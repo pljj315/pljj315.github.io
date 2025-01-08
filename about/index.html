@@ -278,6 +278,24 @@
         
       
       
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/gitalk/1.8.0/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"Ov23lipwdnWHzn8s0j4d","clientSecret":"794682cc1d531e3af88ba187be170008cdb87097","repo":"pljj315.github.io","owner":"pljj315","admin":["pljj315"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
+          {
+            id: 'a7224db13f3a49096aa27c1876d1a947'
+          }
+        )
+        var gitalk = new Gitalk(options);
+        gitalk.render('gitalk-container');
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
 
     </article>
   
