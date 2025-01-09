@@ -26,22 +26,22 @@
 <meta property="og:site_name" content="JH_BLOG">
 <meta property="og:description" content="文章目的：从大四接触diffusion到现在已经接近2年，温故而知新，最近在回顾之前阅读过的工作，也总结一下在control方面的技术发展路线，看看能否给带来点启发。谈到control技术的分类，很多工作被统一归纳为“encoder-based methods”，但这种归纳还是太”大“了，这里用我自己的理解做一些更细致的分类，分类依据更偏向于具体的特征注入机制&#x2F;控制机制。  encode">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://pljj315.github.io/images/personalization-and-feature-mechanism/image-20250109172222535.png">
-<meta property="og:image" content="https://pljj315.github.io/images/personalization-and-feature-mechanism/image-20250109154914240.png">
-<meta property="og:image" content="https://pljj315.github.io/images/personalization-and-feature-mechanism/image-20250109113515713.png">
-<meta property="og:image" content="https://pljj315.github.io/images/personalization-and-feature-mechanism/image-20250109143750831.png">
-<meta property="og:image" content="https://pljj315.github.io/images/personalization-and-feature-mechanism/image-20250109152153105.png">
-<meta property="og:image" content="https://pljj315.github.io/images/personalization-and-feature-mechanism/image-20250109164719609.png">
-<meta property="og:image" content="https://pljj315.github.io/images/personalization-and-feature-mechanism/image-20250109173953044.png">
-<meta property="og:image" content="https://pljj315.github.io/images/personalization-and-feature-mechanism/image-20250109160403306.png">
-<meta property="og:image" content="https://pljj315.github.io/images/personalization-and-feature-mechanism/image-20250109161049551.png">
-<meta property="og:image" content="https://pljj315.github.io/images/personalization-and-feature-mechanism/image-20250109161355622.png">
+<meta property="og:image" content="https://pljj315.github.io/imgs/personalization-and-feature-mechanism/image-20250109172222535.png">
+<meta property="og:image" content="https://pljj315.github.io/imgs/personalization-and-feature-mechanism/image-20250109154914240.png">
+<meta property="og:image" content="https://pljj315.github.io/imgs/personalization-and-feature-mechanism/image-20250109113515713.png">
+<meta property="og:image" content="https://pljj315.github.io/imgs/personalization-and-feature-mechanism/image-20250109143750831.png">
+<meta property="og:image" content="https://pljj315.github.io/imgs/personalization-and-feature-mechanism/image-20250109152153105.png">
+<meta property="og:image" content="https://pljj315.github.io/imgs/personalization-and-feature-mechanism/image-20250109164719609.png">
+<meta property="og:image" content="https://pljj315.github.io/imgs/personalization-and-feature-mechanism/image-20250109173953044.png">
+<meta property="og:image" content="https://pljj315.github.io/imgs/personalization-and-feature-mechanism/image-20250109160403306.png">
+<meta property="og:image" content="https://pljj315.github.io/imgs/personalization-and-feature-mechanism/image-20250109161049551.png">
+<meta property="og:image" content="https://pljj315.github.io/imgs/personalization-and-feature-mechanism/image-20250109161355622.png">
 <meta property="article:published_time" content="2025-01-09T02:56:23.000Z">
-<meta property="article:modified_time" content="2025-01-09T10:13:15.387Z">
+<meta property="article:modified_time" content="2025-01-09T10:42:22.643Z">
 <meta property="article:author" content="pljj315">
 <meta property="article:tag" content="diffusion; control; text-to-img; img-to-img; 大模型；">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pljj315.github.io/images/personalization-and-feature-mechanism/image-20250109172222535.png">
+<meta name="twitter:image" content="https://pljj315.github.io/imgs/personalization-and-feature-mechanism/image-20250109172222535.png">
   
   
   
@@ -346,7 +346,7 @@
 <li><p><a target="_blank" rel="noopener" href="http://arxiv.org/abs/2309.05793">PhotoVerse: Tuning-Free Image Customization with Text-to-Image Diffusion Models</a>-2023.9</p>
 </li>
 </ul>
-<p><img src="/../images/personalization-and-feature-mechanism/image-20250109172222535.png" srcset="/img/loading.gif" lazyload alt="左图为PhotoVerse-右图为ELITE" title="左图为PhotoVerse-右图为ELITE"></p>
+<p><img src="/../imgs/personalization-and-feature-mechanism/image-20250109172222535.png" srcset="/img/loading.gif" lazyload alt="左图为PhotoVerse-右图为ELITE" title="左图为PhotoVerse-右图为ELITE"></p>
 <h2 id="3-stacked-into-text-embedding"><a href="#3-stacked-into-text-embedding" class="headerlink" title="3. stacked into text_embedding:"></a>3. stacked into text_embedding:</h2><p>概括：把<strong>CLIP image encoder</strong>提取到的图像特征，与文本特征向量（即text_embedding）<strong>拼接concatenate</strong>或者<strong>替换replace</strong>，得到的融合特征作为 cross-attention的 Key&#x2F;Value 注入unet，以指导图像生成。</p>
 <p>缺点：生成的图像只是部分忠实于图像提示，对图像提示的表现力不如微调（如LoRA）。</p>
 <blockquote>
@@ -357,7 +357,7 @@
 <li><p><a target="_blank" rel="noopener" href="http://arxiv.org/abs/2307.09481">AnyDoor: Zero-shot Object-level Image Customization</a>-2023.7 阿里巴巴 蚂蚁</p>
 <ul>
 <li><p>策略：sobel算子提取的高频信息map与背景和位置+<strong>ControlNet</strong> 、DINO-V2提取物体的信息特征+<strong>stacked into text_embedding</strong>；</p>
-<p><img src="/../images/personalization-and-feature-mechanism/image-20250109154914240.png" srcset="/img/loading.gif" lazyload alt="image-20250109154914240" title="anydoor结构"></p>
+<p><img src="/../imgs/personalization-and-feature-mechanism/image-20250109154914240.png" srcset="/img/loading.gif" lazyload alt="image-20250109154914240" title="anydoor结构"></p>
 </li>
 </ul>
 </li>
@@ -368,7 +368,7 @@
 <li><p>优点：由于保持了text_embedding的存在，对原始底膜的语义遵循没太大影响，语义一致性不错；</p>
 </li>
 <li><p>缺点：仅使用更新的带有人像信息的“text_embedding”，对人像信息控制不充分，人像保持差；</p>
-<p><img src="/../images/personalization-and-feature-mechanism/image-20250109113515713.png" srcset="/img/loading.gif" lazyload alt="image-20250109113515713"></p>
+<p><img src="/../imgs/personalization-and-feature-mechanism/image-20250109113515713.png" srcset="/img/loading.gif" lazyload alt="image-20250109113515713"></p>
 </li>
 </ul>
 </li>
@@ -380,7 +380,7 @@
 <li><p><a target="_blank" rel="noopener" href="http://arxiv.org/abs/2308.06721">IP-Adapter: Text Compatible Image Prompt Adapter for Text-to-Image Diffusion Models</a>-2023.8 腾讯✨</p>
 <ul>
 <li><p>策略：利用<strong>CLIP-image-encoder</strong>提取具有图像的image-feature，经过<strong>Linear+LayerNorm</strong>，将<strong>注意力解耦</strong>，即把“文本条件特征”与“图像条件特征”分开，分别注入到2个不同的cross-attention中去[ <em>text-cross-attention与image-cross-attention</em> ]，再将2个cross-attention结果进行相加。</p>
-<p><img src="/../images/personalization-and-feature-mechanism/image-20250109143750831.png" srcset="/img/loading.gif" lazyload alt="image-20250109143750831"></p>
+<p><img src="/../imgs/personalization-and-feature-mechanism/image-20250109143750831.png" srcset="/img/loading.gif" lazyload alt="image-20250109143750831"></p>
 </li>
 </ul>
 </li>
@@ -389,7 +389,7 @@
 <li>策略：与IP-A类似，只不过在imgae-feature提取这有所增添：除了来自CLIP-image-encoder提取的人像信息【后续称为clip-image-embedding】，还使用了来自<strong>人脸识别器</strong>提取的face-embedding，并将两者<strong>拼接concat</strong>，拼接后一齐作为图像条件特征（<strong>IP-A</strong>）。</li>
 <li>训练策略：训练时，只使用图像输入，不使用caption。据说能够增强对图像的学习。</li>
 <li>除此之外，风格控制方面还使用了AdaIN-m机制，主要是在self-attention上做了改动。</li>
-<li><img src="/../images/personalization-and-feature-mechanism/image-20250109152153105.png" srcset="/img/loading.gif" lazyload alt="image-20250109152153105"></li>
+<li><img src="/../imgs/personalization-and-feature-mechanism/image-20250109152153105.png" srcset="/img/loading.gif" lazyload alt="image-20250109152153105"></li>
 </ul>
 </li>
 <li><p><a target="_blank" rel="noopener" href="http://arxiv.org/abs/2401.07519">InstantID: Zero-shot Identity-Preserving Generation in Seconds</a>-2024.2 InstantX、小红书</p>
@@ -410,7 +410,7 @@
 <ul>
 <li>策略：可以理解为IP-A的变种：依然是解耦的cross-attention，不过新增的image-cross-attention的keys&#x2F;values不再是直接用image-encoder提取的image-feature，用的是参考图像的”ref_unet”流程中<strong>ref-self-attention后得到的ref-unet-feature</strong>。</li>
 </ul>
-<p><img src="/../images/personalization-and-feature-mechanism/image-20250109164719609.png" srcset="/img/loading.gif" lazyload alt="image-20250109164719609"></p>
+<p><img src="/../imgs/personalization-and-feature-mechanism/image-20250109164719609.png" srcset="/img/loading.gif" lazyload alt="image-20250109164719609"></p>
 </li>
 <li><p>[Improving Diffusion Models for Authentic Virtual Try-on in the Wild]([<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2403.05139">2403.05139] Improving Diffusion Models for Authentic Virtual Try-on in the Wild</a>)-2024.3 KAIST 已开源✨</p>
 <ul>
@@ -419,9 +419,9 @@
 </ul>
 </li>
 </ul>
-<p><img src="/../images/personalization-and-feature-mechanism/image-20250109173953044.png" srcset="/img/loading.gif" lazyload alt="image-20250109173953044" title="IDM–VTON结构"></p>
+<p><img src="/../imgs/personalization-and-feature-mechanism/image-20250109173953044.png" srcset="/img/loading.gif" lazyload alt="image-20250109173953044" title="IDM–VTON结构"></p>
 <h2 id="6-novel-loss"><a href="#6-novel-loss" class="headerlink" title="6. novel loss"></a>6. novel loss</h2><p>在diffusion中常见的loss是：由unet预测到的噪声与真实噪声之间的MSE均方差loss，被称作vanilla-loss或naive-loss：</p>
-<p><img src="/../images/personalization-and-feature-mechanism/image-20250109160403306.png" srcset="/img/loading.gif" lazyload alt="image-20250109160403306"></p>
+<p><img src="/../imgs/personalization-and-feature-mechanism/image-20250109160403306.png" srcset="/img/loading.gif" lazyload alt="image-20250109160403306"></p>
 <p>论文举例：</p>
 <ul>
 <li><a target="_blank" rel="noopener" href="http://arxiv.org/abs/2404.16022">PuLID: Pure and Lightning ID Customization via Contrastive Alignment</a>-2024.4 字节<ul>
@@ -431,8 +431,8 @@
 </ul>
 </li>
 </ul>
-<p>​		<img src="/../images/personalization-and-feature-mechanism/image-20250109161049551.png" srcset="/img/loading.gif" lazyload alt="image-20250109161049551"></p>
-<p>​		<img src="/../images/personalization-and-feature-mechanism/image-20250109161355622.png" srcset="/img/loading.gif" lazyload alt="image-20250109161355622"></p>
+<p>​		<img src="/../imgs/personalization-and-feature-mechanism/image-20250109161049551.png" srcset="/img/loading.gif" lazyload alt="image-20250109161049551"></p>
+<p>​		<img src="/../imgs/personalization-and-feature-mechanism/image-20250109161355622.png" srcset="/img/loading.gif" lazyload alt="image-20250109161355622"></p>
 <p>待看：</p>
 <p><a target="_blank" rel="noopener" href="http://arxiv.org/abs/2406.16537">Character-Adapter: Prompt-Guided Region Control for High-Fidelity Character Customization</a>-2024.6</p>
 
