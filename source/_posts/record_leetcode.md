@@ -42,14 +42,14 @@ tags:
 
    2. 算法要点：虚拟头结点、构建类（增删查改）、双指针（快n步双指针）、环形链表（数学推理）；
 
-   3. ```python
+      ```python
       class ListNode:     # 单链表
           def __init__(self, val=0, next=None):
               self.val = val
               self.next = next
       ```
 
-   4. ```python
+      ```python
       class ListNode:     # 双链表
           def __init__(self, val=0, prev=None, next=None):
               self.val = val
@@ -71,7 +71,7 @@ tags:
 
    3. 算法要点：先构建+再快速查询、n数和、结合双指针；
 
-   4. ```python
+      ```python
       from collections import defaultdict, Counter
       
       dict.get(get_val, set_val_if_cannot_get)
