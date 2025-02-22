@@ -1,5 +1,5 @@
 ---
-title: '技术路线总结: diffusion VS control'
+title: 'Research Insights: diffusion VS control'
 author: pljj315
 comment: gitalk
 date: 2025-01-09 10:56:23
@@ -9,8 +9,10 @@ tags:
 - text-to-img; 
 - img-to-img; 
 - 大模型；
-category: 技术路线总结
+category: Research Insights
 ---
+
+# Research Insights: diffusion VS control
 
 文章目的：从大四接触diffusion到现在已经接近2年，温故而知新，最近在回顾之前阅读过的工作，也总结一下在control方面的技术发展路线，看看能否给带来点启发。谈到control技术的分类，很多工作被统一归纳为“encoder-based methods”，但这种归纳还是太”大“了，这里用我自己的理解做一些更细致的分类，分类依据更偏向于具体的*特征注入机制/控制机制*。
 
@@ -159,8 +161,6 @@ encoder-based methods如何理解？：从特征的提取encoder角度入手，�
 ​		![image-20250109161049551](../imgs/personalization-and-feature-mechanism/image-20250109161049551.png)
 
 ​		![image-20250109161355622](../imgs/personalization-and-feature-mechanism/image-20250109161355622.png)
-
-
 
 
 

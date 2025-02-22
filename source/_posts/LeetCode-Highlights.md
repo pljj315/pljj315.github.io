@@ -4,6 +4,7 @@ date: 2025-01-27 13:47:19
 tags: 
 - leetcode刷题
 - 算法
+category: 'LeetCode highlights' 
 ---
 
 刷题以及快速刷题的技巧：
@@ -226,7 +227,7 @@ tags:
               最长公共子序列：二维dp
               # 子序列：dp[i][j]表示nums1:0~i-1 与 nums2:0~j-1的最长公共子的长度
               # 递归公式：if nums1[i-1]==nums2[j-1]:dp[i][j] = dp[i-1][j-1]+1, else: max(dp[i-1][j], dp[i][j-1])
-          
+              
               # 子数组==连续子序列：dp[i][j]表示以nums1[i-1] 与 nums2[j-1]结尾的、最长公共子数组的长度
               # 递归公式：if nums1[i-1]==nums2[j-1]:dp[i][j] = dp[i-1][j-1]+1, else:0
 

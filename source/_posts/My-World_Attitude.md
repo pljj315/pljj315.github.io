@@ -8,7 +8,7 @@ tags:
 - 音乐 
 - 生活方式 
 - recommends
-category: 'live' 
+category: 'My world' 
 author: pljj315
 comment: gitalk
 ---

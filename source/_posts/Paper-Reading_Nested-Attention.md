@@ -12,7 +12,9 @@ tags:
 category: paper_reading
 ---
 
-> [文章链接](https://snap-research.github.io/NestedAttention/)
+# [**Nested Attention:** Semantic-aware Attention Values for Concept Personalization-2025](https://snap-research.github.io/NestedAttention/)
+
+
 
 关键概括：injects a rich and expressive image representation into the model’s existing cross-attention layers. ==>  **single textual-token**、**cross-attention: Nested Attention**、 **smaller semantic visual elements**、 **多个定制化概念**、**可以非人 数据集低需求**  
 
