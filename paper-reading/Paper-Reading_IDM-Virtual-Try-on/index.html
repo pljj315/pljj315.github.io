@@ -26,10 +26,10 @@
 <meta property="og:site_name" content="JH_BLOG">
 <meta property="og:description" content="IDM-VTON: Improving Diffusion Models for Authentic Virtual Try-on in the Wild (in 2024 ECCV)论文概括：论文中提出了一种改进的扩散模型 (Improved Diffusion Models for Virtual Try-ON, 简称IDM–VTON)，使其应用在真实世界场景下虚拟试穿任务。该模型显著提高了服">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="d:\github_io\source\imgs\Paper-Reading_IDM-Virtual-Try-on\image-20250222211416822.png">
-<meta property="og:image" content="d:\github_io\source\imgs\Paper-Reading_IDM-Virtual-Try-on\image-20250222213603226.png">
+<meta property="og:image" content="https://pljj315.github.io/imgs/Paper-Reading_IDM-Virtual-Try-on/image-20250222211416822.png">
+<meta property="og:image" content="https://pljj315.github.io/imgs/Paper-Reading_IDM-Virtual-Try-on/image-20250222213603226.png">
 <meta property="article:published_time" content="2024-12-20T13:16:38.000Z">
-<meta property="article:modified_time" content="2025-02-22T13:50:17.308Z">
+<meta property="article:modified_time" content="2025-02-23T12:38:11.813Z">
 <meta property="article:author" content="pljj315">
 <meta property="article:tag" content="attention">
 <meta property="article:tag" content="diffusion">
@@ -37,7 +37,7 @@
 <meta property="article:tag" content="personalization">
 <meta property="article:tag" content="论文阅读">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="d:\github_io\source\imgs\Paper-Reading_IDM-Virtual-Try-on\image-20250222211416822.png">
+<meta name="twitter:image" content="https://pljj315.github.io/imgs/Paper-Reading_IDM-Virtual-Try-on/image-20250222211416822.png">
   
   
   
@@ -322,11 +322,11 @@
 <li>IP-Adapter：提取服装高级语义**【代码中并没有训练？】**</li>
 <li>GarmentNet：基于UNet的特征编码器，提取服装的低级特征，直接使用冻结的SDXL-base</li>
 </ul>
-<p><img src="D:\github_io\source\imgs\Paper-Reading_IDM-Virtual-Try-on\image-20250222211416822.png" srcset="/imgs/img/loading.gif" lazyload alt="IDM-VTON模型整体框架"></p>
+<p><img src="/../imgs/Paper-Reading_IDM-Virtual-Try-on/image-20250222211416822.png" srcset="/imgs/img/loading.gif" lazyload alt="IDM-VTON模型整体框架"></p>
 <h4 id="1-TryonNet-详解"><a href="#1-TryonNet-详解" class="headerlink" title="1. TryonNet 详解"></a>1. TryonNet 详解</h4><p>TryonNet的输入由4个部分组成，共13通道&#x3D;4+4+4+1：除了单通道的mask外，均为4个通道（VAE编码层获得latent是4通道）：使用开源的9通道SDXL-Inpainting模型作为初始化，并使用卷积层来修改UNet的输入特征通道（卷积层初始化为0）。代码如下:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python">unet.encoder_hid_proj = image_proj_model<br><br>conv_new = torch.nn.Conv2d(<br>    in_channels=<span class="hljs-number">4</span>+<span class="hljs-number">4</span>+<span class="hljs-number">1</span>+<span class="hljs-number">4</span>,<br>    out_channels=unet.conv_in.out_channels,<br>    kernel_size=<span class="hljs-number">3</span>,<br>    padding=<span class="hljs-number">1</span>,<br>)<br>torch.nn.init.kaiming_normal_(conv_new.weight)  <br>conv_new.weight.data = conv_new.weight.data * <span class="hljs-number">0.</span>  <span class="hljs-comment"># 初始化为0 </span><br><br>conv_new.weight.data[:, :<span class="hljs-number">9</span>] = unet.conv_in.weight.data  <br>conv_new.bias.data = unet.conv_in.bias.data  <br><br>unet.conv_in = conv_new  <span class="hljs-comment"># replace conv layer in unet</span><br>unet.config[<span class="hljs-string">&#x27;in_channels&#x27;</span>] = <span class="hljs-number">13</span>  <span class="hljs-comment"># update config</span><br>unet.config.in_channels = <span class="hljs-number">13</span>  <span class="hljs-comment"># update config</span><br><span class="hljs-comment">#customize unet end</span><br></code></pre></td></tr></table></figure>
 <h4 id="2-IP-Adapter-详解"><a href="#2-IP-Adapter-详解" class="headerlink" title="2. IP-Adapter 详解"></a>2. IP-Adapter 详解</h4><p>使用IP-Adapter对服装图像进行编码，使用冻结参数的CLIP图像编码器（即 OpenCLIP ViT-H&#x2F;14）来提取特征。论文说IP-Adapter【包括特征投影层（feature projection layers）和交叉注意层（cross-attention layers）】是可训练的，<em>但代码里并没有训练</em>，社区的issues也提到了不训练可能会更好：ipa可能会影响到衣服颜色准确度*。 </p>
-<p><img src="D:\github_io\source\imgs\Paper-Reading_IDM-Virtual-Try-on\image-20250222213603226.png" srcset="/imgs/img/loading.gif" lazyload alt="原版IP-Adapter论文图片"></p>
+<p><img src="/../imgs/Paper-Reading_IDM-Virtual-Try-on/image-20250222213603226.png" srcset="/imgs/img/loading.gif" lazyload alt="原版IP-Adapter论文图片"></p>
 <h4 id="3-GarmentNet-详解"><a href="#3-GarmentNet-详解" class="headerlink" title="3. GarmentNet 详解"></a>3. GarmentNet 详解</h4><ul>
 <li><p>由于 <strong>CLIP 图像编码器缺乏提取服装的低级特征（CLIP训练的文本图像对比较广泛，对服装细节无法详细的描述）</strong>，导致：虽然IP-Adapter已经引入了来自服装图像的控制，但当服装具有复杂的图案或印花时，IP-Adapter在保留服装的细粒度细节方面存在不足。而SDXL模型在大规模数据集上经过预训练，已经具备了良好的低级特征提取器的能力，可以作为对IPA的细粒度特征的补充特征。</p>
 </li>

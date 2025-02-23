@@ -19,31 +19,31 @@
   <meta name="author" content="pljj315">
   <meta name="keywords" content="计算机视觉 视觉大模型 研究生生活">
   
-    <meta name="description" content="Nested Attention: Semantic-aware Attention Values for Concept Personalization-2025关键概括：injects a rich and expressive image representation into the model’s existing cross-attention layers. &#x3D;&#x3D;">
+    <meta name="description" content="Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12关键概括：训练了一个即插即用的adapter，能够在各种diffusion模型下，通过相机参数或者几何信息对视角进行指导，进行多视角的一致性角色生成。  decoupled attention mechanism：新的自注意力层来源于对原自注意力层的复制">
 <meta property="og:type" content="article">
-<meta property="og:title" content="paper reading: Nested Attention: Semantic-aware Attention Values for Concept Personalization-2025">
-<meta property="og:url" content="https://pljj315.github.io/paper-reading/Paper-Reading_Nested-Attention/index.html">
+<meta property="og:title" content="Paper-Reading：MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12">
+<meta property="og:url" content="https://pljj315.github.io/paper-reading/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/index.html">
 <meta property="og:site_name" content="JH_BLOG">
-<meta property="og:description" content="Nested Attention: Semantic-aware Attention Values for Concept Personalization-2025关键概括：injects a rich and expressive image representation into the model’s existing cross-attention layers. &#x3D;&#x3D;">
+<meta property="og:description" content="Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12关键概括：训练了一个即插即用的adapter，能够在各种diffusion模型下，通过相机参数或者几何信息对视角进行指导，进行多视角的一致性角色生成。  decoupled attention mechanism：新的自注意力层来源于对原自注意力层的复制">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://pljj315.github.io/imgs/Paper-Reading_Nested-Attention/image-20250108160404745.png">
-<meta property="og:image" content="https://pljj315.github.io/imgs/Paper-Reading_Nested-Attention/image-20250108165121686.png">
-<meta property="og:image" content="https://pljj315.github.io/imgs/Paper-Reading_Nested-Attention/image-20250108172150828.png">
-<meta property="og:image" content="https://pljj315.github.io/imgs/Paper-Reading_Nested-Attention/image-20250108174006292.png">
-<meta property="article:published_time" content="2025-01-08T07:21:08.000Z">
-<meta property="article:modified_time" content="2025-02-23T12:42:47.742Z">
+<meta property="og:image" content="https://pljj315.github.io/imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223194550810.png">
+<meta property="og:image" content="https://pljj315.github.io/imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200818183.png">
+<meta property="og:image" content="https://pljj315.github.io/imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200121201.png">
+<meta property="og:image" content="https://pljj315.github.io/imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200148615.png">
+<meta property="og:image" content="https://pljj315.github.io/imgs%5CPaper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy%5Cimage-20250223202102134.png">
+<meta property="article:published_time" content="2025-02-23T09:58:33.000Z">
+<meta property="article:modified_time" content="2025-02-23T12:41:53.965Z">
 <meta property="article:author" content="pljj315">
-<meta property="article:tag" content="attention">
 <meta property="article:tag" content="diffusion">
 <meta property="article:tag" content="text-to-img">
-<meta property="article:tag" content="personalization">
 <meta property="article:tag" content="论文阅读">
+<meta property="article:tag" content="multi-view">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pljj315.github.io/imgs/Paper-Reading_Nested-Attention/image-20250108160404745.png">
+<meta name="twitter:image" content="https://pljj315.github.io/imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223194550810.png">
   
   
   
-  <title>paper reading: Nested Attention: Semantic-aware Attention Values for Concept Personalization-2025 -&gt; JH_BLOG</title>
+  <title>Paper-Reading：MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12 -&gt; JH_BLOG</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -220,7 +220,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="paper reading: Nested Attention: Semantic-aware Attention Values for Concept Personalization-2025"></span>
+            <span id="subtitle" data-typed-text="Paper-Reading：MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12"></span>
           
         </div>
 
@@ -236,8 +236,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-01-08 15:21" pubdate>
-          2025年1月8日 下午
+        <time datetime="2025-02-23 17:58" pubdate>
+          2025年2月23日 下午
         </time>
       </span>
     
@@ -248,7 +248,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          714 字
+          518 字
         
       </span>
     
@@ -259,7 +259,7 @@
         
         
         
-          6 分钟
+          5 分钟
         
       </span>
     
@@ -305,42 +305,63 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">paper reading: Nested Attention: Semantic-aware Attention Values for Concept Personalization-2025</h1>
+            <h1 id="seo-header">Paper-Reading：MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="Nested-Attention-Semantic-aware-Attention-Values-for-Concept-Personalization-2025"><a href="#Nested-Attention-Semantic-aware-Attention-Values-for-Concept-Personalization-2025" class="headerlink" title="Nested Attention: Semantic-aware Attention Values for Concept Personalization-2025"></a><a target="_blank" rel="noopener" href="https://snap-research.github.io/NestedAttention/"><strong>Nested Attention:</strong> Semantic-aware Attention Values for Concept Personalization-2025</a></h1><p>关键概括：injects a rich and expressive image representation into the model’s existing cross-attention layers. &#x3D;&#x3D;&gt;  <strong>single textual-token</strong>、<strong>cross-attention: Nested Attention</strong>、 <strong>smaller semantic visual elements</strong>、 <strong>多个定制化概念</strong>、<strong>可以非人 数据集低需求</strong>  </p>
-<p>personalization技术发展路线：text-embedding&#x2F;fine-tuning based——&gt;cross-image attention based——&gt;<em><strong>encoder-based（本文）</strong></em>✨</p>
-<span id="more"></span>
-
-
-
-<h2 id="1-如何理解per-query-attention-values"><a href="#1-如何理解per-query-attention-values" class="headerlink" title="1. 如何理解per-query attention values?"></a>1. 如何理解per-query attention values?</h2><h3 id="回顾cross-attention"><a href="#回顾cross-attention" class="headerlink" title="回顾cross-attention"></a>回顾cross-attention</h3><p>Query: hidden_states(来自unet中间层)</p>
-<p>Key &amp; Value: text_embedding(来自text-encoder)</p>
-<p>Q 与 K 的点积意义：表示当前空间位置下的 Q_ij 与 K 的语义相似性，即权重，用来后续与 V 加权。由此，在给定文本（K &#x2F; V ）下，Q的能够决定图像内容的“空间位置”，也就是控制了图像的“外观”！这是文章着重研究 Query 的原因。</p>
-<p><img src="/../imgs/Paper-Reading_Nested-Attention/image-20250108160404745.png" srcset="/imgs/img/loading.gif" lazyload alt="cross-attention" title="cross-attention"></p>
-<h3 id="per-query-attention-Values"><a href="#per-query-attention-Values" class="headerlink" title="per-query attention Values"></a>per-query attention Values</h3><p>原文提取：per-query attention Values &#x3D; localized values that depend on the queries&#x3D;per-region values&#x3D;query-dependent values</p>
-<p>Value: text_embedding(来自text-encoder)，由于 Value由不同的token对应的embedding组成，而一个token却要指示着图片<em>整个区域</em>的全部相关实例和相关内容，这很“粗粒度”，无法达到任务期待的“细粒度”个性化生成【value中的每一个embedding要负责整个query，任务重，容易完成的不好】。因此把任务细分：划分query，每个子query由专门的新value负责，减轻了value的任务量。即：提出了更局部的“localized Values”：能更好的关注到局部区域、细粒度的语义信息。</p>
-<p>所谓的“per-query attention Values”具体是怎样实现的就是下面的内容了。</p>
-<blockquote>
-<p>注意：per-query attention Values ≠ attention map的值，Values指的是Q K V中的V。</p>
-</blockquote>
-<h2 id="2-如何理解nested-attention-mechanism？"><a href="#2-如何理解nested-attention-mechanism？" class="headerlink" title="2. 如何理解nested attention mechanism？"></a>2. 如何理解nested attention mechanism？</h2><p>其中公式1就是上文的“per-query attention Values”的实现方式了。简单来说，就是对special token（s*）在不同的空间位置（i,j）下的q_ij，单独预测value_ij，这样得到的value_ij便具有了更局部的、细粒度的语义信息。但不是所有的text token都是用这个机制，只有要被个性化的special token会用到，这种注意力机制就是nested attention mechanism。</p>
-<p><img src="/../imgs/Paper-Reading_Nested-Attention/image-20250108165121686.png" srcset="/imgs/img/loading.gif" lazyload alt="公式1&#x2F;2&#x2F;3" title="公式1&#x2F;2&#x2F;3"></p>
-<blockquote>
-<p>注意，Key 在公式1和3中的区别！(从左到右分别：公式1&#x2F;2&#x2F;3)<br>文中还提到了对“per-query attention Values”的正则化实验技巧，不具体介绍。</p>
-</blockquote>
-<h2 id="3-q-ij、nested-keys、nested-values从哪来？——可训练模块"><a href="#3-q-ij、nested-keys、nested-values从哪来？——可训练模块" class="headerlink" title="3. q_ij、nested keys、nested values从哪来？——可训练模块"></a>3. q_ij、nested keys、nested values从哪来？——可训练模块</h2><p>Q-Former得到：”Q-Former learned queries“，即q_ij；</p>
-<p>nested attention layers[ linear layers ]得到：nested keys、nested values；</p>
-<p>上述两个模块组成了文章的可训练部分，得到的q_ij、nested keys、nested values三者构成公式1的输入。</p>
-<blockquote>
-<p>注意：per-query attention Values ≠ nested values, 二者关系：nested values 和 nested keys 经过公式1 得到per-query attention Values。</p>
-<p>clip image features &#x3D; CLIP ‘s last layer before pooling</p>
-</blockquote>
-<p><img src="/../imgs/Paper-Reading_Nested-Attention/image-20250108172150828.png" srcset="/imgs/img/loading.gif" lazyload alt="论文架构"></p>
-<h2 id="4-对“Q-Former-learned-queries”的验证："><a href="#4-对“Q-Former-learned-queries”的验证：" class="headerlink" title="4. 对“Q-Former learned queries”的验证："></a>4. 对“Q-Former learned queries”的验证：</h2><p>从生成过程中的Query中取3个不同空间位置的q_ij，与nested keys进行点积运算得到attention map’，可以观察到总能有1-2个nested token与q_ij最相关；进一步将q_ij、nested keys、nested values按照公式1进行运算，得到Q-Former learned queries，与输入脸部图像的clip image features 进行点积运算得到attention map, 能直观的观察到Q-Former learned queries的作用，即生成的细粒度特征在输入图中的来源相关性。</p>
-<p><img src="/../imgs/Paper-Reading_Nested-Attention/image-20250108174006292.png" srcset="/imgs/img/loading.gif" lazyload alt="可视化验证" title="可视化验证"></p>
+                <h1 id="Paper-Reading：MULTI-VIEW-CONSISTENT-IMAGE-GENERATION-MADE-EASY-2024-12"><a href="#Paper-Reading：MULTI-VIEW-CONSISTENT-IMAGE-GENERATION-MADE-EASY-2024-12" class="headerlink" title="Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12"></a>Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12</h1><p><strong>关键概括：<strong>训练了一个即插即用的adapter，能够在各种diffusion模型下，通过相机参数或者几何信息对视角进行指导，进行</strong>多视角的一致性角色生成</strong>。</p>
+<ul>
+<li><strong>decoupled attention mechanism</strong>：新的自注意力层来源于对原自注意力层的复制 + 平行的自注意力连接架构【原spatial_self_attention与多个其他的attention平行连接！】</li>
+<li><strong>condition-guider</strong>：能够对相机参数和几何信息进行编码的“新的条件编码器(condition encoder)”</li>
+</ul>
+<p><strong>优点：</strong></p>
+<ul>
+<li>即插即用，尽可能保留了底模(base model)的性能</li>
+<li>训练容易，只需要微调几个adapter层而不是整个UNet：参数量小，数据集友好</li>
+</ul>
+<h2 id="方法："><a href="#方法：" class="headerlink" title="方法："></a>方法：</h2><h3 id="1-pipeline"><a href="#1-pipeline" class="headerlink" title="1. pipeline:"></a>1. pipeline:</h3><p>包括一个condition-guider encoder; 和decoupled attention mechanism</p>
+<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223194550810.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250223194550810"></p>
+<hr>
+<h3 id="2-condition-guider-encoder："><a href="#2-condition-guider-encoder：" class="headerlink" title="2. condition-guider&#x3D;&#x3D;&gt; encoder："></a>2. condition-guider&#x3D;&#x3D;&gt; encoder：</h3><ul>
+<li>conditioning map：<ul>
+<li>相机位姿：raymap</li>
+<li>几何信息：position_map + normal_map</li>
+</ul>
+</li>
+<li>encoder结构：一系列的卷积网络&#x3D;&#x3D;&gt;包括feature extraction blocks特征提取 + downsampling layers下采样调整scale</li>
+</ul>
+<h3 id="3-decoupled-attention-mechanism："><a href="#3-decoupled-attention-mechanism：" class="headerlink" title="3. decoupled attention mechanism："></a>3. decoupled attention mechanism：</h3><ul>
+<li><p>自注意力与其他注意力的连接方式不再是原始的级联，如下图所示：<img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200818183.png" srcset="/imgs/img/loading.gif" lazyload alt="serial attention-architecture"></p>
+</li>
+<li><p>并联架构，如下图所示：<img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200121201.png" srcset="/imgs/img/loading.gif" lazyload alt="平行注意力架构公式"></p>
+</li>
+<li><p>级联注意力架构  vs  并联注意力架构，对比如下图所示：</p>
+</li>
+</ul>
+<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200148615.png" srcset="/imgs/img/loading.gif" lazyload alt="级联注意力架构vs平行注意力架构"></p>
+<ul>
+<li>其中：<ul>
+<li>spatial self-attention：即原始的自注意力层，Q&#x3D;K&#x3D;V&#x3D;hidden states，表示图片本身不同位置的关注度；</li>
+<li><strong>multi-view attention</strong>：较为复杂，是多视图的实现关键！<img src="/../imgs%5CPaper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy%5Cimage-20250223202102134.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250223202102134"></li>
+<li>image cross-attention：Q &#x3D; hidden states, K&#x3D;V&#x3D;来自冻结UNet对参考输入图提取得中间表示，即把冻结的平行UNet【被叫做UNet Encoder】作为了一种特征提取器，提取低级语义的特征和细粒度的细节；</li>
+</ul>
+</li>
+</ul>
+<h3 id="训练："><a href="#训练：" class="headerlink" title="训练："></a>训练：</h3><ul>
+<li><p>数据集：Objaverse dataset</p>
+</li>
+<li><p>randomly zero out the features of the reference image to drop image conditions, enabling classifier-free guidance at inference：解释：对于CFG的训练策略，是在训练过程中按照比例（如0.1）随机丢弃<strong>条件信息</strong>，这里的“条件信息”一般是额外的(<strong>cross attn的K、V来源？</strong>)指导信息，比如文生图中的文本(text embedding)，这里丢弃的是<strong>参考图像特征</strong></p>
+</li>
+</ul>
+<h3 id="待解决："><a href="#待解决：" class="headerlink" title="待解决："></a>待解决：</h3><ul>
+<li><p>shift the noise schedule towards high noise levels</p>
+</li>
+<li><p>shift the log signal-to-noise ratio by log(n), where n is the number of generated views.</p>
+</li>
+<li><p><strong>multi-view attention</strong>部分没有细致的研究，row-wise self_attention column-wise self-attention是什么？</p>
+</li>
+</ul>
 
                 
               </div>
@@ -374,15 +395,13 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/attention/" class="print-no-link">#attention</a>
-      
         <a href="/tags/diffusion/" class="print-no-link">#diffusion</a>
       
         <a href="/tags/text-to-img/" class="print-no-link">#text-to-img</a>
       
-        <a href="/tags/personalization/" class="print-no-link">#personalization</a>
-      
         <a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" class="print-no-link">#论文阅读</a>
+      
+        <a href="/tags/multi-view/" class="print-no-link">#multi-view</a>
       
     </div>
   
@@ -394,8 +413,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>paper reading: Nested Attention: Semantic-aware Attention Values for Concept Personalization-2025</div>
-      <div>https://pljj315.github.io/paper-reading/Paper-Reading_Nested-Attention/</div>
+      <div>Paper-Reading：MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12</div>
+      <div>https://pljj315.github.io/paper-reading/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/</div>
     </div>
     <div class="license-meta">
       
@@ -407,7 +426,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年1月8日</div>
+          <div>2025年2月23日</div>
         </div>
       
       
@@ -439,18 +458,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/Research-Insights/Research-Insights_Personalization-and-feature-Mechanism/" title="Research Insights: diffusion VS control">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Research Insights: diffusion VS control</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/My-world/My-World_Attitude/" title="影视剧、书籍、音乐和生活方式推荐">
-                        <span class="hidden-mobile">影视剧、书籍、音乐和生活方式推荐</span>
+                      <a href="/LeetCode-highlights/LeetCode-Highlights/" title="算法——leetcode">
+                        <span class="hidden-mobile">算法——leetcode</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -473,7 +486,7 @@
         var options = Object.assign(
           {"clientID":"Ov23lipwdnWHzn8s0j4d","clientSecret":"794682cc1d531e3af88ba187be170008cdb87097","repo":"pljj315.github.io","owner":"pljj315","admin":["pljj315"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: 'e223c4f06399c4a5b3b4947672fc1eb2'
+            id: '6b9a54d3a2f9cf03a2a0eb0e3b59cc4e'
           }
         )
         var gitalk = new Gitalk(options);
