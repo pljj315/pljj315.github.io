@@ -8,7 +8,7 @@
     <link href="/paper-reading/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/"/>
     <url>/paper-reading/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/</url>
     
-    <content type="html"><![CDATA[<h1 id="Paper-Reading：MULTI-VIEW-CONSISTENT-IMAGE-GENERATION-MADE-EASY-2024-12"><a href="#Paper-Reading：MULTI-VIEW-CONSISTENT-IMAGE-GENERATION-MADE-EASY-2024-12" class="headerlink" title="Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12"></a>Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12</h1><p><strong>关键概括：<strong>训练了一个即插即用的adapter，能够在各种diffusion模型下，通过相机参数或者几何信息对视角进行指导，进行</strong>多视角的一致性角色生成</strong>。</p><ul><li><strong>decoupled attention mechanism</strong>：新的自注意力层来源于对原自注意力层的复制 + 平行的自注意力连接架构【原spatial_self_attention与多个其他的attention平行连接！】</li><li><strong>condition-guider</strong>：能够对相机参数和几何信息进行编码的“新的条件编码器(condition encoder)”</li></ul><p><strong>优点：</strong></p><ul><li>即插即用，尽可能保留了底模(base model)的性能</li><li>训练容易，只需要微调几个adapter层而不是整个UNet：参数量小，数据集友好</li></ul><h2 id="方法："><a href="#方法：" class="headerlink" title="方法："></a>方法：</h2><h3 id="1-pipeline"><a href="#1-pipeline" class="headerlink" title="1. pipeline:"></a>1. pipeline:</h3><p>包括一个condition-guider encoder; 和decoupled attention mechanism</p><p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223194550810.png" alt="image-20250223194550810"></p><hr><h3 id="2-condition-guider-encoder："><a href="#2-condition-guider-encoder：" class="headerlink" title="2. condition-guider&#x3D;&#x3D;&gt; encoder："></a>2. condition-guider&#x3D;&#x3D;&gt; encoder：</h3><ul><li>conditioning map：<ul><li>相机位姿：raymap</li><li>几何信息：position_map + normal_map</li></ul></li><li>encoder结构：一系列的卷积网络&#x3D;&#x3D;&gt;包括feature extraction blocks特征提取 + downsampling layers下采样调整scale</li></ul><h3 id="3-decoupled-attention-mechanism："><a href="#3-decoupled-attention-mechanism：" class="headerlink" title="3. decoupled attention mechanism："></a>3. decoupled attention mechanism：</h3><ul><li><p>自注意力与其他注意力的连接方式不再是原始的级联，如下图所示：<img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200818183.png" alt="serial attention-architecture"></p></li><li><p>并联架构，如下图所示：<img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200121201.png" alt="平行注意力架构公式"></p></li><li><p>级联注意力架构  vs  并联注意力架构，对比如下图所示：</p></li></ul><p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200148615.png" alt="级联注意力架构vs平行注意力架构"></p><ul><li>其中：<ul><li>spatial self-attention：即原始的自注意力层，Q&#x3D;K&#x3D;V&#x3D;hidden states，表示图片本身不同位置的关注度；</li><li><strong>multi-view attention</strong>：较为复杂，是多视图的实现关键！<img src="/../imgs%5CPaper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy%5Cimage-20250223202102134.png" alt="image-20250223202102134"></li><li>image cross-attention：Q &#x3D; hidden states, K&#x3D;V&#x3D;来自冻结UNet对参考输入图提取得中间表示，即把冻结的平行UNet【被叫做UNet Encoder】作为了一种特征提取器，提取低级语义的特征和细粒度的细节；</li></ul></li></ul><h3 id="训练："><a href="#训练：" class="headerlink" title="训练："></a>训练：</h3><ul><li><p>数据集：Objaverse dataset</p></li><li><p>randomly zero out the features of the reference image to drop image conditions, enabling classifier-free guidance at inference：解释：对于CFG的训练策略，是在训练过程中按照比例（如0.1）随机丢弃<strong>条件信息</strong>，这里的“条件信息”一般是额外的(<strong>cross attn的K、V来源？</strong>)指导信息，比如文生图中的文本(text embedding)，这里丢弃的是<strong>参考图像特征</strong></p></li></ul><h3 id="待解决："><a href="#待解决：" class="headerlink" title="待解决："></a>待解决：</h3><ul><li><p>shift the noise schedule towards high noise levels</p></li><li><p>shift the log signal-to-noise ratio by log(n), where n is the number of generated views.</p></li><li><p><strong>multi-view attention</strong>部分没有细致的研究，row-wise self_attention column-wise self-attention是什么？</p></li></ul>]]></content>
+    <content type="html"><![CDATA[<h1 id="Paper-Reading：MULTI-VIEW-CONSISTENT-IMAGE-GENERATION-MADE-EASY-2024-12"><a href="#Paper-Reading：MULTI-VIEW-CONSISTENT-IMAGE-GENERATION-MADE-EASY-2024-12" class="headerlink" title="Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12"></a>Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12</h1><p><strong>关键概括：<strong>训练了一个即插即用的adapter，能够在各种diffusion模型下，通过相机参数或者几何信息对视角进行指导，进行</strong>多视角的一致性角色生成</strong>。</p><ul><li><strong>decoupled attention mechanism</strong>：新的自注意力层来源于对原自注意力层的复制 + 平行的自注意力连接架构【原spatial_self_attention与多个其他的attention平行连接！】</li><li><strong>condition-guider</strong>：能够对相机参数和几何信息进行编码的“新的条件编码器(condition encoder)”</li></ul><p><strong>优点：</strong></p><ul><li>即插即用，尽可能保留了底模(base model)的性能</li><li>训练容易，只需要微调几个adapter层而不是整个UNet：参数量小，数据集友好</li></ul><h2 id="方法："><a href="#方法：" class="headerlink" title="方法："></a>方法：</h2><h3 id="1-pipeline"><a href="#1-pipeline" class="headerlink" title="1. pipeline:"></a>1. pipeline:</h3><p>包括一个condition-guider encoder; 和decoupled attention mechanism</p><p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223194550810.png" alt="image-20250223194550810"></p><hr><h3 id="2-condition-guider-encoder："><a href="#2-condition-guider-encoder：" class="headerlink" title="2. condition-guider&#x3D;&#x3D;&gt; encoder："></a>2. condition-guider&#x3D;&#x3D;&gt; encoder：</h3><ul><li>conditioning map：<ul><li>相机位姿：raymap</li><li>几何信息：position_map + normal_map</li></ul></li><li>encoder结构：一系列的卷积网络&#x3D;&#x3D;&gt;包括feature extraction blocks特征提取 + downsampling layers下采样调整scale</li></ul><h3 id="3-decoupled-attention-mechanism："><a href="#3-decoupled-attention-mechanism：" class="headerlink" title="3. decoupled attention mechanism："></a>3. decoupled attention mechanism：</h3><ul><li><p>自注意力与其他注意力的连接方式不再是原始的级联，如下图所示：<img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200818183.png" alt="serial attention-architecture"></p></li><li><p>并联架构，如下图所示：<img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200121201.png" alt="平行注意力架构公式"></p></li><li><p>级联注意力架构  vs  并联注意力架构，对比如下图所示：</p></li></ul><p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200148615.png" alt="级联注意力架构vs平行注意力架构"></p><ul><li>其中：<ul><li>spatial self-attention：即原始的自注意力层，Q&#x3D;K&#x3D;V&#x3D;hidden states，表示图片本身不同位置的关注度；</li><li><strong>multi-view attention</strong>：较为复杂，是多视图的实现关键！<img src="/../imgs%5CPaper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy%5Cimage-20250223202102134.png" alt="image-20250223202102134"></li><li>image cross-attention：Q &#x3D; hidden states, K&#x3D;V&#x3D;来自冻结UNet对参考输入图提取得中间表示，即把冻结的平行UNet【被叫做UNet Encoder】作为了一种特征提取器，提取低级语义的特征和细粒度的细节；</li></ul></li></ul><h3 id="训练："><a href="#训练：" class="headerlink" title="训练："></a>训练：</h3><ul><li><p>数据集：Objaverse dataset</p></li><li><p>randomly zero out the features of the reference image to drop image conditions, enabling classifier-free guidance at inference：解释：对于CFG的训练策略，是在训练过程中按照比例（如0.1）随机丢弃<strong>条件信息</strong>，这里的“条件信息”一般是额外的(<strong>cross attn的K、V来源？</strong>)指导信息，比如文生图中的文本(text embedding)，这里丢弃的是<strong>参考图像特征</strong></p></li></ul><h3 id="待解决："><a href="#待解决：" class="headerlink" title="待解决："></a>待解决：</h3><ul><li><p>shift the noise schedule towards high noise levels</p></li><li><p>shift the log signal-to-noise ratio by log(n), where n is the number of generated views.</p></li><li><p><strong>multi-view attention</strong>部分没有细致的研究，row-wise self_attention column-wise self-attention是什么？</p></li></ul><h3 id="测试实例："><a href="#测试实例：" class="headerlink" title="测试实例："></a>测试实例：</h3><p>输入、输出&#x3D;768分辨率</p><p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image.webp" alt="预处理后的输入图"></p><p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-1740315153443-3.webp" alt="6视图-1"></p><p>![img](..&#x2F;imgs\Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy\image (5).webp)</p><p>![image (2)](E:\Wehcat_File\WeChat Files\wxid_aeawvjq4jnms22\FileStorage\File\2024-11\HDR-DataSample(2)\HDR-DataSample\ic_前背景模型\image (1).webp)</p><p>![image (3)](..&#x2F;imgs\Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy\image (3).webp)![image (4)](..&#x2F;imgs\Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy\image (4).webp)</p><p>![image (1)](..&#x2F;imgs\Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy\image (1).webp)</p>]]></content>
     
     
     <categories>
@@ -24,9 +24,9 @@
       
       <tag>text-to-img</tag>
       
-      <tag>论文阅读</tag>
-      
       <tag>multi-view</tag>
+      
+      <tag>论文阅读</tag>
       
     </tags>
     
@@ -111,15 +111,15 @@
     
     <tags>
       
-      <tag>attention</tag>
-      
       <tag>diffusion</tag>
       
       <tag>text-to-img</tag>
       
-      <tag>personalization</tag>
-      
       <tag>论文阅读</tag>
+      
+      <tag>attention</tag>
+      
+      <tag>personalization</tag>
       
     </tags>
     
@@ -179,15 +179,15 @@
     
     <tags>
       
-      <tag>attention</tag>
-      
       <tag>diffusion</tag>
       
       <tag>text-to-img</tag>
       
-      <tag>personalization</tag>
-      
       <tag>论文阅读</tag>
+      
+      <tag>attention</tag>
+      
+      <tag>personalization</tag>
       
     </tags>
     
