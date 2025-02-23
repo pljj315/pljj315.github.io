@@ -35,7 +35,7 @@ category: paper_reading
 - IP-Adapter：提取服装高级语义**【代码中并没有训练？】**
 - GarmentNet：基于UNet的特征编码器，提取服装的低级特征，直接使用冻结的SDXL-base
 
-![IDM-VTON模型整体框架](D:\github_io\source\imgs\Paper-Reading_IDM-Virtual-Try-on\image-20250222211416822.png)
+![IDM-VTON模型整体框架](../imgs/Paper-Reading_IDM-Virtual-Try-on/image-20250222211416822.png)
 
 #### 1. TryonNet 详解
 
@@ -65,7 +65,7 @@ unet.config.in_channels = 13  # update config
 
 使用IP-Adapter对服装图像进行编码，使用冻结参数的CLIP图像编码器（即 OpenCLIP ViT-H/14）来提取特征。论文说IP-Adapter【包括特征投影层（feature projection layers）和交叉注意层（cross-attention layers）】是可训练的，*但代码里并没有训练*，社区的issues也提到了不训练可能会更好：ipa可能会影响到衣服颜色准确度*。 
 
-![原版IP-Adapter论文图片](D:\github_io\source\imgs\Paper-Reading_IDM-Virtual-Try-on\image-20250222213603226.png)
+![原版IP-Adapter论文图片](../imgs/Paper-Reading_IDM-Virtual-Try-on/image-20250222213603226.png)
 
 #### 3. GarmentNet 详解
 

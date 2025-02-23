@@ -34,7 +34,7 @@ Key & Value: text_embedding(来自text-encoder)
 
 Q 与 K 的点积意义：表示当前空间位置下的 Q_ij 与 K 的语义相似性，即权重，用来后续与 V 加权。由此，在给定文本（K / V ）下，Q的能够决定图像内容的“空间位置”，也就是控制了图像的“外观”！这是文章着重研究 Query 的原因。
 
-![cross-attention](../imgs/paper-reading/image-20250108160404745.png "cross-attention")
+![cross-attention](../imgs/Paper-Reading_Nested-Attention/image-20250108160404745.png "cross-attention")
 
 ### per-query attention Values
 
@@ -52,7 +52,7 @@ Value: text_embedding(来自text-encoder)，由于 Value由不同的token对应�
 
 其中公式1就是上文的“per-query attention Values”的实现方式了。简单来说，就是对special token（s*）在不同的空间位置（i,j）下的q_ij，单独预测value_ij，这样得到的value_ij便具有了更局部的、细粒度的语义信息。但不是所有的text token都是用这个机制，只有要被个性化的special token会用到，这种注意力机制就是nested attention mechanism。
 
-![公式1/2/3](../imgs/paper-reading/image-20250108165121686.png "公式1/2/3")
+![公式1/2/3](../imgs/Paper-Reading_Nested-Attention/image-20250108165121686.png "公式1/2/3")
 
 > 注意，Key 在公式1和3中的区别！(从左到右分别：公式1/2/3)
 > 文中还提到了对“per-query attention Values”的正则化实验技巧，不具体介绍。
@@ -71,10 +71,10 @@ nested attention layers[ linear layers ]得到：nested keys、nested values；
 >
 > clip image features = CLIP 's last layer before pooling
 
-![论文架构](../imgs/paper-reading/image-20250108172150828.png "论文架构")
+![论文架构](../imgs/Paper-Reading_Nested-Attention/image-20250108172150828.png )
 
 ## 4. 对“Q-Former learned queries”的验证：
 
 从生成过程中的Query中取3个不同空间位置的q_ij，与nested keys进行点积运算得到attention map'，可以观察到总能有1-2个nested token与q_ij最相关；进一步将q_ij、nested keys、nested values按照公式1进行运算，得到Q-Former learned queries，与输入脸部图像的clip image features 进行点积运算得到attention map, 能直观的观察到Q-Former learned queries的作用，即生成的细粒度特征在输入图中的来源相关性。
 
-![可视化验证](../imgs/paper-reading/image-20250108174006292.png "可视化验证")
+![可视化验证](../imgs/Paper-Reading_Nested-Attention/image-20250108174006292.png "可视化验证")
