@@ -89,10 +89,12 @@ index_img: ../imgs/roy.jpg
 
 ![6视图-1](../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-1740315153443-3.webp)
 
-![img](../imgs\Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy\image (5).webp)
+![img](../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image (5).webp)
 
-![image (2)](E:\Wehcat_File\WeChat Files\wxid_aeawvjq4jnms22\FileStorage\File\2024-11\HDR-DataSample(2)\HDR-DataSample\ic_前背景模型\image (1).webp)
 
-![image (3)](../imgs\Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy\image (3).webp)![image (4)](../imgs\Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy\image (4).webp)
 
-![image (1)](../imgs\Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy\image (1).webp)
+![image (3)](../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image (3).webp)
+
+![image (4)](../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image (4).webp)
+
+![image (1)](../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image (1).webp)
