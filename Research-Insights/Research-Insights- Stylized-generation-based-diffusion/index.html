@@ -1,0 +1,837 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/imgs/img/OIP.jpg">
+  <link rel="icon" href="/imgs/img/OIP.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="pljj315">
+  <meta name="keywords" content="计算机视觉 视觉大模型 研究生生活">
+  
+    <meta name="description" content="Stylized generation（Based-Diffusion）基于扩散模型的风格化生成面试时被问到关于风格化生成的发展路线，一下子紧张只说出了2个工作，但其实Diffusion发展至今已经有很多这方面的工作了。现在来做个总结，梳理一下风格迁移&#x2F;风格化生成的发展路线，加深一下理解。  本文前提：只考虑由图像描述的风格提示，即风格是由一张具由显著风格的图像来进行控制的，本文称之为”">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Reserch-Insights_Stylized-generation-based-diffusion">
+<meta property="og:url" content="https://pljj315.github.io/Research-Insights/Research-Insights-%20Stylized-generation-based-diffusion/index.html">
+<meta property="og:site_name" content="JH_BLOG">
+<meta property="og:description" content="Stylized generation（Based-Diffusion）基于扩散模型的风格化生成面试时被问到关于风格化生成的发展路线，一下子紧张只说出了2个工作，但其实Diffusion发展至今已经有很多这方面的工作了。现在来做个总结，梳理一下风格迁移&#x2F;风格化生成的发展路线，加深一下理解。  本文前提：只考虑由图像描述的风格提示，即风格是由一张具由显著风格的图像来进行控制的，本文称之为”">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pljj315.github.io/imgs/Research-Insights_Stylized-generation-based-diffusion/image-20250227153104659.png">
+<meta property="article:published_time" content="2025-02-27T05:42:30.000Z">
+<meta property="article:modified_time" content="2025-02-28T02:28:02.727Z">
+<meta property="article:author" content="pljj315">
+<meta property="article:tag" content="diffusion">
+<meta property="article:tag" content="text-to-img">
+<meta property="article:tag" content="style-transfer">
+<meta property="article:tag" content="stylized-generation">
+<meta property="article:tag" content="img-to-img">
+<meta property="article:tag" content="大模型">
+<meta property="article:tag" content="风格化生成">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pljj315.github.io/imgs/Research-Insights_Stylized-generation-based-diffusion/image-20250227153104659.png">
+  
+  
+  
+  <title>Reserch-Insights_Stylized-generation-based-diffusion -&gt; JH_BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"pljj315.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":30,"cursorChar":":","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"❡"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/imgs/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>pljj315&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/imgs/img/default_roy.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Reserch-Insights_Stylized-generation-based-diffusion"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        pljj315
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-27 13:42" pubdate>
+          2025年2月27日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          16 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Reserch-Insights_Stylized-generation-based-diffusion</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Stylized-generation（Based-Diffusion）基于扩散模型的风格化生成"><a href="#Stylized-generation（Based-Diffusion）基于扩散模型的风格化生成" class="headerlink" title="Stylized generation（Based-Diffusion）基于扩散模型的风格化生成"></a>Stylized generation（Based-Diffusion）基于扩散模型的风格化生成</h1><p>面试时被问到关于风格化生成的发展路线，一下子紧张只说出了2个工作，但其实Diffusion发展至今已经有很多这方面的工作了。现在来做个总结，梳理一下风格迁移&#x2F;风格化生成的发展路线，加深一下理解。</p>
+<blockquote>
+<p>本文前提：只考虑由图像描述的风格提示，即风格是由一张具由显著风格的图像来进行控制的，本文称之为”风格参考图（reference style image）” + 本文只考虑图片生成，视频风格化不考虑</p>
+<p>由于风格参考图以图像形式，不仅包含了风格信息，也包含了内容信息，因此经常会带来“内容泄露”：会把图片内容误认为是风格的一部分；针对此需要考虑如何将风格参考图中的“风格”与“内容”解耦。</p>
+</blockquote>
+<p><strong>刚好有篇style-transfer的纯论文梳理的工作</strong>：<a target="_blank" rel="noopener" href="https://github.com/Westlake-AGI-Lab/Awesome-Style-Transfer-with-Diffusion-Models">Awesome-Style-Transfer-with-Diffusion-Models论文总结</a> ：包括了图像的风格迁移和视频的风格迁移，其中图像的风格迁移包括了文本驱动的和图像驱动的，细分又按照技术路线进行了分类。在此基础上，我根据自己的理解和行文逻辑进行了下文的梳理，会把论文的关键技术要素概括出来。</p>
+<ol>
+<li><p>按照生成内容的输入模态可以分为：</p>
+<ul>
+<li>文本驱动的</li>
+<li>图像驱动的（较少、较难）</li>
+</ul>
+</li>
+<li><p>按照技术路线分类：</p>
+<ul>
+<li>基于编码器encoder的：对风格特征进行提取并通过交叉注意力注入</li>
+<li>基于反演Invertion的：较早起研究，效果一般，后文不介绍</li>
+<li>基于注意力attention操作的：shared-attention、swap-attention</li>
+</ul>
+</li>
+<li><p>按照每个风格的需求数据量分类：</p>
+<ul>
+<li>zero-shot</li>
+<li>few-shot：风格LoRA TI  Dreamdooth——&gt; 风格LoRA还是最稳定的，但是如何减少风格集合带来的内容泄露也是一个可以优化的点</li>
+</ul>
+</li>
+</ol>
+<p>正文：</p>
+<h2 id="基于编码器encoder："><a href="#基于编码器encoder：" class="headerlink" title="基于编码器encoder："></a>基于编码器encoder：</h2><ol>
+<li><p><strong>IP-Adapter-2023.8:</strong></p>
+<ul>
+<li>分类：文本驱动的+图像驱动的、基于编码器encoder的、zero-shot</li>
+<li>总结：交叉注意力的方式注入风格参考图片中的特征，但特征中的风格与内容无法进行解耦——内容泄露+无法稳定的风格化生成；且对每一张参考图片需要手动调节scale</li>
+</ul>
+</li>
+<li><p><strong>DEADiff: An Efficient Stylization Diffusion Model with Disentangled Representations- CVPR 2024</strong></p>
+<ul>
+<li>分类：文本驱动的、基于编码器encoder的、zero-shot</li>
+<li>总结：通过对Q-former的训练，实现用Q-former对风格参考图片的内容与风格特征解耦 + 交叉注意力方式注入风格特征；</li>
+<li>缺点：<strong>风格是无穷多样的，经过有限的风格对训练数据训练的Q-former没办法真正的全面的学到风格特征提取；这也是一切用风格对pair训练数据进行风格解耦训练的方法的统一缺点</strong></li>
+<li><img src="/../imgs/Research-Insights_Stylized-generation-based-diffusion/image-20250227154122749.png" srcset="/imgs/img/loading.gif" lazyload alt="DEADiff-Q-former trained"></li>
+</ul>
+</li>
+<li><p><strong>InstantStyle: Free Lunch towards Style-Preserving in Text-to-Image Generation-2024.4</strong></p>
+<ul>
+<li><p>分类：文本驱动的、基于编码器encoder的、zero-shot</p>
+</li>
+<li><p>总结：简单 又巧妙…</p>
+<ul>
+<li><strong>将风格参考图片的内容与风格解耦：CLIP-image-encoder对风格参考图片提取图片特征，CLIP-text-encoder对风格参考图片的内容描述提取内容特征，两个特征相减！【假设：认为在CLIP文本对齐的性质具由文图特征空间是同一个特征空间】</strong></li>
+<li>对Unet分层研究：发现了特定层对风格的反应显著，命名为：layout block和style block；风格参考图的风格特征只注入这两个block【注入方式为IP-Adapter】</li>
+</ul>
+</li>
+<li><p><strong>InstantStyle-Plus: Free Lunch towards Style-Preserving in Text-to-Image Generation-2024.6</strong> </p>
+<ul>
+<li>分类：<strong>图像驱动的</strong></li>
+<li>用了各种辅助模块进行内容的保留，也就是内容参考图像&#x3D;&#x3D;&gt;图像驱动，包括ipadapter、tile_controlnet; 风格上额外引入风格鉴别器；</li>
+</ul>
+<p><img src="/../imgs/Research-Insights_Stylized-generation-based-diffusion/image-20250227200225157.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250227200225157"></p>
+</li>
+<li><p><strong>CSGO:  CONTENT-STYLE COMPOSITION IN TEXT-TO IMAGE GENERATION</strong>  和instant style同一个团队</p>
+<ul>
+<li>分类：<strong>图像驱动的</strong>，基于编码器encoder的</li>
+<li>总结：分别训练了针对内容的和针对风格的特征投影+交叉注意力；</li>
+<li>缺点：利用了有限的风格内容pair对训练集，而风格是无穷的，是一切用风格对pair训练数据进行风格解耦训练的方法的统一缺点</li>
+<li><img src="/../imgs/Research-Insights_Stylized-generation-based-diffusion/image-20250227205948912.png" srcset="/imgs/img/loading.gif" lazyload alt="CSGO"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="基于注意力attention操作的"><a href="#基于注意力attention操作的" class="headerlink" title="基于注意力attention操作的"></a>基于注意力attention操作的</h2><ol>
+<li><p><strong>Style Aligned Image Generation via Shared Attention</strong>  -CVPR 2024  </p>
+<ul>
+<li><p>分类：文本驱动的、基于注意力attention的、zero-shot——&gt;<em>实际本文并不具有”风格参考图片“，但结合invertion可以将第一张生成的图片理解为风格参考图片</em>，除了原repo，<a target="_blank" rel="noopener" href="https://github.com/AstitvaSri/Control-Style-Aligned-Generation.git">github上有人对controlnlet的invertion做出了实现</a></p>
+</li>
+<li><p>总结：**共享自注意力的思路很巧妙！！！midjourney的ref功能也许与这里相同？**可以利用生成过程中的注意力，迁移&#x2F;共享给后续的生成过程，以得到相似内容&#x2F;风格——多头注意力</p>
+<ul>
+<li><p>sharing attention layers across the generated images【self-attention】 </p>
+</li>
+<li><p>Adaptive Instance Normalization &#x3D; AdaIN :自适应实例归一化：风格迁移中常用的技术，通过调整内容图像的均值和标准差来匹配风格参考图像的均值和标准差，使得内容图像适应风格参考图像的风格分布【在传统风格迁移任务中，认为图片的均值、标准差在某程度上代表了抽象意义上的“风格”】</p>
+</li>
+<li><p>代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">adain</span>(<span class="hljs-params">feat: T</span>) -&gt; T:<br>    feat_mean, feat_std = calc_mean_std(feat)<br>    <span class="hljs-comment"># 计算风格参考图的均值和方差</span><br>    feat_style_mean = expand_first(feat_mean) <span class="hljs-comment"># 抽取batch中索引为0的图片并扩展维度</span><br>    feat_style_std = expand_first(feat_std)<br>    <span class="hljs-comment"># 实例归一化</span><br>    feat = (feat - feat_mean) / feat_std<br>    feat = feat * feat_style_std + feat_style_mean<br>    <span class="hljs-keyword">return</span> feat<br>    <br><span class="hljs-keyword">def</span> <span class="hljs-title function_">shared_call</span>(<span class="hljs-params">  self, attn: attention_processor.Attention,  </span><br><span class="hljs-params">				  hidden_states, encoder_hidden_states=<span class="hljs-literal">None</span>,  attention_mask=<span class="hljs-literal">None</span>,   **kwargs</span>):<br>    <span class="hljs-keyword">if</span> <span class="hljs-variable language_">self</span>.adain_queries:   <span class="hljs-comment"># AdaIN 操作</span><br>        query = adain(query)<br>    <span class="hljs-keyword">if</span> <span class="hljs-variable language_">self</span>.adain_keys:<br>        key = adain(key)<br>    <span class="hljs-keyword">if</span> <span class="hljs-variable language_">self</span>.adain_values:<br>        value = adain(value)<br>    <span class="hljs-keyword">if</span> <span class="hljs-variable language_">self</span>.share_attention:<br>    	<span class="hljs-comment"># 与batch[0]==风格参考图片特征，进行拼接</span><br>        key = concat_first(key, -<span class="hljs-number">2</span>, scale=<span class="hljs-variable language_">self</span>.shared_score_scale) <span class="hljs-comment"># # [bs, heads, query_length * 2 , d_k]</span><br>        value = concat_first(value, -<span class="hljs-number">2</span>)                            <span class="hljs-comment"># # [bs, heads, query_length * 2 , d_k]</span><br>        <span class="hljs-comment"># 计算注意力</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-variable language_">self</span>.shared_score_shift != <span class="hljs-number">0</span>:<br>            hidden_states = <span class="hljs-variable language_">self</span>.shifted_scaled_dot_product_attention(attn, query, key, value,) <span class="hljs-comment"># [bs, heads, query_length , d_k]</span><br>        <span class="hljs-keyword">else</span>:<br>            hidden_states = nnf.scaled_dot_product_attention(<br>                query, key, value, attn_mask=attention_mask, dropout_p=<span class="hljs-number">0.0</span>, is_causal=<span class="hljs-literal">False</span><br>            )<br>    <span class="hljs-keyword">else</span>:<br>        hidden_states = nnf.scaled_dot_product_attention(<br>            query, key, value, attn_mask=attention_mask, dropout_p=<span class="hljs-number">0.0</span>, is_causal=<span class="hljs-literal">False</span><br>        )<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><img src="/../imgs/Research-Insights_Stylized-generation-based-diffusion/image-20250227162410941.png" srcset="/imgs/img/loading.gif" lazyload alt="shared-attention with Adain"></p>
+</li>
+</ul>
+</li>
+<li><p><strong>Style Injection in Diffusion: A Training-free Approach for Adapting Large-scale Diffusion Models for Style Transfer</strong>- CVPR 2023.12 Highlight</p>
+<ul>
+<li>分类：<strong>图像驱动的</strong>、基于注意力attention的、zero-shot、基于invertion的</li>
+<li>总结：利用了invertion反演，也是在self-attention层进行操作：把风格的hidden_feature替换K&#x2F;V，把内容的hidden_feature与原始hidden_feature加权作为Q；<img src="/../imgs/Research-Insights_Stylized-generation-based-diffusion/image-20250227202947918.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250227202947918"></li>
+</ul>
+</li>
+</ol>
+<p>总结：</p>
+<ul>
+<li><p>现阶段的很多工作还是文本驱动的；</p>
+</li>
+<li><p>图片驱动的对于内容、风格解耦与组合要求更复杂，目前实现要么效果不好、要么十分复杂；</p>
+</li>
+<li><p>few-shot的风格LoRA算是较为稳定的实现方式，但存在训练集的内容泄露问题；</p>
+</li>
+</ul>
+<p><img src="/../imgs/Research-Insights_Stylized-generation-based-diffusion/image-20250227204852267.png" srcset="/imgs/img/loading.gif" lazyload alt="多种风格化生成对比-文本驱动"></p>
+<h1 id="补充：FLUX-1-Redux迁移—Redux-pro重风格化restyling"><a href="#补充：FLUX-1-Redux迁移—Redux-pro重风格化restyling" class="headerlink" title="补充：FLUX.1 Redux迁移—Redux_pro重风格化restyling"></a>补充：FLUX.1 Redux迁移—Redux_pro重风格化restyling</h1><p>flux.1模型以及[flux.1 tools模型介绍](<a target="_blank" rel="noopener" href="https://blackforestlabs.ai/flux-1-tools/?ref=blog.comfy.org">Introducing FLUX.1 Tools - Black Forest Labs</a>)：</p>
+<ul>
+<li><strong>flux.1 Fill : Inpaint &#x2F; outpaint ：图像擦除、插入、 编辑与扩充</strong></li>
+<li><strong>flux.1 Redux : An adapter that allows mixing and recreating input images and text prompts. 输入图像的Variation、restyling</strong></li>
+<li>flux.1 Depth</li>
+<li>flux.1 Canny</li>
+</ul>
+<p>综合应用：Redux+fill</p>
+<ul>
+<li>FLUX.1 Redux 提取图A主体的风格特征。</li>
+<li>将图A与图B拼接，作为 FLUX.1 Fill 的重绘底图。</li>
+<li>FLUX.1 Fill 在局部重绘时，将 FLUX.1 Redux 提供的图A特征条件与底图的图A特征对齐，最终生成结果高度还原图A的主体特征。</li>
+</ul>
+<p><img src="https://picx.zhimg.com/70/v2-00d0d772afd375663701a356926b5d2f_1440w.image?source=172ae18b&biz_tag=Post" srcset="/imgs/img/loading.gif" lazyload alt="FLUX.1 超高还原风格迁移：将图像特征100%精准复刻到新场景的终极工作流"></p>
+<p>综合应用：PuLID-FLUX-v0.9：换脸、人脸一致性</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Research-Insights/" class="category-chain-item">Research Insights</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/diffusion/" class="print-no-link">#diffusion</a>
+      
+        <a href="/tags/text-to-img/" class="print-no-link">#text-to-img</a>
+      
+        <a href="/tags/style-transfer/" class="print-no-link">#style-transfer</a>
+      
+        <a href="/tags/stylized-generation/" class="print-no-link">#stylized-generation</a>
+      
+        <a href="/tags/img-to-img/" class="print-no-link">#img-to-img</a>
+      
+        <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" class="print-no-link">#大模型</a>
+      
+        <a href="/tags/%E9%A3%8E%E6%A0%BC%E5%8C%96%E7%94%9F%E6%88%90/" class="print-no-link">#风格化生成</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Reserch-Insights_Stylized-generation-based-diffusion</div>
+      <div>https://pljj315.github.io/Research-Insights/Research-Insights- Stylized-generation-based-diffusion/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>pljj315</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月27日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/paper-reading/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/" title="Paper-Reading：MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12">
+                        <span class="hidden-mobile">Paper-Reading：MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/gitalk/1.8.0/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"Ov23lipwdnWHzn8s0j4d","clientSecret":"794682cc1d531e3af88ba187be170008cdb87097","repo":"pljj315.github.io","owner":"pljj315","admin":["pljj315"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
+          {
+            id: '832b521e8c08ba9dd58dfced3b5beadf'
+          }
+        )
+        var gitalk = new Gitalk(options);
+        gitalk.render('gitalk-container');
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-love"></i> <a href="https://github.com/pljj315" target="_blank" rel="nofollow noopener"><span>github</span></a> <i class="iconfont icon-love"></i> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
