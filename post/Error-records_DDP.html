@@ -19,27 +19,24 @@
   <meta name="author" content="pljj315">
   <meta name="keywords" content="计算机视觉 视觉大模型 研究生生活">
   
-    <meta name="description" content="Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12关键概括：训练了一个即插即用的adapter，能够在各种diffusion模型下，通过相机参数或者几何信息对视角进行指导，进行多视角的一致性角色生成。  decoupled attention mechanism：新的自注意力层来源于对原自注意力层的复制">
+    <meta name="description" content="Linear实现MLP ：输入数据形式：形状为[N, *, in_features]的tensor，N为batch size，这个参数是PyTorch各个数据操作中都具备的，相似的，输出数据形式为[N, *, out_features]  n_features：每个输入样本的大小，对应MLP中当前层的输入节点数&#x2F;特征维度  out_features：每个输出样本的大小，对应MLP中当前">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Paper Reading:MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12">
-<meta property="og:url" content="https://pljj315.github.io/post/Paper-Reading_MV-Adapter%E5%A4%9A%E8%A7%86%E8%A7%92%E7%94%9F%E6%88%90.html">
+<meta property="og:title" content="Error-records:DDP">
+<meta property="og:url" content="https://pljj315.github.io/post/Error-records_DDP.html">
 <meta property="og:site_name" content="JH_BLOG">
-<meta property="og:description" content="Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12关键概括：训练了一个即插即用的adapter，能够在各种diffusion模型下，通过相机参数或者几何信息对视角进行指导，进行多视角的一致性角色生成。  decoupled attention mechanism：新的自注意力层来源于对原自注意力层的复制">
+<meta property="og:description" content="Linear实现MLP ：输入数据形式：形状为[N, *, in_features]的tensor，N为batch size，这个参数是PyTorch各个数据操作中都具备的，相似的，输出数据形式为[N, *, out_features]  n_features：每个输入样本的大小，对应MLP中当前层的输入节点数&#x2F;特征维度  out_features：每个输出样本的大小，对应MLP中当前">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://pljj315.github.io/imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223194550810.png">
-<meta property="article:published_time" content="2025-02-23T09:58:33.000Z">
-<meta property="article:modified_time" content="2025-04-18T08:00:46.788Z">
+<meta property="og:image" content="https://pljj315.github.io/imgs/Research-Insights_Stylized-generation-based-diffusion/image-20250227153104659.png">
+<meta property="article:published_time" content="2025-03-17T05:42:30.000Z">
+<meta property="article:modified_time" content="2025-04-18T08:24:25.042Z">
 <meta property="article:author" content="pljj315">
-<meta property="article:tag" content="diffusion">
-<meta property="article:tag" content="text-to-img">
-<meta property="article:tag" content="论文阅读">
-<meta property="article:tag" content="multi-view">
+<meta property="article:tag" content="DDP分布式训练">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pljj315.github.io/imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223194550810.png">
+<meta name="twitter:image" content="https://pljj315.github.io/imgs/Research-Insights_Stylized-generation-based-diffusion/image-20250227153104659.png">
   
   
   
-  <title>Paper Reading:MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12 -&gt; JH_BLOG</title>
+  <title>Error-records:DDP -&gt; JH_BLOG</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -216,7 +213,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Paper Reading:MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12"></span>
+            <span id="subtitle" data-typed-text="Error-records:DDP"></span>
           
         </div>
 
@@ -232,8 +229,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-02-23 17:58" pubdate>
-          2025年2月23日 下午
+        <time datetime="2025-03-17 13:42" pubdate>
+          2025年3月17日 下午
         </time>
       </span>
     
@@ -244,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          610 字
+          783 字
         
       </span>
     
@@ -255,7 +252,7 @@
         
         
         
-          6 分钟
+          7 分钟
         
       </span>
     
@@ -301,70 +298,75 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Paper Reading:MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12</h1>
+            <h1 id="seo-header">Error-records:DDP</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="Paper-Reading：MULTI-VIEW-CONSISTENT-IMAGE-GENERATION-MADE-EASY-2024-12"><a href="#Paper-Reading：MULTI-VIEW-CONSISTENT-IMAGE-GENERATION-MADE-EASY-2024-12" class="headerlink" title="Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12"></a>Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12</h1><p><strong>关键概括：<strong>训练了一个即插即用的adapter，能够在各种diffusion模型下，通过相机参数或者几何信息对视角进行指导，进行</strong>多视角的一致性角色生成</strong>。</p>
+                <ol>
+<li><p>Linear实现MLP ：输入数据形式：形状为[N, *, in_features]的tensor，N为batch size，这个参数是PyTorch各个数据操作中都具备的，相似的，输出数据形式为[N, *, out_features]</p>
 <ul>
-<li><strong>decoupled attention mechanism</strong>：新的自注意力层来源于对原自注意力层的复制 + 平行的自注意力连接架构【原spatial_self_attention与多个其他的attention平行连接！】</li>
-<li><strong>condition-guider</strong>：能够对相机参数和几何信息进行编码的“新的条件编码器(condition encoder)”</li>
+<li><p>n_features：每个输入样本的大小，对应MLP中当前层的输入节点数&#x2F;特征维度</p>
+</li>
+<li><p>out_features：每个输出样本的大小，对应MLP中当前层的输出节点数&#x2F;特征维度</p>
+</li>
 </ul>
-<p><strong>优点：</strong></p>
-<ul>
-<li>即插即用，尽可能保留了底模(base model)的性能</li>
-<li>训练容易，只需要微调几个adapter层而不是整个UNet：参数量小，数据集友好</li>
-</ul>
-<h2 id="方法："><a href="#方法：" class="headerlink" title="方法："></a>方法：</h2><h3 id="1-pipeline"><a href="#1-pipeline" class="headerlink" title="1. pipeline:"></a>1. pipeline:</h3><p>包括一个condition-guider encoder; 和decoupled attention mechanism</p>
-<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223194550810.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250223194550810"></p>
+</li>
+<li><p>验证del 如何删？set_ipadapter的原因？</p>
+</li>
+<li><p>9cinpainting训练ipa——minus_clip</p>
+</li>
+<li><p>8c 训练ipa——minus_clip</p>
+</li>
+</ol>
 <hr>
-<h3 id="2-condition-guider-encoder："><a href="#2-condition-guider-encoder：" class="headerlink" title="2. condition-guider&#x3D;&#x3D;&gt; encoder："></a>2. condition-guider&#x3D;&#x3D;&gt; encoder：</h3><ul>
-<li>conditioning map：<ul>
-<li>相机位姿：raymap</li>
-<li>几何信息：position_map + normal_map</li>
-</ul>
+<h2 id="分布式训练过程报错记录："><a href="#分布式训练过程报错记录：" class="headerlink" title="分布式训练过程报错记录："></a>分布式训练过程报错记录：</h2><h3 id="1-多卡训练发生NCCL错误，单卡不会发生："><a href="#1-多卡训练发生NCCL错误，单卡不会发生：" class="headerlink" title="1. 多卡训练发生NCCL错误，单卡不会发生："></a>1. 多卡训练发生NCCL错误，单卡不会发生：</h3><ul>
+<li><p>更新分布式训练相关库acelerate deepspeed xformers transformers；</p>
 </li>
-<li>encoder结构：一系列的卷积网络&#x3D;&#x3D;&gt;包括feature extraction blocks特征提取 + downsampling layers下采样调整scale</li>
-</ul>
-<h3 id="3-decoupled-attention-mechanism："><a href="#3-decoupled-attention-mechanism：" class="headerlink" title="3. decoupled attention mechanism："></a>3. decoupled attention mechanism：</h3><ul>
-<li><p>自注意力与其他注意力的连接方式不再是原始的级联，如下图所示：<img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200818183.png" srcset="/imgs/img/loading.gif" lazyload alt="serial attention-architecture"></p>
+<li><p>进程通信方式设置：</p>
+<p><code>依然使用P2P通信： export NCCL_P2P_LEVEL=NVL </code></p>
+<p><code>直接取消P2P通信：export NCCL_IB_DISABLE=1 &amp;&amp; export NCCL_P2P_DISABLE=1</code></p>
 </li>
-<li><p>并联架构，如下图所示：<img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200121201.png" srcset="/imgs/img/loading.gif" lazyload alt="平行注意力架构公式"></p>
+<li><p>dataloader中设置 <code>pin_memory=False</code>;  loss取消<code>gather</code>操作并且loss的打印和写入log时要<code>.detach().item()</code>，</p>
 </li>
-<li><p>级联注意力架构  vs  并联注意力架构，对比如下图所示：</p>
+<li><p><code>accelerator.sync_gradients, accelerator.is_local_main_process, accelerator.is_main_process</code>的使用和检查</p>
 </li>
-</ul>
-<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200148615.png" srcset="/imgs/img/loading.gif" lazyload alt="级联注意力架构vs平行注意力架构"></p>
+<li><p>log_validation中谨慎：</p>
 <ul>
-<li>其中：<ul>
-<li>spatial self-attention：即原始的自注意力层，Q&#x3D;K&#x3D;V&#x3D;hidden states，表示图片本身不同位置的关注度；</li>
-<li><strong>multi-view attention</strong>：较为复杂，是多视图的实现关键！<img src="/../imgs%5CPaper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy%5Cimage-20250223202102134.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250223202102134"></li>
-<li>image cross-attention：Q &#x3D; hidden states, K&#x3D;V&#x3D;来自冻结UNet对参考输入图提取得中间表示，即把冻结的平行UNet【被叫做UNet Encoder】作为了一种特征提取器，提取低级语义的特征和细粒度的细节；</li>
-</ul>
+<li><p>在log_validation后没多少个step就NCCL卡主，time.sleep()取代log_validation操作后能够正常训练：</p>
+<p>说明log_validation内有操作破坏了正常训练中的某步骤，经检查发现： log_validation中的**set_ipadapter()**设置问题导致attn_processor被重新设置，丢失权重、梯度？</p>
 </li>
 </ul>
-<h3 id="训练："><a href="#训练：" class="headerlink" title="训练："></a>训练：</h3><ul>
-<li><p>数据集：Objaverse dataset</p>
-</li>
-<li><p>randomly zero out the features of the reference image to drop image conditions, enabling classifier-free guidance at inference：解释：对于CFG的训练策略，是在训练过程中按照比例（如0.1）随机丢弃<strong>条件信息</strong>，这里的“条件信息”一般是额外的(<strong>cross attn的K、V来源？</strong>)指导信息，比如文生图中的文本(text embedding)，这里丢弃的是<strong>参考图像特征</strong></p>
 </li>
 </ul>
-<h3 id="待解决："><a href="#待解决：" class="headerlink" title="待解决："></a>待解决：</h3><ul>
-<li><p>shift the noise schedule towards high noise levels</p>
+<h3 id="2-log-validation推理出全黑图："><a href="#2-log-validation推理出全黑图：" class="headerlink" title="2. log_validation推理出全黑图："></a>2. log_validation推理出全黑图：</h3><ul>
+<li>pipe的输入不符合要求或者其他问题导致pipe的推理过程<strong>出错</strong>，但是在分布式训练过程中不一定会显示报错，所以需要单独把log_validation拿出来过一遍</li>
+<li>上述步骤依然没报错，可能是VAE的模型权重版本问题，比如inpaintPipeline的时候使用stabilityai&#x2F;stable-diffusion-xl-base-1.0的VAE会不匹配，出图全黑！还是得使用”madebyollin&#x2F;sdxl-vae-fp16-fix”</li>
+</ul>
+<h3 id="3-overflow问题："><a href="#3-overflow问题：" class="headerlink" title="3. overflow问题："></a>3. overflow问题：</h3><p>fp16改为bf16，代码中数据的.to(weight_dtype)也要修改</p>
+<h3 id="4-out-of-memory（OOM）"><a href="#4-out-of-memory（OOM）" class="headerlink" title="4. out of memory（OOM）:"></a>4. out of memory（OOM）:</h3><ul>
+<li><p>数据精度：fp32改为bf16&#x2F;fp16</p>
 </li>
-<li><p>shift the log signal-to-noise ratio by log(n), where n is the number of generated views.</p>
+<li><p>优化器：使用use_8bit_adamw</p>
 </li>
-<li><p><strong>multi-view attention</strong>部分没有细致的研究，row-wise self_attention column-wise self-attention是什么？</p>
+<li><p>训练数据批次大小：调小batchsize&#x2F;num of worker&#x2F; accumulate_step</p>
+</li>
+<li><p>增加为多卡训练：有时模型以及优化器状态以及梯度的总体参数量较大，需要更多卡</p>
+</li>
+<li><p>deepspeed的zero_stage: 1 改为2，改为3</p>
 </li>
 </ul>
-<h3 id="测试实例："><a href="#测试实例：" class="headerlink" title="测试实例："></a>测试实例：</h3><p>输入、输出&#x3D;768分辨率</p>
-<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image.webp" srcset="/imgs/img/loading.gif" lazyload alt="预处理后的输入图"></p>
-<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-1740315153443-3.webp" srcset="/imgs/img/loading.gif" lazyload alt="6视图-1"></p>
-<p>![img](..&#x2F;imgs&#x2F;Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy&#x2F;image (5).webp)</p>
-<p>![image (3)](..&#x2F;imgs&#x2F;Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy&#x2F;image (3).webp)</p>
-<p>![image (4)](..&#x2F;imgs&#x2F;Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy&#x2F;image (4).webp)</p>
-<p>![image (1)](..&#x2F;imgs&#x2F;Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy&#x2F;image (1).webp)</p>
+<h3 id="5-huggingface-load-模型："><a href="#5-huggingface-load-模型：" class="headerlink" title="5. huggingface load 模型："></a>5. huggingface load 模型：</h3><p>已经设置过环境变量<code>export HF_HOME=&quot;.../huggingface&quot;</code>，此目录下也已经保存了模型，但是load不进来:<code> from_pretrained(, local_files_only = True)</code></p>
+<h3 id="6-过拟合same-device"><a href="#6-过拟合same-device" class="headerlink" title="6. 过拟合same device:"></a>6. 过拟合same device:</h3><p>换了小数据集进行过拟合实验时，报错：NCCL WARN Duplicate GPU detected : rank 0 and rank 1 both on CUDA device 1000，发现报错位置是dataloader的prepare,检查bs ·num_processes· gradient_accumulation_steps &gt; 总训练数据大小，也就是可能只用了一张卡就load了全部的数据，改小bs· num_processes· gradient_accumulation_steps并未解决， 降低了accelerate&#x3D;&#x3D;0.25.0版本解决；</p>
+<h2 id="ssh-报错记录："><a href="#ssh-报错记录：" class="headerlink" title="ssh 报错记录："></a>ssh 报错记录：</h2><h3 id="1-vscode忽然连接不上远程服务器，一直显示Opening-Remote"><a href="#1-vscode忽然连接不上远程服务器，一直显示Opening-Remote" class="headerlink" title="1. vscode忽然连接不上远程服务器，一直显示Opening Remote"></a>1. vscode忽然连接不上远程服务器，一直显示Opening Remote</h3><ul>
+<li>进入远程主机的个人目录，删除.vscode-server，路径一般是&#x2F;home&#x2F;usrname&#x2F;.vscode-server</li>
+<li>删除本地：known_hosts和known_hosts.old，路径一般是C:\Users$(usrname).ssh</li>
+<li>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36183881/article/details/123873537">https://blog.csdn.net/qq_36183881/article/details/123873537</a></li>
+</ul>
+<h3 id="wandb"><a href="#wandb" class="headerlink" title="wandb"></a>wandb</h3><ol>
+<li>当Ctrl+C无法立即结束时, 通过<code>pkillwandb-service</code>命令快速停止wandb-service的输出</li>
+<li><a target="_blank" rel="noopener" href="https://community.wandb.ai/t/brokenpipeerror-on-ubuntu-machine/4117">BrokenPipeError on Ubuntu machine</a>  proxy或者网络中断导致：本地机器与wandb服务器通讯中断，导致wandb日志记录线程中断，导致训练中断！！！太不智能了！还是使用<strong>tensorboard</strong>吧</li>
+</ol>
 
                 
               </div>
@@ -383,7 +385,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Paper-Reading/" class="category-chain-item">Paper Reading</a>
+  <a href="/categories/Error-records/" class="category-chain-item">Error records</a>
   
   
 
@@ -398,13 +400,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/diffusion/" class="print-no-link">#diffusion</a>
-      
-        <a href="/tags/text-to-img/" class="print-no-link">#text-to-img</a>
-      
-        <a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" class="print-no-link">#论文阅读</a>
-      
-        <a href="/tags/multi-view/" class="print-no-link">#multi-view</a>
+        <a href="/tags/DDP%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83/" class="print-no-link">#DDP分布式训练</a>
       
     </div>
   
@@ -416,8 +412,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Paper Reading:MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12</div>
-      <div>https://pljj315.github.io/post/Paper-Reading_MV-Adapter多视角生成.html</div>
+      <div>Error-records:DDP</div>
+      <div>https://pljj315.github.io/post/Error-records_DDP.html</div>
     </div>
     <div class="license-meta">
       
@@ -429,7 +425,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年2月23日</div>
+          <div>2025年3月17日</div>
         </div>
       
       
@@ -461,9 +457,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/post/Research-Insights_Stylized-generation-based-diffusion.html" title="Stylized-generation-based-diffusion风格化生成">
+                      <a href="/post/Research_Insights_AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92.html" title="AutoRegressive自回归图像生成">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Stylized-generation-based-diffusion风格化生成</span>
+                        <span class="hidden-mobile">AutoRegressive自回归图像生成</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -471,8 +467,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/post/LeetCode-Highlights.html" title="算法——leetcode">
-                        <span class="hidden-mobile">算法——leetcode</span>
+                      <a href="/post/Research-Insights_Stylized-generation-based-diffusion.html" title="Stylized-generation-based-diffusion风格化生成">
+                        <span class="hidden-mobile">Stylized-generation-based-diffusion风格化生成</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -495,7 +491,7 @@
         var options = Object.assign(
           {"clientID":"Ov23lipwdnWHzn8s0j4d","clientSecret":"794682cc1d531e3af88ba187be170008cdb87097","repo":"pljj315.github.io","owner":"pljj315","admin":["pljj315"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: 'e1e4b7949e7ec687f2978429ad53890c'
+            id: '0bda9e64c6a4b2ae172601f81665549f'
           }
         )
         var gitalk = new Gitalk(options);

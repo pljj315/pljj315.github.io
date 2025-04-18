@@ -118,6 +118,31 @@
   
   
   <entry>
+    <title>Error-records:DDP</title>
+    <link href="/post/Error-records_DDP.html"/>
+    <url>/post/Error-records_DDP.html</url>
+    
+    <content type="html"><![CDATA[<ol><li><p>Linear实现MLP ：输入数据形式：形状为[N, *, in_features]的tensor，N为batch size，这个参数是PyTorch各个数据操作中都具备的，相似的，输出数据形式为[N, *, out_features]</p><ul><li><p>n_features：每个输入样本的大小，对应MLP中当前层的输入节点数&#x2F;特征维度</p></li><li><p>out_features：每个输出样本的大小，对应MLP中当前层的输出节点数&#x2F;特征维度</p></li></ul></li><li><p>验证del 如何删？set_ipadapter的原因？</p></li><li><p>9cinpainting训练ipa——minus_clip</p></li><li><p>8c 训练ipa——minus_clip</p></li></ol><hr><h2 id="分布式训练过程报错记录："><a href="#分布式训练过程报错记录：" class="headerlink" title="分布式训练过程报错记录："></a>分布式训练过程报错记录：</h2><h3 id="1-多卡训练发生NCCL错误，单卡不会发生："><a href="#1-多卡训练发生NCCL错误，单卡不会发生：" class="headerlink" title="1. 多卡训练发生NCCL错误，单卡不会发生："></a>1. 多卡训练发生NCCL错误，单卡不会发生：</h3><ul><li><p>更新分布式训练相关库acelerate deepspeed xformers transformers；</p></li><li><p>进程通信方式设置：</p><p><code>依然使用P2P通信： export NCCL_P2P_LEVEL=NVL </code></p><p><code>直接取消P2P通信：export NCCL_IB_DISABLE=1 &amp;&amp; export NCCL_P2P_DISABLE=1</code></p></li><li><p>dataloader中设置 <code>pin_memory=False</code>;  loss取消<code>gather</code>操作并且loss的打印和写入log时要<code>.detach().item()</code>，</p></li><li><p><code>accelerator.sync_gradients, accelerator.is_local_main_process, accelerator.is_main_process</code>的使用和检查</p></li><li><p>log_validation中谨慎：</p><ul><li><p>在log_validation后没多少个step就NCCL卡主，time.sleep()取代log_validation操作后能够正常训练：</p><p>说明log_validation内有操作破坏了正常训练中的某步骤，经检查发现： log_validation中的**set_ipadapter()**设置问题导致attn_processor被重新设置，丢失权重、梯度？</p></li></ul></li></ul><h3 id="2-log-validation推理出全黑图："><a href="#2-log-validation推理出全黑图：" class="headerlink" title="2. log_validation推理出全黑图："></a>2. log_validation推理出全黑图：</h3><ul><li>pipe的输入不符合要求或者其他问题导致pipe的推理过程<strong>出错</strong>，但是在分布式训练过程中不一定会显示报错，所以需要单独把log_validation拿出来过一遍</li><li>上述步骤依然没报错，可能是VAE的模型权重版本问题，比如inpaintPipeline的时候使用stabilityai&#x2F;stable-diffusion-xl-base-1.0的VAE会不匹配，出图全黑！还是得使用”madebyollin&#x2F;sdxl-vae-fp16-fix”</li></ul><h3 id="3-overflow问题："><a href="#3-overflow问题：" class="headerlink" title="3. overflow问题："></a>3. overflow问题：</h3><p>fp16改为bf16，代码中数据的.to(weight_dtype)也要修改</p><h3 id="4-out-of-memory（OOM）"><a href="#4-out-of-memory（OOM）" class="headerlink" title="4. out of memory（OOM）:"></a>4. out of memory（OOM）:</h3><ul><li><p>数据精度：fp32改为bf16&#x2F;fp16</p></li><li><p>优化器：使用use_8bit_adamw</p></li><li><p>训练数据批次大小：调小batchsize&#x2F;num of worker&#x2F; accumulate_step</p></li><li><p>增加为多卡训练：有时模型以及优化器状态以及梯度的总体参数量较大，需要更多卡</p></li><li><p>deepspeed的zero_stage: 1 改为2，改为3</p></li></ul><h3 id="5-huggingface-load-模型："><a href="#5-huggingface-load-模型：" class="headerlink" title="5. huggingface load 模型："></a>5. huggingface load 模型：</h3><p>已经设置过环境变量<code>export HF_HOME=&quot;.../huggingface&quot;</code>，此目录下也已经保存了模型，但是load不进来:<code> from_pretrained(, local_files_only = True)</code></p><h3 id="6-过拟合same-device"><a href="#6-过拟合same-device" class="headerlink" title="6. 过拟合same device:"></a>6. 过拟合same device:</h3><p>换了小数据集进行过拟合实验时，报错：NCCL WARN Duplicate GPU detected : rank 0 and rank 1 both on CUDA device 1000，发现报错位置是dataloader的prepare,检查bs ·num_processes· gradient_accumulation_steps &gt; 总训练数据大小，也就是可能只用了一张卡就load了全部的数据，改小bs· num_processes· gradient_accumulation_steps并未解决， 降低了accelerate&#x3D;&#x3D;0.25.0版本解决；</p><h2 id="ssh-报错记录："><a href="#ssh-报错记录：" class="headerlink" title="ssh 报错记录："></a>ssh 报错记录：</h2><h3 id="1-vscode忽然连接不上远程服务器，一直显示Opening-Remote"><a href="#1-vscode忽然连接不上远程服务器，一直显示Opening-Remote" class="headerlink" title="1. vscode忽然连接不上远程服务器，一直显示Opening Remote"></a>1. vscode忽然连接不上远程服务器，一直显示Opening Remote</h3><ul><li>进入远程主机的个人目录，删除.vscode-server，路径一般是&#x2F;home&#x2F;usrname&#x2F;.vscode-server</li><li>删除本地：known_hosts和known_hosts.old，路径一般是C:\Users$(usrname).ssh</li><li>原文链接：<a href="https://blog.csdn.net/qq_36183881/article/details/123873537">https://blog.csdn.net/qq_36183881/article/details/123873537</a></li></ul><h3 id="wandb"><a href="#wandb" class="headerlink" title="wandb"></a>wandb</h3><ol><li>当Ctrl+C无法立即结束时, 通过<code>pkillwandb-service</code>命令快速停止wandb-service的输出</li><li><a href="https://community.wandb.ai/t/brokenpipeerror-on-ubuntu-machine/4117">BrokenPipeError on Ubuntu machine</a>  proxy或者网络中断导致：本地机器与wandb服务器通讯中断，导致wandb日志记录线程中断，导致训练中断！！！太不智能了！还是使用<strong>tensorboard</strong>吧</li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>Error records</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>DDP分布式训练</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Stylized-generation-based-diffusion风格化生成</title>
     <link href="/post/Research-Insights_Stylized-generation-based-diffusion.html"/>
     <url>/post/Research-Insights_Stylized-generation-based-diffusion.html</url>
@@ -138,13 +163,13 @@
       
       <tag>text-to-img</tag>
       
-      <tag>style-transfer</tag>
-      
-      <tag>stylized-generation</tag>
-      
       <tag>img-to-img</tag>
       
       <tag>大模型</tag>
+      
+      <tag>style-transfer</tag>
+      
+      <tag>stylized-generation</tag>
       
       <tag>风格化生成</tag>
       
@@ -175,9 +200,9 @@
       
       <tag>text-to-img</tag>
       
-      <tag>multi-view</tag>
-      
       <tag>论文阅读</tag>
+      
+      <tag>multi-view</tag>
       
     </tags>
     
@@ -231,11 +256,44 @@
       
       <tag>text-to-img</tag>
       
+      <tag>control</tag>
+      
       <tag>img-to-img</tag>
       
       <tag>大模型</tag>
       
-      <tag>control</tag>
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Paper Reading:Nested Attention:Semantic-aware Attention Values for Concept Personalization-2025</title>
+    <link href="/post/Paper-Reading_Nested-Attention.html"/>
+    <url>/post/Paper-Reading_Nested-Attention.html</url>
+    
+    <content type="html"><![CDATA[<h1 id="Nested-Attention-Semantic-aware-Attention-Values-for-Concept-Personalization-2025"><a href="#Nested-Attention-Semantic-aware-Attention-Values-for-Concept-Personalization-2025" class="headerlink" title="Nested Attention: Semantic-aware Attention Values for Concept Personalization-2025"></a><a href="https://snap-research.github.io/NestedAttention/"><strong>Nested Attention:</strong> Semantic-aware Attention Values for Concept Personalization-2025</a></h1><p>关键概括：injects a rich and expressive image representation into the model’s existing cross-attention layers. &#x3D;&#x3D;&gt;  <strong>single textual-token</strong>、<strong>cross-attention: Nested Attention</strong>、 <strong>smaller semantic visual elements</strong>、 <strong>多个定制化概念</strong>、<strong>可以非人 数据集低需求</strong>  </p><p>personalization技术发展路线：text-embedding&#x2F;fine-tuning based——&gt;cross-image attention based——&gt;<em><strong>encoder-based（本文）</strong></em>✨</p><span id="more"></span><h2 id="1-如何理解per-query-attention-values"><a href="#1-如何理解per-query-attention-values" class="headerlink" title="1. 如何理解per-query attention values?"></a>1. 如何理解per-query attention values?</h2><h3 id="回顾cross-attention"><a href="#回顾cross-attention" class="headerlink" title="回顾cross-attention"></a>回顾cross-attention</h3><p>Query: hidden_states(来自unet中间层)</p><p>Key &amp; Value: text_embedding(来自text-encoder)</p><p>Q 与 K 的点积意义：表示当前空间位置下的 Q_ij 与 K 的语义相似性，即权重，用来后续与 V 加权。由此，在给定文本（K &#x2F; V ）下，Q的能够决定图像内容的“空间位置”，也就是控制了图像的“外观”！这是文章着重研究 Query 的原因。</p><p><img src="/../imgs/Paper-Reading_Nested-Attention/image-20250108160404745.png" alt="cross-attention" title="cross-attention"></p><h3 id="per-query-attention-Values"><a href="#per-query-attention-Values" class="headerlink" title="per-query attention Values"></a>per-query attention Values</h3><p>原文提取：per-query attention Values &#x3D; localized values that depend on the queries&#x3D;per-region values&#x3D;query-dependent values</p><p>Value: text_embedding(来自text-encoder)，由于 Value由不同的token对应的embedding组成，而一个token却要指示着图片<em>整个区域</em>的全部相关实例和相关内容，这很“粗粒度”，无法达到任务期待的“细粒度”个性化生成【value中的每一个embedding要负责整个query，任务重，容易完成的不好】。因此把任务细分：划分query，每个子query由专门的新value负责，减轻了value的任务量。即：提出了更局部的“localized Values”：能更好的关注到局部区域、细粒度的语义信息。</p><p>所谓的“per-query attention Values”具体是怎样实现的就是下面的内容了。</p><blockquote><p>注意：per-query attention Values ≠ attention map的值，Values指的是Q K V中的V。</p></blockquote><h2 id="2-如何理解nested-attention-mechanism？"><a href="#2-如何理解nested-attention-mechanism？" class="headerlink" title="2. 如何理解nested attention mechanism？"></a>2. 如何理解nested attention mechanism？</h2><p>其中公式1就是上文的“per-query attention Values”的实现方式了。简单来说，就是对special token（s*）在不同的空间位置（i,j）下的q_ij，单独预测value_ij，这样得到的value_ij便具有了更局部的、细粒度的语义信息。但不是所有的text token都是用这个机制，只有要被个性化的special token会用到，这种注意力机制就是nested attention mechanism。</p><p><img src="/../imgs/Paper-Reading_Nested-Attention/image-20250108165121686.png" alt="公式1&#x2F;2&#x2F;3" title="公式1&#x2F;2&#x2F;3"></p><blockquote><p>注意，Key 在公式1和3中的区别！(从左到右分别：公式1&#x2F;2&#x2F;3)<br>文中还提到了对“per-query attention Values”的正则化实验技巧，不具体介绍。</p></blockquote><h2 id="3-q-ij、nested-keys、nested-values从哪来？——可训练模块"><a href="#3-q-ij、nested-keys、nested-values从哪来？——可训练模块" class="headerlink" title="3. q_ij、nested keys、nested values从哪来？——可训练模块"></a>3. q_ij、nested keys、nested values从哪来？——可训练模块</h2><p>Q-Former得到：”Q-Former learned queries“，即q_ij；</p><p>nested attention layers[ linear layers ]得到：nested keys、nested values；</p><p>上述两个模块组成了文章的可训练部分，得到的q_ij、nested keys、nested values三者构成公式1的输入。</p><blockquote><p>注意：per-query attention Values ≠ nested values, 二者关系：nested values 和 nested keys 经过公式1 得到per-query attention Values。</p><p>clip image features &#x3D; CLIP ‘s last layer before pooling</p></blockquote><p><img src="/../imgs/Paper-Reading_Nested-Attention/image-20250108172150828.png" alt="论文架构"></p><h2 id="4-对“Q-Former-learned-queries”的验证："><a href="#4-对“Q-Former-learned-queries”的验证：" class="headerlink" title="4. 对“Q-Former learned queries”的验证："></a>4. 对“Q-Former learned queries”的验证：</h2><p>从生成过程中的Query中取3个不同空间位置的q_ij，与nested keys进行点积运算得到attention map’，可以观察到总能有1-2个nested token与q_ij最相关；进一步将q_ij、nested keys、nested values按照公式1进行运算，得到Q-Former learned queries，与输入脸部图像的clip image features 进行点积运算得到attention map, 能直观的观察到Q-Former learned queries的作用，即生成的细粒度特征在输入图中的来源相关性。</p><p><img src="/../imgs/Paper-Reading_Nested-Attention/image-20250108174006292.png" alt="可视化验证" title="可视化验证"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Paper Reading</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>attention</tag>
+      
+      <tag>diffusion</tag>
+      
+      <tag>text-to-img</tag>
+      
+      <tag>personalization</tag>
+      
+      <tag>论文阅读</tag>
       
     </tags>
     
@@ -261,6 +319,39 @@
     <tags>
       
       <tag>生活方式</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Paper Reading:IDM-VTON:Improving Diffusion Models for Authentic Virtual Try-on in the Wild-2024 ECCV</title>
+    <link href="/post/Paper-Reading_IDM-Virtual-Try-on%E8%99%9A%E6%8B%9F%E8%AF%95%E7%A9%BF.html"/>
+    <url>/post/Paper-Reading_IDM-Virtual-Try-on%E8%99%9A%E6%8B%9F%E8%AF%95%E7%A9%BF.html</url>
+    
+    <content type="html"><![CDATA[<h2 id="IDM-VTON-Improving-Diffusion-Models-for-Authentic-Virtual-Try-on-in-the-Wild-in-2024-ECCV"><a href="#IDM-VTON-Improving-Diffusion-Models-for-Authentic-Virtual-Try-on-in-the-Wild-in-2024-ECCV" class="headerlink" title="IDM-VTON: Improving Diffusion Models for Authentic Virtual Try-on in the Wild (in 2024 ECCV)"></a>IDM-VTON: Improving Diffusion Models for Authentic Virtual Try-on in the Wild (in 2024 ECCV)</h2><p>论文概括：论文中提出了一种改进的扩散模型 (Improved Diffusion Models for Virtual Try-ON, 简称IDM–VTON)，使其应用在真实世界场景下虚拟试穿任务。该模型显著提高了服装图像的一致性，可以生成真实的虚拟试穿图像。具体地，设计一个复杂的注意力模块(attention modules)，可以将服装图像更好的编码到扩散模型，该注意力模块由两个不同的组件组成：</p><ul><li>作用在self-attention——IP-Adapter：对图片形式的服装提示进行编码适配(image prompt adapter)【高级语义】</li><li>作用在cross-attention——GarmentNet：同样对服装图片进行编码，不过使用UNet的hidden_state直接得到特征，保留细粒度的细节【低层特征】</li></ul><span id="more"></span><h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><h4 id="IDM-VTON整个模型框架由三个部分组成："><a href="#IDM-VTON整个模型框架由三个部分组成：" class="headerlink" title="IDM-VTON整个模型框架由三个部分组成："></a>IDM-VTON整个模型框架由三个部分组成：</h4><ul><li>TryonNet：13通道的UNet，以常见的9通道InpaintingModel作为初始化+4通道的pose map latent</li><li>IP-Adapter：提取服装高级语义**【代码中并没有训练？】**</li><li>GarmentNet：基于UNet的特征编码器，提取服装的低级特征，直接使用冻结的SDXL-base</li></ul><p><img src="/../imgs/Paper-Reading_IDM-Virtual-Try-on/image-20250222211416822.png" alt="IDM-VTON模型整体框架"></p><h4 id="1-TryonNet-详解"><a href="#1-TryonNet-详解" class="headerlink" title="1. TryonNet 详解"></a>1. TryonNet 详解</h4><p>TryonNet的输入由4个部分组成，共13通道&#x3D;4+4+4+1：除了单通道的mask外，均为4个通道（VAE编码层获得latent是4通道）：使用开源的9通道SDXL-Inpainting模型作为初始化，并使用卷积层来修改UNet的输入特征通道（卷积层初始化为0）。代码如下:</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python">unet.encoder_hid_proj = image_proj_model<br><br>conv_new = torch.nn.Conv2d(<br>    in_channels=<span class="hljs-number">4</span>+<span class="hljs-number">4</span>+<span class="hljs-number">1</span>+<span class="hljs-number">4</span>,<br>    out_channels=unet.conv_in.out_channels,<br>    kernel_size=<span class="hljs-number">3</span>,<br>    padding=<span class="hljs-number">1</span>,<br>)<br>torch.nn.init.kaiming_normal_(conv_new.weight)  <br>conv_new.weight.data = conv_new.weight.data * <span class="hljs-number">0.</span>  <span class="hljs-comment"># 初始化为0 </span><br><br>conv_new.weight.data[:, :<span class="hljs-number">9</span>] = unet.conv_in.weight.data  <br>conv_new.bias.data = unet.conv_in.bias.data  <br><br>unet.conv_in = conv_new  <span class="hljs-comment"># replace conv layer in unet</span><br>unet.config[<span class="hljs-string">&#x27;in_channels&#x27;</span>] = <span class="hljs-number">13</span>  <span class="hljs-comment"># update config</span><br>unet.config.in_channels = <span class="hljs-number">13</span>  <span class="hljs-comment"># update config</span><br><span class="hljs-comment">#customize unet end</span><br></code></pre></td></tr></table></figure><h4 id="2-IP-Adapter-详解"><a href="#2-IP-Adapter-详解" class="headerlink" title="2. IP-Adapter 详解"></a>2. IP-Adapter 详解</h4><p>使用IP-Adapter对服装图像进行编码，使用冻结参数的CLIP图像编码器（即 OpenCLIP ViT-H&#x2F;14）来提取特征。论文说IP-Adapter【包括特征投影层（feature projection layers）和交叉注意层（cross-attention layers）】是可训练的，<em>但代码里并没有训练</em>，社区的issues也提到了不训练可能会更好：ipa可能会影响到衣服颜色准确度*。 </p><p><img src="/../imgs/Paper-Reading_IDM-Virtual-Try-on/image-20250222213603226.png" alt="原版IP-Adapter论文图片"></p><h4 id="3-GarmentNet-详解"><a href="#3-GarmentNet-详解" class="headerlink" title="3. GarmentNet 详解"></a>3. GarmentNet 详解</h4><ul><li><p>由于 <strong>CLIP 图像编码器缺乏提取服装的低级特征（CLIP训练的文本图像对比较广泛，对服装细节无法详细的描述）</strong>，导致：虽然IP-Adapter已经引入了来自服装图像的控制，但当服装具有复杂的图案或印花时，IP-Adapter在保留服装的细粒度细节方面存在不足。而SDXL模型在大规模数据集上经过预训练，已经具备了良好的低级特征提取器的能力，可以作为对IPA的细粒度特征的补充特征。</p></li><li><p>具体实现可以理解为：来自两个UNet网络的低层次特征 (Low-level features) 先通过<strong>自注意力</strong>进行特征融合，再和来自IP-Adapter的高级语义（High-level semantics）通过<strong>交叉注意力</strong>进行特征融合</p><ul><li><strong>冻结SDXL-base的UNet网络参数</strong>，并获取其hidden state中间表示作为低级特征</li><li>与来自TryonNet的中间表达进行连接，然后计算连接特征的自注意力(Self Attention)</li><li>只传递来自TryonNet的前半部分特征，将其与IP-Adapter结果特征进行交叉注意力(Cross Attention)计算并继续传递</li></ul></li></ul><h4 id="4-使用更详细的Caption：对服装的细节进行精细描述"><a href="#4-使用更详细的Caption：对服装的细节进行精细描述" class="headerlink" title="4. 使用更详细的Caption：对服装的细节进行精细描述"></a>4. 使用更详细的Caption：对服装的细节进行精细描述</h4><p>更详细的描述有助于模型使用自然语言对服装的高级语义进行编码，对基于图像的信息进行补充。[V]，即 cloth_annotation 通过图像注释器（image annotator，对图片中的特定属性进行分类识别）获得。</p><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs applescript">替换公式：<br>[V] = short sleeve <span class="hljs-built_in">round</span> neck t-shirts<br>A photo <span class="hljs-keyword">of</span> [V] = A photo <span class="hljs-keyword">of</span> short sleeve <span class="hljs-built_in">round</span> neck t-shirts<br>Model <span class="hljs-keyword">is</span> wearing [V] = Model <span class="hljs-keyword">is</span> wearing short sleeve <span class="hljs-built_in">round</span> neck t-shirts<br><br>代码：<br><span class="hljs-literal">result</span>[<span class="hljs-string">&quot;caption&quot;</span>] = <span class="hljs-string">&quot;model is wearing &quot;</span> + cloth_annotation<br><span class="hljs-literal">result</span>[<span class="hljs-string">&quot;caption_cloth&quot;</span>] = <span class="hljs-string">&quot;a photo of &quot;</span> + cloth_annotation<br></code></pre></td></tr></table></figure><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python">annotation_list = [ <span class="hljs-comment"># </span><br>    <span class="hljs-comment"># &quot;colors&quot;,</span><br>    <span class="hljs-comment"># &quot;textures&quot;,</span><br>    <span class="hljs-string">&quot;sleeveLength&quot;</span>,<br>    <span class="hljs-string">&quot;neckLine&quot;</span>,<br>    <span class="hljs-string">&quot;item&quot;</span>,<br>]<br><br><span class="hljs-variable language_">self</span>.annotation_pair = &#123;&#125;<br><span class="hljs-keyword">for</span> k, v <span class="hljs-keyword">in</span> data1.items():<br>    <span class="hljs-keyword">for</span> elem <span class="hljs-keyword">in</span> v:<br>        annotation_str = <span class="hljs-string">&quot;&quot;</span><br>        <span class="hljs-keyword">for</span> template <span class="hljs-keyword">in</span> annotation_list: <span class="hljs-comment"># 遍历 annotation_list，依次提取每一项的分类结果，对字符串进行连接获得最终描述</span><br>            <span class="hljs-keyword">for</span> tag <span class="hljs-keyword">in</span> elem[<span class="hljs-string">&quot;tag_info&quot;</span>]:<br>                <span class="hljs-keyword">if</span> (<br>                    tag[<span class="hljs-string">&quot;tag_name&quot;</span>] == template<br>                    <span class="hljs-keyword">and</span> tag[<span class="hljs-string">&quot;tag_category&quot;</span>] <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span><br>                ):<br>                    annotation_str += tag[<span class="hljs-string">&quot;tag_category&quot;</span>]<br>                    annotation_str += <span class="hljs-string">&quot; &quot;</span><br>        <span class="hljs-variable language_">self</span>.annotation_pair[elem[<span class="hljs-string">&quot;file_name&quot;</span>]] = annotation_str<br></code></pre></td></tr></table></figure><hr>]]></content>
+    
+    
+    <categories>
+      
+      <category>Paper Reading</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>attention</tag>
+      
+      <tag>diffusion</tag>
+      
+      <tag>text-to-img</tag>
+      
+      <tag>personalization</tag>
+      
+      <tag>论文阅读</tag>
       
     </tags>
     
