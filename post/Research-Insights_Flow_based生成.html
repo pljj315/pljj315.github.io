@@ -19,27 +19,27 @@
   <meta name="author" content="pljj315">
   <meta name="keywords" content="计算机视觉 视觉大模型 研究生生活">
   
-    <meta name="description" content="Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12关键概括：训练了一个即插即用的adapter，能够在各种diffusion模型下，通过相机参数或者几何信息对视角进行指导，进行多视角的一致性角色生成。  decoupled attention mechanism：新的自注意力层来源于对原自注意力层的复制">
+    <meta name="description" content="多模态理解与生成 分类：  基于扩散的：都是估计一种分布转换 基于扩散Diffusion:  ϵ -Prediction，UNet、DiT、MM-DiT；估计噪声&#x2F;数据分布，不限定&#x3D;&#x3D;&gt;也就是走曲线的概率密度转换路径：缺：训练时间长采样慢 前行过程：通过不可学习的Schedule 对样本进行加噪，多次加噪变换为正态分布 反向过程：从正态分布采样，并通过模型隐式的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Paper Reading:MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12">
-<meta property="og:url" content="https://pljj315.github.io/Paper-Reading/Paper-Reading_MV-Adapter%E5%A4%9A%E8%A7%86%E8%A7%92%E7%94%9F%E6%88%90/index.html">
+<meta property="og:title" content="Flow-based基于流的图像生成">
+<meta property="og:url" content="https://pljj315.github.io/post/Research-Insights_Flow_based%E7%94%9F%E6%88%90.html">
 <meta property="og:site_name" content="JH_BLOG">
-<meta property="og:description" content="Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12关键概括：训练了一个即插即用的adapter，能够在各种diffusion模型下，通过相机参数或者几何信息对视角进行指导，进行多视角的一致性角色生成。  decoupled attention mechanism：新的自注意力层来源于对原自注意力层的复制">
+<meta property="og:description" content="多模态理解与生成 分类：  基于扩散的：都是估计一种分布转换 基于扩散Diffusion:  ϵ -Prediction，UNet、DiT、MM-DiT；估计噪声&#x2F;数据分布，不限定&#x3D;&#x3D;&gt;也就是走曲线的概率密度转换路径：缺：训练时间长采样慢 前行过程：通过不可学习的Schedule 对样本进行加噪，多次加噪变换为正态分布 反向过程：从正态分布采样，并通过模型隐式的">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://pljj315.github.io/imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223194550810.png">
-<meta property="article:published_time" content="2025-02-23T09:58:33.000Z">
-<meta property="article:modified_time" content="2025-04-18T08:00:46.788Z">
+<meta property="og:image" content="https://pljj315.github.io/imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408144423138.png">
+<meta property="article:published_time" content="2025-04-07T12:40:11.000Z">
+<meta property="article:modified_time" content="2025-04-18T07:37:54.571Z">
 <meta property="article:author" content="pljj315">
-<meta property="article:tag" content="diffusion">
-<meta property="article:tag" content="text-to-img">
-<meta property="article:tag" content="multi-view">
-<meta property="article:tag" content="论文阅读">
+<meta property="article:tag" content="DiT">
+<meta property="article:tag" content="多模态">
+<meta property="article:tag" content="flow_based">
+<meta property="article:tag" content="flux sd3">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pljj315.github.io/imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223194550810.png">
+<meta name="twitter:image" content="https://pljj315.github.io/imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408144423138.png">
   
   
   
-  <title>Paper Reading:MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12 -&gt; JH_BLOG</title>
+  <title>Flow-based基于流的图像生成 -&gt; JH_BLOG</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -216,7 +216,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Paper Reading:MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12"></span>
+            <span id="subtitle" data-typed-text="Flow-based基于流的图像生成"></span>
           
         </div>
 
@@ -232,8 +232,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-02-23 17:58" pubdate>
-          2025年2月23日 下午
+        <time datetime="2025-04-07 20:40" pubdate>
+          2025年4月7日 晚上
         </time>
       </span>
     
@@ -244,7 +244,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          610 字
+          1.2k 字
         
       </span>
     
@@ -255,7 +255,7 @@
         
         
         
-          6 分钟
+          11 分钟
         
       </span>
     
@@ -301,70 +301,129 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Paper Reading:MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12</h1>
+            <h1 id="seo-header">Flow-based基于流的图像生成</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="Paper-Reading：MULTI-VIEW-CONSISTENT-IMAGE-GENERATION-MADE-EASY-2024-12"><a href="#Paper-Reading：MULTI-VIEW-CONSISTENT-IMAGE-GENERATION-MADE-EASY-2024-12" class="headerlink" title="Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12"></a>Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12</h1><p><strong>关键概括：<strong>训练了一个即插即用的adapter，能够在各种diffusion模型下，通过相机参数或者几何信息对视角进行指导，进行</strong>多视角的一致性角色生成</strong>。</p>
+                <p>多模态理解与生成 分类：</p>
 <ul>
-<li><strong>decoupled attention mechanism</strong>：新的自注意力层来源于对原自注意力层的复制 + 平行的自注意力连接架构【原spatial_self_attention与多个其他的attention平行连接！】</li>
-<li><strong>condition-guider</strong>：能够对相机参数和几何信息进行编码的“新的条件编码器(condition encoder)”</li>
+<li>基于扩散的：都是估计一种分布转换<ul>
+<li>基于扩散Diffusion:  ϵ -Prediction，UNet、DiT、MM-DiT；估计噪声&#x2F;数据分布，不限定&#x3D;&#x3D;&gt;也就是走曲线的概率密度转换路径：<strong>缺：训练时间长采样慢</strong><ul>
+<li>前行过程：通过不可学习的Schedule 对样本进行加噪，多次加噪变换为正态分布</li>
+<li>反向过程：从正态分布采样，并通过模型隐式的学习反向过程的噪声，去噪得到生成的样本【迭代多步生成】</li>
 </ul>
-<p><strong>优点：</strong></p>
+</li>
+<li>基于流Flow： v -Prediction，DiT、MM-DiT；估计向量场&#x2F;速度场，尽量走直线的概率密度转换路径，与扩散落实在代码上的区别是“训练目标函数和采样函数”<ul>
+<li>前行过程：通过显式的可学习的可逆变换将样本分布变换为正态分布</li>
+<li>反向过程：从正态分布采样，并通过上述变换的逆变换得到生成的样本【近似直线一步生成】</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>基于自回归的：各种AR的序列预测顺序</li>
+<li>基于扩散+自回归的</li>
+</ul>
+<p>基础框架：</p>
 <ul>
-<li>即插即用，尽可能保留了底模(base model)的性能</li>
-<li>训练容易，只需要微调几个adapter层而不是整个UNet：参数量小，数据集友好</li>
+<li>Transformer：decoder-only transformer？</li>
+<li>Diffusion-Transformer（DiT）</li>
+<li>MM-DiT</li>
 </ul>
-<h2 id="方法："><a href="#方法：" class="headerlink" title="方法："></a>方法：</h2><h3 id="1-pipeline"><a href="#1-pipeline" class="headerlink" title="1. pipeline:"></a>1. pipeline:</h3><p>包括一个condition-guider encoder; 和decoupled attention mechanism</p>
-<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223194550810.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250223194550810"></p>
-<hr>
-<h3 id="2-condition-guider-encoder："><a href="#2-condition-guider-encoder：" class="headerlink" title="2. condition-guider&#x3D;&#x3D;&gt; encoder："></a>2. condition-guider&#x3D;&#x3D;&gt; encoder：</h3><ul>
-<li>conditioning map：<ul>
-<li>相机位姿：raymap</li>
-<li>几何信息：position_map + normal_map</li>
-</ul>
-</li>
-<li>encoder结构：一系列的卷积网络&#x3D;&#x3D;&gt;包括feature extraction blocks特征提取 + downsampling layers下采样调整scale</li>
-</ul>
-<h3 id="3-decoupled-attention-mechanism："><a href="#3-decoupled-attention-mechanism：" class="headerlink" title="3. decoupled attention mechanism："></a>3. decoupled attention mechanism：</h3><ul>
-<li><p>自注意力与其他注意力的连接方式不再是原始的级联，如下图所示：<img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200818183.png" srcset="/imgs/img/loading.gif" lazyload alt="serial attention-architecture"></p>
-</li>
-<li><p>并联架构，如下图所示：<img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200121201.png" srcset="/imgs/img/loading.gif" lazyload alt="平行注意力架构公式"></p>
-</li>
-<li><p>级联注意力架构  vs  并联注意力架构，对比如下图所示：</p>
-</li>
-</ul>
-<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200148615.png" srcset="/imgs/img/loading.gif" lazyload alt="级联注意力架构vs平行注意力架构"></p>
+<p><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408144423138.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408144423138"></p>
+<h3 id="2-Flow-based-Method-原理理解："><a href="#2-Flow-based-Method-原理理解：" class="headerlink" title="2. Flow-based Method 原理理解："></a>2. Flow-based Method 原理理解：</h3><p>阅读博文：</p>
 <ul>
-<li>其中：<ul>
-<li>spatial self-attention：即原始的自注意力层，Q&#x3D;K&#x3D;V&#x3D;hidden states，表示图片本身不同位置的关注度；</li>
-<li><strong>multi-view attention</strong>：较为复杂，是多视图的实现关键！<img src="/../imgs%5CPaper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy%5Cimage-20250223202102134.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250223202102134"></li>
-<li>image cross-attention：Q &#x3D; hidden states, K&#x3D;V&#x3D;来自冻结UNet对参考输入图提取得中间表示，即把冻结的平行UNet【被叫做UNet Encoder】作为了一种特征提取器，提取低级语义的特征和细粒度的细节；</li>
+<li>Rectified Flow论文原作者的中文解读：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/603740431">ICLR2023] 扩散生成模型新方法：极度简化，一步生成</a></li>
+<li><a target="_blank" rel="noopener" href="https://littlenyima.github.io/posts/51-flow-matching-for-diffusion-models/index.html">Flow Matching 理论详解</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/11686643707">深入理解Rectified Flow，完善统一扩散框架</a></li>
+</ul>
+<blockquote>
+<p>flow: 使用时间参数化的向量场来定义一个流函数 <strong>Flow</strong>，从而在连续时间内对概率密度进行变换</p>
+<p>marginal distribution: 边际分布？</p>
+<p>可以把Rectified Flow理解为<strong>保持线性插值边缘分布相等的，具有因果的ODE</strong></p>
+</blockquote>
+<p>常见的Flow-based包括：</p>
+<ul>
+<li>Normalizing Flow：离散可逆变换，对概率分布进行建模，实现从先验分布（即，高斯分布）到目标分布的可逆转换过程并采样生成；</li>
+<li>Continuous Normalizing Flow（CNF）：连续可逆变换【ODE】；<ul>
+<li>Rectified Flow（linear flows）2022.10：<strong>一步沿着直线采样生成【ODE】</strong>：Domain Transfer，两次训练</li>
+<li>Flow Matching（FM）、Conditional Flow Matching（CFM）2022.10：【ODE】：几乎同上</li>
 </ul>
 </li>
 </ul>
-<h3 id="训练："><a href="#训练：" class="headerlink" title="训练："></a>训练：</h3><ul>
-<li><p>数据集：Objaverse dataset</p>
+<h4 id="2-1-Rectified-flow-2022-10"><a href="#2-1-Rectified-flow-2022-10" class="headerlink" title="2.1 Rectified flow 2022.10:"></a>2.1 Rectified flow 2022.10:</h4><p>Rectified flow + 【蒸馏 与 Reflow回流的区别】</p>
+<p><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408143435584.png" srcset="/imgs/img/loading.gif" lazyload alt="Rectified Flow"></p>
+<p><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408144230797.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408144230797"></p>
+<h4 id="2-2-Flow-Matching-–-Conditional-FM-2022-10"><a href="#2-2-Flow-Matching-–-Conditional-FM-2022-10" class="headerlink" title="2.2 Flow Matching –&gt; Conditional FM 2022.10:"></a>2.2 Flow Matching –&gt; Conditional FM 2022.10:</h4><p>先验分布设定为高斯分布，包括μ_t均值函数、sigma_t标准差函数的不同，可以构建不同的高斯条件概率路径：</p>
+<ul>
+<li><strong>Variance Preserving，VP</strong> 方差保持扩散路径：传输路径轨迹为曲线</li>
+<li><strong>Variance Exploding，VE</strong> 方差爆炸扩散路径：传输路径轨迹为曲线</li>
+<li><strong>最优传输（Optimal Transport，OT）</strong> 路径（CFM）：传输路径轨迹为直线，得到更快的训练速度和生成速度、更好的性能表现</li>
+</ul>
+<p><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408152543388.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408152543388"><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408151908334.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408151908334"></p>
+<p><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408150909885.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408150909885"><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408151159712.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408151159712"></p>
+<h3 id="3-Flow-based-Model-Transformer"><a href="#3-Flow-based-Model-Transformer" class="headerlink" title="3. Flow_based Model + Transformer:"></a>3. Flow_based Model + Transformer:</h3><h4 id="3-1-Transformer-原理探究：DiT"><a href="#3-1-Transformer-原理探究：DiT" class="headerlink" title="3.1 Transformer 原理探究：DiT"></a>3.1 Transformer 原理探究：DiT</h4><p>博文阅读：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/684125968">Diffusion Transformer（DiT）原理与源码解析 - 知乎</a></li>
+</ul>
+<p>ViT &#x3D; Transformer用在CV领域：将图像进行 patchify 得到固定大小的 patch 序列，作为输入馈送进标准 Transformer Encoder，然后进行下游任务的处理</p>
+<p>DiT &#x3D; 调整Normalization后的ViT + LDM（输入是latent）： </p>
+<ul>
+<li>TimestepEmbedder:  timestep_embedding(对数正弦位置编码，log_SPE) + MLP结构</li>
+<li>LabelEmbedder: dropout丢弃实现CFG能力</li>
+<li>DiTBlock: SelfAttention、FeedForward、Normalization: DiT 使用 adaln_zero 来代替标准 transformer 中的 Layer Normalization</li>
+<li>Final Layer：</li>
+<li>Patchify： timm.PatchEmbed（）:2*2， SPE位置编码</li>
+</ul>
+<p><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408164934759.png" srcset="/imgs/img/loading.gif" lazyload alt="ViT 到 DiT"></p>
+<h4 id="3-2-SD3-–-Rectified-Flow-stability-ai-2024-3：Scaling-Rectified-Flow-Transformers-for-High-Resolution-Image-Synthesis"><a href="#3-2-SD3-–-Rectified-Flow-stability-ai-2024-3：Scaling-Rectified-Flow-Transformers-for-High-Resolution-Image-Synthesis" class="headerlink" title="3.2 SD3 –&gt; [Rectified Flow] _stability.ai 2024.3：Scaling Rectified Flow Transformers for High-Resolution Image Synthesis"></a>3.2 SD3 –&gt; [Rectified Flow] _stability.ai 2024.3：Scaling Rectified Flow Transformers for High-Resolution Image Synthesis</h4><p><strong>主要贡献</strong>：<br><strong>1）改进的<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=240459073&content_type=Article&match_order=1&q=%E5%99%AA%E5%A3%B0%E9%87%87%E6%A0%B7%E6%8A%80%E6%9C%AF&zhida_source=entity">噪声采样技术</a>（Improved Noise Sampling Techniques）</strong>：</p>
+<ul>
+<li>作者针对修正流模型（Rectified Flow Models）提出了一种新的噪声采样方法（<strong>Timestep Samplers</strong>），这种方法通过偏向感知相关尺度（perceptually relevant scales）来提高训练效率和生成图像的质量。这种改进有助于模型在训练过程中更有效地学习数据到噪声的转换过程。</li>
+<li>introducing a re-weighting of the noise scales in rectified flow models：SNR采样器</li>
+<li>提到了一个diffusion的scheduler缺陷：Common Diffusion Noise Schedules and Sample Steps are Flawed</li>
+</ul>
+<p><strong>2）MM-DiT：novel transformer-based architecture</strong> 文图双向流</p>
+<p><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408163912375.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408163912375"></p>
+<h4 id="3-3-Flux-–-Flow-Matching-Black-Forest-Labs-没公开论文"><a href="#3-3-Flux-–-Flow-Matching-Black-Forest-Labs-没公开论文" class="headerlink" title="3.3 Flux –&gt; [Flow Matching] _Black Forest Labs 没公开论文"></a>3.3 Flux –&gt; [Flow Matching] _Black Forest Labs 没公开论文</h4><p>博文阅读：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/741939590">FLUX.1 原理与源码解析 - 知乎</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/714150390">FLUX.1 源码深度前瞻解读</a></li>
+</ul>
+<p>主要贡献</p>
+<ul>
+<li>DoubleStreamBlock 双流块 （与MM-DiT几乎相同）</li>
+<li>SingleStreamBlock 单流块 （与DiT几乎相同）</li>
+</ul>
+<p><img src="/../imgs/Flow_based%E7%94%9F%E6%88%90/v2-ef89636e6f9d4c333116cdba283f1151_r.png" srcset="/imgs/img/loading.gif" lazyload alt="FLUX"></p>
+<h3 id="4-Transformer-位置编码"><a href="#4-Transformer-位置编码" class="headerlink" title="4. Transformer 位置编码"></a>4. Transformer 位置编码</h3><p>阅读博文：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/631363482">Transformer位置编码（基础）</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/454482273">Transformer学习笔记一：Positional Encoding（位置编码）</a></li>
+</ul>
+<p>Positional Encoding：就是将位置信息添加（嵌入）到Embedding词向量中，让Transformer保留词向量的<strong>位置信息</strong>，可以提高模型对序列的理解能力；</p>
+<ol>
+<li>为每个字输出<strong>唯一的编码</strong>；</li>
+<li>不同长度的句子之间，任何两个字之间的差值应该保持一致？</li>
+<li>编码值应该是<strong>有界</strong>的。</li>
+</ol>
+<p>位置编码分类：</p>
+<ul>
+<li><p>绝对位置编码 <code>Absolute Position Embedding</code>：</p>
+<ul>
+<li><p><strong>学习式位置编码（Learned Positional Embedding）</strong>：方法是最普遍的绝对位置编码方法，该方法直接对不同的位置随机初始化一个 <code>postion embedding</code>，加到 <code>word embedding</code> 上输入模型，<strong>作为参数进行训练</strong>；举例：<a href="https://link.zhihu.com/?target=https://arxiv.org/pdf/1810.04805.pdf">BERT</a>、<a href="https://link.zhihu.com/?target=https://ailab-ua.github.io/courses/resources/GPT-2_Radford_2018.pdf">GPT-2</a></p>
 </li>
-<li><p>randomly zero out the features of the reference image to drop image conditions, enabling classifier-free guidance at inference：解释：对于CFG的训练策略，是在训练过程中按照比例（如0.1）随机丢弃<strong>条件信息</strong>，这里的“条件信息”一般是额外的(<strong>cross attn的K、V来源？</strong>)指导信息，比如文生图中的文本(text embedding)，这里丢弃的是<strong>参考图像特征</strong></p>
+<li><p><strong>正弦位置编码（Sinusoidal Positional Encoding, SPE）</strong>：是通过将正弦和余弦函数的不同频率应用于输入序列的位置来计算位置编码；</p>
+<p><img src="/../imgs/Flow_based%E7%94%9F%E6%88%90/image-20250408180932773.png" srcset="/imgs/img/loading.gif" lazyload alt="SPE正弦位置编码"></p>
 </li>
 </ul>
-<h3 id="待解决："><a href="#待解决：" class="headerlink" title="待解决："></a>待解决：</h3><ul>
-<li><p>shift the noise schedule towards high noise levels</p>
 </li>
-<li><p>shift the log signal-to-noise ratio by log(n), where n is the number of generated views.</p>
-</li>
-<li><p><strong>multi-view attention</strong>部分没有细致的研究，row-wise self_attention column-wise self-attention是什么？</p>
+<li><p><strong>相对位置编码 <code>Relative Position Embedding</code></strong>：</p>
+<ul>
+<li>Learned Positional Encoding：通过学习一组可学习参数来计算位置编码- </li>
+<li><strong>旋转位置编码RoPE</strong></li>
+</ul>
 </li>
 </ul>
-<h3 id="测试实例："><a href="#测试实例：" class="headerlink" title="测试实例："></a>测试实例：</h3><p>输入、输出&#x3D;768分辨率</p>
-<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image.webp" srcset="/imgs/img/loading.gif" lazyload alt="预处理后的输入图"></p>
-<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-1740315153443-3.webp" srcset="/imgs/img/loading.gif" lazyload alt="6视图-1"></p>
-<p>![img](..&#x2F;imgs&#x2F;Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy&#x2F;image (5).webp)</p>
-<p>![image (3)](..&#x2F;imgs&#x2F;Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy&#x2F;image (3).webp)</p>
-<p>![image (4)](..&#x2F;imgs&#x2F;Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy&#x2F;image (4).webp)</p>
-<p>![image (1)](..&#x2F;imgs&#x2F;Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy&#x2F;image (1).webp)</p>
 
                 
               </div>
@@ -383,7 +442,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Paper-Reading/" class="category-chain-item">Paper Reading</a>
+  <a href="/categories/Research-Insights/" class="category-chain-item">Research Insights</a>
   
   
 
@@ -398,13 +457,13 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/diffusion/" class="print-no-link">#diffusion</a>
+        <a href="/tags/DiT/" class="print-no-link">#DiT</a>
       
-        <a href="/tags/text-to-img/" class="print-no-link">#text-to-img</a>
+        <a href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81/" class="print-no-link">#多模态</a>
       
-        <a href="/tags/multi-view/" class="print-no-link">#multi-view</a>
+        <a href="/tags/flow-based/" class="print-no-link">#flow_based</a>
       
-        <a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" class="print-no-link">#论文阅读</a>
+        <a href="/tags/flux-sd3/" class="print-no-link">#flux sd3</a>
       
     </div>
   
@@ -416,8 +475,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Paper Reading:MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12</div>
-      <div>https://pljj315.github.io/Paper-Reading/Paper-Reading_MV-Adapter多视角生成/</div>
+      <div>Flow-based基于流的图像生成</div>
+      <div>https://pljj315.github.io/post/Research-Insights_Flow_based生成.html</div>
     </div>
     <div class="license-meta">
       
@@ -429,7 +488,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年2月23日</div>
+          <div>2025年4月7日</div>
         </div>
       
       
@@ -461,9 +520,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/Research-Insights/Research-Insights_Stylized-generation-based-diffusion/" title="Stylized-generation-based-diffusion风格化生成">
+                      <a href="/post/Research-Insights_Inversion_based_%E5%9B%BE%E5%83%8F%E7%BC%96%E8%BE%91.html" title="基于反演的图像编辑Inversion_based_editing in flow_matching models">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Stylized-generation-based-diffusion风格化生成</span>
+                        <span class="hidden-mobile">基于反演的图像编辑Inversion_based_editing in flow_matching models</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -471,8 +530,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/LeetCode-highlights/LeetCode-Highlights/" title="算法——leetcode">
-                        <span class="hidden-mobile">算法——leetcode</span>
+                      <a href="/post/Research-Insights-Video-Generation.html" title="Video_Generation视频生成">
+                        <span class="hidden-mobile">Video_Generation视频生成</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -495,7 +554,7 @@
         var options = Object.assign(
           {"clientID":"Ov23lipwdnWHzn8s0j4d","clientSecret":"794682cc1d531e3af88ba187be170008cdb87097","repo":"pljj315.github.io","owner":"pljj315","admin":["pljj315"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: 'a57b15b7127476a7af6eeeacae757700'
+            id: '9068025e1521e61b8d7cd4880a283e31'
           }
         )
         var gitalk = new Gitalk(options);

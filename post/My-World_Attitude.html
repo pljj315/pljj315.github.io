@@ -19,24 +19,24 @@
   <meta name="author" content="pljj315">
   <meta name="keywords" content="计算机视觉 视觉大模型 研究生生活">
   
-    <meta name="description" content="Diffusion based methods:图生视频：  文生图模型 + 时序建模：时序建模技术包括：“inter-frame attention”即temporal-layers，或者motion_module； 文生视频模型 + 图片特征：视觉特征提取（CLIP-image-encoder、Parallel-UNet-encoder &#x2F; ControlNet），latent初始化">
+    <meta name="description" content="影视剧、书籍、音乐和生活方式推荐 下面会介绍我推荐的、我最近在看的影视剧、书籍、音乐和生活方式，说实话我认为这种“生活态度”的安利是极具私人性的，毕竟，它们组成了我个人。不过我不介意，因为我更看重它们对我来说的其他意义：记忆和成长。因此我会持续更新的~  不论是想要了解我还是想要接受我的安利，都请继续关注吧！  影视电影 还有明天 2023观影过程中以为和国内出走的决心-2024剧情类似，结果！我">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Video_Generation视频生成">
-<meta property="og:url" content="https://pljj315.github.io/Research-Insights/Research-Insights-Video-Generation/index.html">
+<meta property="og:title" content="影视剧、书籍、音乐和生活方式推荐">
+<meta property="og:url" content="https://pljj315.github.io/post/My-World_Attitude.html">
 <meta property="og:site_name" content="JH_BLOG">
-<meta property="og:description" content="Diffusion based methods:图生视频：  文生图模型 + 时序建模：时序建模技术包括：“inter-frame attention”即temporal-layers，或者motion_module； 文生视频模型 + 图片特征：视觉特征提取（CLIP-image-encoder、Parallel-UNet-encoder &#x2F; ControlNet），latent初始化">
+<meta property="og:description" content="影视剧、书籍、音乐和生活方式推荐 下面会介绍我推荐的、我最近在看的影视剧、书籍、音乐和生活方式，说实话我认为这种“生活态度”的安利是极具私人性的，毕竟，它们组成了我个人。不过我不介意，因为我更看重它们对我来说的其他意义：记忆和成长。因此我会持续更新的~  不论是想要了解我还是想要接受我的安利，都请继续关注吧！  影视电影 还有明天 2023观影过程中以为和国内出走的决心-2024剧情类似，结果！我">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://pljj315.github.io/imgs/Paper-Reading-Video-Generation/640.webp">
-<meta property="article:published_time" content="2025-03-26T02:04:11.000Z">
-<meta property="article:modified_time" content="2025-04-18T08:00:11.638Z">
+<meta property="og:image" content="https://pljj315.github.io/imgs/roy.jpg">
+<meta property="article:published_time" content="2025-01-07T12:27:41.000Z">
+<meta property="article:modified_time" content="2025-04-18T07:37:51.866Z">
 <meta property="article:author" content="pljj315">
-<meta property="article:tag" content="stable_video_diffusion">
+<meta property="article:tag" content="生活方式">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pljj315.github.io/imgs/Paper-Reading-Video-Generation/640.webp">
+<meta name="twitter:image" content="https://pljj315.github.io/imgs/roy.jpg">
   
   
   
-  <title>Video_Generation视频生成 -&gt; JH_BLOG</title>
+  <title>影视剧、书籍、音乐和生活方式推荐 -&gt; JH_BLOG</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -213,7 +213,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Video_Generation视频生成"></span>
+            <span id="subtitle" data-typed-text="影视剧、书籍、音乐和生活方式推荐"></span>
           
         </div>
 
@@ -229,8 +229,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-03-26 10:04" pubdate>
-          2025年3月26日 上午
+        <time datetime="2025-01-07 20:27" pubdate>
+          2025年1月7日 晚上
         </time>
       </span>
     
@@ -241,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          309 字
+          735 字
         
       </span>
     
@@ -252,7 +252,7 @@
         
         
         
-          3 分钟
+          7 分钟
         
       </span>
     
@@ -298,54 +298,57 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Video_Generation视频生成</h1>
+            <h1 id="seo-header">影视剧、书籍、音乐和生活方式推荐</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="Diffusion-based-methods"><a href="#Diffusion-based-methods" class="headerlink" title="Diffusion based methods:"></a>Diffusion based methods:</h1><p>图生视频：</p>
-<ol>
-<li>文生<strong>图</strong>模型 + 时序建模：时序建模技术包括：“inter-frame attention”即temporal-layers，或者motion_module；</li>
-<li>文生<strong>视频</strong>模型 + 图片特征：视觉特征提取（CLIP-image-encoder、Parallel-UNet-encoder &#x2F; ControlNet），latent初始化；</li>
-</ol>
-<ul>
-<li>Animate-Anyone【图生视频】</li>
-<li>Stable Video Diffusion(SVD)</li>
+                <p>影视剧、书籍、音乐和生活方式推荐</p>
+<p>下面会介绍我推荐的、我最近在看的影视剧、书籍、音乐和生活方式，说实话我认为这种“生活态度”的安利是极具私人性的，毕竟，它们组成了我个人。不过我不介意，因为我更看重它们对我来说的其他意义：记忆和成长。因此我会持续更新的~ </p>
+<p>不论是想要了解我还是想要接受我的安利，都请继续关注吧！ </p>
+<h2 id="影视"><a href="#影视" class="headerlink" title="影视"></a>影视</h2><h3 id="电影"><a href="#电影" class="headerlink" title="电影"></a>电影</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://movie.douban.com/subject/36445098/">还有明天</a> 2023<br>观影过程中以为和国内<a target="_blank" rel="noopener" href="https://movie.douban.com/subject/36587974/">出走的决心-2024</a>剧情类似，结果！我还是太狭隘了！！强烈推荐</li>
+<li><a target="_blank" rel="noopener" href="https://movie.douban.com/subject/26656728/">老娘与海 <strong>又名：泳者之心</strong></a> 2024</li>
+<li><a target="_blank" rel="noopener" href="https://movie.douban.com/subject/25821498/">妇女参政论者</a> 2015</li>
 </ul>
-<h2 id="1-Stable-Video-Diffusion：StabilityAI-2023-11"><a href="#1-Stable-Video-Diffusion：StabilityAI-2023-11" class="headerlink" title="1. Stable Video Diffusion：StabilityAI 2023.11"></a>1. Stable Video Diffusion：StabilityAI 2023.11</h2><h2 id="2-AnimateDiff：2023-11-略"><a href="#2-AnimateDiff：2023-11-略" class="headerlink" title="2. AnimateDiff：2023.11 略"></a>2. AnimateDiff：2023.11 略</h2><h2 id="3-Animate-Anyone：阿里巴巴-通义-2023-12"><a href="#3-Animate-Anyone：阿里巴巴-通义-2023-12" class="headerlink" title="3. Animate-Anyone：阿里巴巴-通义 2023.12"></a>3. Animate-Anyone：阿里巴巴-通义 2023.12</h2><ol>
-<li><p>贡献点：</p>
-<ul>
-<li><p>ReferenceNet: 平行的UNet-encoder提取参考人物细节特征【优点：相比于CLIP-Image-encoer的输入分辨率只能224*224且强调语义，能够接受更大的分辨率输入且强调细粒度细节特征和语义，】</p>
-</li>
-<li><p>Pose Guider: 姿势控制器: 高斯权重、零投影初始化，加到noise_latent上</p>
-</li>
-<li><p>Temporal-Attention: 时序注意力层：确保帧间的空间、时间连续性，串联在两个注意力机制后：沿着 t 维度进行自注意力机制</p>
-<p><code>Specifically, for a feature map x∈b×t×h×w×c, we first reshape it to x∈(b×h×w)×t×c, and then perform temporal attention, which refers to self-attention along the dimension t.</code></p>
-</li>
+<h3 id="连续剧"><a href="#连续剧" class="headerlink" title="连续剧"></a>连续剧</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://movie.douban.com/subject/1474087/">无耻之徒</a> 2004-2020 <strong>忽略frank的不负责任真的是最爱frank！</strong></li>
+<li><a target="_blank" rel="noopener" href="https://book.douban.com/subject/27204805/">我的天才女友(意大利)</a> 2018-2024<br>关键词：书籍《那不勒斯四部曲》改编：我的天才女友、新名字的故事、离开的，留下的、失踪的孩子<br>很细腻的女性作家书写的两名女性的友谊：复杂、既有爱又有恨和期待；很喜欢两个女生以各自的速度成长。</li>
+<li><a target="_blank" rel="noopener" href="https://movie.douban.com/subject/26838164/">伦敦生活</a> 2016-2019</li>
+<li><a target="_blank" rel="noopener" href="https://movie.douban.com/subject/36085524/">影后(台湾)</a> 2024 <strong>太爱杨谨华！</strong></li>
+<li><a href="">人生复本</a>:看过<a href="">瑞克和莫蒂</a>的应该不会被这个电影惊艳到，’薛定谔的猫’系列科幻片 2025.2</li>
 </ul>
-</li>
-<li><p>训练策略：</p>
-<ul>
-<li>两阶段：<ul>
-<li>先使用没有 Temporal-Attention 时序注意力层的网络训练Pose Guider：使用单帧；</li>
-<li>再只训练 Temporal-Attention 模块，权重由 AnimateDiff 初始化：使用24帧；</li>
+<h3 id="动漫"><a href="#动漫" class="headerlink" title="动漫"></a>动漫</h3><ul>
+<li>刺客伍六七：超级轻松搞笑！！！</li>
 </ul>
-</li>
-<li>测试指标：SSIM， PSNR， LPIPS，FVD</li>
+<h2 id="书籍"><a href="#书籍" class="headerlink" title="书籍"></a>书籍</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://book.douban.com/subject/25836270/">厌女：日本的女性厌恶——上野千鹤子</a> 2015<br>关键词：男性同性社会性欲望homosocial、厌女misogyny、同性恋憎恶homophobia、厌女症：男性对女性的蔑视和女性的自我厌恶<br>理论性还是比<a target="_blank" rel="noopener" href="https://book.douban.com/subject/35523099/?icn=index-latestbook-subject">从零开始的女性主义</a>要高得多，而且翻译感好重，什么时候国内女性主义作家能把<a target="_blank" rel="noopener" href="https://book.douban.com/subject/6722209/">男人之间</a>用国内的历史和语言文化，在近代的情况下进行更新的分析呢？希望！</li>
+<li><a target="_blank" rel="noopener" href="https://book.douban.com/subject/35966120/?icn=index-topchart-subject">始于极限——上野千鹤子</a> 2022 <strong>正在阅读</strong></li>
+<li><a target="_blank" rel="noopener" href="https://book.douban.com/subject/35143790/">蛤蟆先生去看心理医生——罗伯特·戴博德</a> 2020 <strong>第二次阅读</strong></li>
+<li><a href="">双重赔偿</a> 2个小时就能看完的精彩小说！2025.2</li>
 </ul>
-</li>
-<li><p>局限：</p>
-<ul>
-<li>手部运动失真、模糊</li>
-<li>单视角参考：背面生成有不稳定</li>
+<h2 id="音乐"><a href="#音乐" class="headerlink" title="音乐"></a>音乐</h2><ul>
+<li>歌手：</li>
+<li>别野加奈：很适合专注时的背景音会，让人平静下来</li>
 </ul>
-</li>
-</ol>
-<p><img src="/../imgs/Paper-Reading-Video-Generation/image-20250326100721485.png" srcset="/imgs/img/loading.gif" lazyload alt="animate-anyone"></p>
-<h1 id="Transformer-based-methods"><a href="#Transformer-based-methods" class="headerlink" title="Transformer based methods:"></a>Transformer based methods:</h1><ul>
-<li>CogVideo</li>
+<h2 id="生活方式"><a href="#生活方式" class="headerlink" title="生活方式"></a>生活方式</h2><h3 id="播客："><a href="#播客：" class="headerlink" title="播客："></a>播客：</h3><ul>
+<li>文化有限：每期对应一本<strong>书</strong></li>
+<li>凹凸电波：搞笑的一群朋友们闲谈，听起来轻松</li>
+<li>燕外之意：针对某一主题对网友的经历汇总</li>
+<li>思文败类：轻松+小思考</li>
+<li>随机波动：感性、深邃的女性在谈论中思考</li>
+<li>岩中花述：鲁豫的对谈，最近都是”she”她主题的女性嘉宾</li>
 </ul>
-<p><img src="/../imgs/Paper-Reading-Video-Generation/640.webp" srcset="/imgs/img/loading.gif" lazyload alt="图片"></p>
+<h3 id="运动："><a href="#运动：" class="headerlink" title="运动："></a>运动：</h3><ul>
+<li>健身：争取引体向上</li>
+<li>攀岩：新时代不分性别的”裹小脚”</li>
+<li>网球：希望对球的控制更稳定一些</li>
+<li>游泳：谁能想到每周都在坚持游泳！</li>
+</ul>
+<p><img src="/../imgs/roy.jpg" srcset="/imgs/img/loading.gif" lazyload alt="王源图片" title="roy"></p>
+<blockquote>
+<p>github: <a href="https://pljj315.github.io/">pljj315</a></p>
+</blockquote>
 
                 
               </div>
@@ -364,7 +367,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Research-Insights/" class="category-chain-item">Research Insights</a>
+  <a href="/categories/My-world/" class="category-chain-item">My world</a>
   
   
 
@@ -379,7 +382,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/stable-video-diffusion/" class="print-no-link">#stable_video_diffusion</a>
+        <a href="/tags/%E7%94%9F%E6%B4%BB%E6%96%B9%E5%BC%8F/" class="print-no-link">#生活方式</a>
       
     </div>
   
@@ -391,8 +394,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Video_Generation视频生成</div>
-      <div>https://pljj315.github.io/Research-Insights/Research-Insights-Video-Generation/</div>
+      <div>影视剧、书籍、音乐和生活方式推荐</div>
+      <div>https://pljj315.github.io/post/My-World_Attitude.html</div>
     </div>
     <div class="license-meta">
       
@@ -404,7 +407,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年3月26日</div>
+          <div>2025年1月7日</div>
         </div>
       
       
@@ -436,21 +439,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/Research-Insights/Research-Insights_Flow_based%E7%94%9F%E6%88%90/" title="Flow-based基于流的图像生成">
+                      <a href="/post/Research-Insights_Personalization-and-feature-Mechanism.html" title="diffusion VS control">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Flow-based基于流的图像生成</span>
+                        <span class="hidden-mobile">diffusion VS control</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
-                    
-                      <a href="/Research-Insights/Research_Insights_AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/" title="AutoRegressive自回归图像生成">
-                        <span class="hidden-mobile">AutoRegressive自回归图像生成</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
                     
                   </article>
                 </div>
@@ -470,7 +467,7 @@
         var options = Object.assign(
           {"clientID":"Ov23lipwdnWHzn8s0j4d","clientSecret":"794682cc1d531e3af88ba187be170008cdb87097","repo":"pljj315.github.io","owner":"pljj315","admin":["pljj315"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: 'ad71e069087846342733e6e055b73895'
+            id: '112cec91e0d0e42d252cc8f677518ee0'
           }
         )
         var gitalk = new Gitalk(options);
