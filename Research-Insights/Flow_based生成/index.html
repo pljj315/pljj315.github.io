@@ -19,24 +19,27 @@
   <meta name="author" content="pljj315">
   <meta name="keywords" content="计算机视觉 视觉大模型 研究生生活">
   
-    <meta name="description" content="Diffusion based methods:图生视频：  文生图模型 + 时序建模：时序建模技术包括：“inter-frame attention”即temporal-layers，或者motion_module； 文生视频模型 + 图片特征：视觉特征提取（CLIP-image-encoder、Parallel-UNet-encoder &#x2F; ControlNet），latent初始化">
+    <meta name="description" content="多模态理解与生成 分类：  基于扩散的：都是估计一种分布转换 基于扩散Diffusion:  ϵ -Prediction，UNet、DiT、MM-DiT；估计噪声&#x2F;数据分布，不限定&#x3D;&#x3D;&gt;也就是走曲线的概率密度转换路径：缺：训练时间长采样慢 前行过程：通过不可学习的Schedule 对样本进行加噪，多次加噪变换为正态分布 反向过程：从正态分布采样，并通过模型隐式的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Paper-Reading_Video_Generation">
-<meta property="og:url" content="https://pljj315.github.io/Paper-Reading/Paper-Reading-Video-Generation/index.html">
+<meta property="og:title" content="Flow-based基于流的图像生成">
+<meta property="og:url" content="https://pljj315.github.io/Research-Insights/Flow_based%E7%94%9F%E6%88%90/index.html">
 <meta property="og:site_name" content="JH_BLOG">
-<meta property="og:description" content="Diffusion based methods:图生视频：  文生图模型 + 时序建模：时序建模技术包括：“inter-frame attention”即temporal-layers，或者motion_module； 文生视频模型 + 图片特征：视觉特征提取（CLIP-image-encoder、Parallel-UNet-encoder &#x2F; ControlNet），latent初始化">
+<meta property="og:description" content="多模态理解与生成 分类：  基于扩散的：都是估计一种分布转换 基于扩散Diffusion:  ϵ -Prediction，UNet、DiT、MM-DiT；估计噪声&#x2F;数据分布，不限定&#x3D;&#x3D;&gt;也就是走曲线的概率密度转换路径：缺：训练时间长采样慢 前行过程：通过不可学习的Schedule 对样本进行加噪，多次加噪变换为正态分布 反向过程：从正态分布采样，并通过模型隐式的">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://pljj315.github.io/imgs/Paper-Reading-Video-Generation/640.webp">
-<meta property="article:published_time" content="2025-03-26T02:04:11.000Z">
-<meta property="article:modified_time" content="2025-04-18T07:27:45.564Z">
+<meta property="og:image" content="https://pljj315.github.io/imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408144423138.png">
+<meta property="article:published_time" content="2025-04-07T12:40:11.000Z">
+<meta property="article:modified_time" content="2025-04-18T07:37:54.571Z">
 <meta property="article:author" content="pljj315">
-<meta property="article:tag" content="stable_video_diffusion">
+<meta property="article:tag" content="多模态">
+<meta property="article:tag" content="flow_based">
+<meta property="article:tag" content="flux sd3">
+<meta property="article:tag" content="DiT">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pljj315.github.io/imgs/Paper-Reading-Video-Generation/640.webp">
+<meta name="twitter:image" content="https://pljj315.github.io/imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408144423138.png">
   
   
   
-  <title>Paper-Reading_Video_Generation -&gt; JH_BLOG</title>
+  <title>Flow-based基于流的图像生成 -&gt; JH_BLOG</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -213,7 +216,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Paper-Reading_Video_Generation"></span>
+            <span id="subtitle" data-typed-text="Flow-based基于流的图像生成"></span>
           
         </div>
 
@@ -229,8 +232,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-03-26 10:04" pubdate>
-          2025年3月26日 上午
+        <time datetime="2025-04-07 20:40" pubdate>
+          2025年4月7日 晚上
         </time>
       </span>
     
@@ -241,7 +244,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          309 字
+          1.2k 字
         
       </span>
     
@@ -252,7 +255,7 @@
         
         
         
-          3 分钟
+          11 分钟
         
       </span>
     
@@ -298,54 +301,129 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Paper-Reading_Video_Generation</h1>
+            <h1 id="seo-header">Flow-based基于流的图像生成</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="Diffusion-based-methods"><a href="#Diffusion-based-methods" class="headerlink" title="Diffusion based methods:"></a>Diffusion based methods:</h1><p>图生视频：</p>
+                <p>多模态理解与生成 分类：</p>
+<ul>
+<li>基于扩散的：都是估计一种分布转换<ul>
+<li>基于扩散Diffusion:  ϵ -Prediction，UNet、DiT、MM-DiT；估计噪声&#x2F;数据分布，不限定&#x3D;&#x3D;&gt;也就是走曲线的概率密度转换路径：<strong>缺：训练时间长采样慢</strong><ul>
+<li>前行过程：通过不可学习的Schedule 对样本进行加噪，多次加噪变换为正态分布</li>
+<li>反向过程：从正态分布采样，并通过模型隐式的学习反向过程的噪声，去噪得到生成的样本【迭代多步生成】</li>
+</ul>
+</li>
+<li>基于流Flow： v -Prediction，DiT、MM-DiT；估计向量场&#x2F;速度场，尽量走直线的概率密度转换路径，与扩散落实在代码上的区别是“训练目标函数和采样函数”<ul>
+<li>前行过程：通过显式的可学习的可逆变换将样本分布变换为正态分布</li>
+<li>反向过程：从正态分布采样，并通过上述变换的逆变换得到生成的样本【近似直线一步生成】</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>基于自回归的：各种AR的序列预测顺序</li>
+<li>基于扩散+自回归的</li>
+</ul>
+<p>基础框架：</p>
+<ul>
+<li>Transformer：decoder-only transformer？</li>
+<li>Diffusion-Transformer（DiT）</li>
+<li>MM-DiT</li>
+</ul>
+<p><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408144423138.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408144423138"></p>
+<h3 id="2-Flow-based-Method-原理理解："><a href="#2-Flow-based-Method-原理理解：" class="headerlink" title="2. Flow-based Method 原理理解："></a>2. Flow-based Method 原理理解：</h3><p>阅读博文：</p>
+<ul>
+<li>Rectified Flow论文原作者的中文解读：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/603740431">ICLR2023] 扩散生成模型新方法：极度简化，一步生成</a></li>
+<li><a target="_blank" rel="noopener" href="https://littlenyima.github.io/posts/51-flow-matching-for-diffusion-models/index.html">Flow Matching 理论详解</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/11686643707">深入理解Rectified Flow，完善统一扩散框架</a></li>
+</ul>
+<blockquote>
+<p>flow: 使用时间参数化的向量场来定义一个流函数 <strong>Flow</strong>，从而在连续时间内对概率密度进行变换</p>
+<p>marginal distribution: 边际分布？</p>
+<p>可以把Rectified Flow理解为<strong>保持线性插值边缘分布相等的，具有因果的ODE</strong></p>
+</blockquote>
+<p>常见的Flow-based包括：</p>
+<ul>
+<li>Normalizing Flow：离散可逆变换，对概率分布进行建模，实现从先验分布（即，高斯分布）到目标分布的可逆转换过程并采样生成；</li>
+<li>Continuous Normalizing Flow（CNF）：连续可逆变换【ODE】；<ul>
+<li>Rectified Flow（linear flows）2022.10：<strong>一步沿着直线采样生成【ODE】</strong>：Domain Transfer，两次训练</li>
+<li>Flow Matching（FM）、Conditional Flow Matching（CFM）2022.10：【ODE】：几乎同上</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-1-Rectified-flow-2022-10"><a href="#2-1-Rectified-flow-2022-10" class="headerlink" title="2.1 Rectified flow 2022.10:"></a>2.1 Rectified flow 2022.10:</h4><p>Rectified flow + 【蒸馏 与 Reflow回流的区别】</p>
+<p><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408143435584.png" srcset="/imgs/img/loading.gif" lazyload alt="Rectified Flow"></p>
+<p><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408144230797.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408144230797"></p>
+<h4 id="2-2-Flow-Matching-–-Conditional-FM-2022-10"><a href="#2-2-Flow-Matching-–-Conditional-FM-2022-10" class="headerlink" title="2.2 Flow Matching –&gt; Conditional FM 2022.10:"></a>2.2 Flow Matching –&gt; Conditional FM 2022.10:</h4><p>先验分布设定为高斯分布，包括μ_t均值函数、sigma_t标准差函数的不同，可以构建不同的高斯条件概率路径：</p>
+<ul>
+<li><strong>Variance Preserving，VP</strong> 方差保持扩散路径：传输路径轨迹为曲线</li>
+<li><strong>Variance Exploding，VE</strong> 方差爆炸扩散路径：传输路径轨迹为曲线</li>
+<li><strong>最优传输（Optimal Transport，OT）</strong> 路径（CFM）：传输路径轨迹为直线，得到更快的训练速度和生成速度、更好的性能表现</li>
+</ul>
+<p><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408152543388.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408152543388"><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408151908334.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408151908334"></p>
+<p><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408150909885.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408150909885"><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408151159712.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408151159712"></p>
+<h3 id="3-Flow-based-Model-Transformer"><a href="#3-Flow-based-Model-Transformer" class="headerlink" title="3. Flow_based Model + Transformer:"></a>3. Flow_based Model + Transformer:</h3><h4 id="3-1-Transformer-原理探究：DiT"><a href="#3-1-Transformer-原理探究：DiT" class="headerlink" title="3.1 Transformer 原理探究：DiT"></a>3.1 Transformer 原理探究：DiT</h4><p>博文阅读：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/684125968">Diffusion Transformer（DiT）原理与源码解析 - 知乎</a></li>
+</ul>
+<p>ViT &#x3D; Transformer用在CV领域：将图像进行 patchify 得到固定大小的 patch 序列，作为输入馈送进标准 Transformer Encoder，然后进行下游任务的处理</p>
+<p>DiT &#x3D; 调整Normalization后的ViT + LDM（输入是latent）： </p>
+<ul>
+<li>TimestepEmbedder:  timestep_embedding(对数正弦位置编码，log_SPE) + MLP结构</li>
+<li>LabelEmbedder: dropout丢弃实现CFG能力</li>
+<li>DiTBlock: SelfAttention、FeedForward、Normalization: DiT 使用 adaln_zero 来代替标准 transformer 中的 Layer Normalization</li>
+<li>Final Layer：</li>
+<li>Patchify： timm.PatchEmbed（）:2*2， SPE位置编码</li>
+</ul>
+<p><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408164934759.png" srcset="/imgs/img/loading.gif" lazyload alt="ViT 到 DiT"></p>
+<h4 id="3-2-SD3-–-Rectified-Flow-stability-ai-2024-3：Scaling-Rectified-Flow-Transformers-for-High-Resolution-Image-Synthesis"><a href="#3-2-SD3-–-Rectified-Flow-stability-ai-2024-3：Scaling-Rectified-Flow-Transformers-for-High-Resolution-Image-Synthesis" class="headerlink" title="3.2 SD3 –&gt; [Rectified Flow] _stability.ai 2024.3：Scaling Rectified Flow Transformers for High-Resolution Image Synthesis"></a>3.2 SD3 –&gt; [Rectified Flow] _stability.ai 2024.3：Scaling Rectified Flow Transformers for High-Resolution Image Synthesis</h4><p><strong>主要贡献</strong>：<br><strong>1）改进的<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=240459073&content_type=Article&match_order=1&q=%E5%99%AA%E5%A3%B0%E9%87%87%E6%A0%B7%E6%8A%80%E6%9C%AF&zhida_source=entity">噪声采样技术</a>（Improved Noise Sampling Techniques）</strong>：</p>
+<ul>
+<li>作者针对修正流模型（Rectified Flow Models）提出了一种新的噪声采样方法（<strong>Timestep Samplers</strong>），这种方法通过偏向感知相关尺度（perceptually relevant scales）来提高训练效率和生成图像的质量。这种改进有助于模型在训练过程中更有效地学习数据到噪声的转换过程。</li>
+<li>introducing a re-weighting of the noise scales in rectified flow models：SNR采样器</li>
+<li>提到了一个diffusion的scheduler缺陷：Common Diffusion Noise Schedules and Sample Steps are Flawed</li>
+</ul>
+<p><strong>2）MM-DiT：novel transformer-based architecture</strong> 文图双向流</p>
+<p><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408163912375.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408163912375"></p>
+<h4 id="3-3-Flux-–-Flow-Matching-Black-Forest-Labs-没公开论文"><a href="#3-3-Flux-–-Flow-Matching-Black-Forest-Labs-没公开论文" class="headerlink" title="3.3 Flux –&gt; [Flow Matching] _Black Forest Labs 没公开论文"></a>3.3 Flux –&gt; [Flow Matching] _Black Forest Labs 没公开论文</h4><p>博文阅读：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/741939590">FLUX.1 原理与源码解析 - 知乎</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/714150390">FLUX.1 源码深度前瞻解读</a></li>
+</ul>
+<p>主要贡献</p>
+<ul>
+<li>DoubleStreamBlock 双流块 （与MM-DiT几乎相同）</li>
+<li>SingleStreamBlock 单流块 （与DiT几乎相同）</li>
+</ul>
+<p><img src="/../imgs/Flow_based%E7%94%9F%E6%88%90/v2-ef89636e6f9d4c333116cdba283f1151_r.png" srcset="/imgs/img/loading.gif" lazyload alt="FLUX"></p>
+<h3 id="4-Transformer-位置编码"><a href="#4-Transformer-位置编码" class="headerlink" title="4. Transformer 位置编码"></a>4. Transformer 位置编码</h3><p>阅读博文：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/631363482">Transformer位置编码（基础）</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/454482273">Transformer学习笔记一：Positional Encoding（位置编码）</a></li>
+</ul>
+<p>Positional Encoding：就是将位置信息添加（嵌入）到Embedding词向量中，让Transformer保留词向量的<strong>位置信息</strong>，可以提高模型对序列的理解能力；</p>
 <ol>
-<li>文生<strong>图</strong>模型 + 时序建模：时序建模技术包括：“inter-frame attention”即temporal-layers，或者motion_module；</li>
-<li>文生<strong>视频</strong>模型 + 图片特征：视觉特征提取（CLIP-image-encoder、Parallel-UNet-encoder &#x2F; ControlNet），latent初始化；</li>
+<li>为每个字输出<strong>唯一的编码</strong>；</li>
+<li>不同长度的句子之间，任何两个字之间的差值应该保持一致？</li>
+<li>编码值应该是<strong>有界</strong>的。</li>
 </ol>
+<p>位置编码分类：</p>
 <ul>
-<li>Animate-Anyone【图生视频】</li>
-<li>Stable Video Diffusion(SVD)</li>
-</ul>
-<h2 id="1-Stable-Video-Diffusion：StabilityAI-2023-11"><a href="#1-Stable-Video-Diffusion：StabilityAI-2023-11" class="headerlink" title="1. Stable Video Diffusion：StabilityAI 2023.11"></a>1. Stable Video Diffusion：StabilityAI 2023.11</h2><h2 id="2-AnimateDiff：2023-11-略"><a href="#2-AnimateDiff：2023-11-略" class="headerlink" title="2. AnimateDiff：2023.11 略"></a>2. AnimateDiff：2023.11 略</h2><h2 id="3-Animate-Anyone：阿里巴巴-通义-2023-12"><a href="#3-Animate-Anyone：阿里巴巴-通义-2023-12" class="headerlink" title="3. Animate-Anyone：阿里巴巴-通义 2023.12"></a>3. Animate-Anyone：阿里巴巴-通义 2023.12</h2><ol>
-<li><p>贡献点：</p>
+<li><p>绝对位置编码 <code>Absolute Position Embedding</code>：</p>
 <ul>
-<li><p>ReferenceNet: 平行的UNet-encoder提取参考人物细节特征【优点：相比于CLIP-Image-encoer的输入分辨率只能224*224且强调语义，能够接受更大的分辨率输入且强调细粒度细节特征和语义，】</p>
+<li><p><strong>学习式位置编码（Learned Positional Embedding）</strong>：方法是最普遍的绝对位置编码方法，该方法直接对不同的位置随机初始化一个 <code>postion embedding</code>，加到 <code>word embedding</code> 上输入模型，<strong>作为参数进行训练</strong>；举例：<a href="https://link.zhihu.com/?target=https://arxiv.org/pdf/1810.04805.pdf">BERT</a>、<a href="https://link.zhihu.com/?target=https://ailab-ua.github.io/courses/resources/GPT-2_Radford_2018.pdf">GPT-2</a></p>
 </li>
-<li><p>Pose Guider: 姿势控制器: 高斯权重、零投影初始化，加到noise_latent上</p>
-</li>
-<li><p>Temporal-Attention: 时序注意力层：确保帧间的空间、时间连续性，串联在两个注意力机制后：沿着 t 维度进行自注意力机制</p>
-<p><code>Specifically, for a feature map x∈b×t×h×w×c, we first reshape it to x∈(b×h×w)×t×c, and then perform temporal attention, which refers to self-attention along the dimension t.</code></p>
+<li><p><strong>正弦位置编码（Sinusoidal Positional Encoding, SPE）</strong>：是通过将正弦和余弦函数的不同频率应用于输入序列的位置来计算位置编码；</p>
+<p><img src="/../imgs/Flow_based%E7%94%9F%E6%88%90/image-20250408180932773.png" srcset="/imgs/img/loading.gif" lazyload alt="SPE正弦位置编码"></p>
 </li>
 </ul>
 </li>
-<li><p>训练策略：</p>
+<li><p><strong>相对位置编码 <code>Relative Position Embedding</code></strong>：</p>
 <ul>
-<li>两阶段：<ul>
-<li>先使用没有 Temporal-Attention 时序注意力层的网络训练Pose Guider：使用单帧；</li>
-<li>再只训练 Temporal-Attention 模块，权重由 AnimateDiff 初始化：使用24帧；</li>
+<li>Learned Positional Encoding：通过学习一组可学习参数来计算位置编码- </li>
+<li><strong>旋转位置编码RoPE</strong></li>
 </ul>
 </li>
-<li>测试指标：SSIM， PSNR， LPIPS，FVD</li>
 </ul>
-</li>
-<li><p>局限：</p>
-<ul>
-<li>手部运动失真、模糊</li>
-<li>单视角参考：背面生成有不稳定</li>
-</ul>
-</li>
-</ol>
-<p><img src="/../imgs/Paper-Reading-Video-Generation/image-20250326100721485.png" srcset="/imgs/img/loading.gif" lazyload alt="animate-anyone"></p>
-<h1 id="Transformer-based-methods"><a href="#Transformer-based-methods" class="headerlink" title="Transformer based methods:"></a>Transformer based methods:</h1><ul>
-<li>CogVideo</li>
-</ul>
-<p><img src="/../imgs/Paper-Reading-Video-Generation/640.webp" srcset="/imgs/img/loading.gif" lazyload alt="图片"></p>
 
                 
               </div>
@@ -364,7 +442,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Paper-Reading/" class="category-chain-item">Paper Reading</a>
+  <a href="/categories/Research-Insights/" class="category-chain-item">Research Insights</a>
   
   
 
@@ -379,7 +457,13 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/stable-video-diffusion/" class="print-no-link">#stable_video_diffusion</a>
+        <a href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81/" class="print-no-link">#多模态</a>
+      
+        <a href="/tags/flow-based/" class="print-no-link">#flow_based</a>
+      
+        <a href="/tags/flux-sd3/" class="print-no-link">#flux sd3</a>
+      
+        <a href="/tags/DiT/" class="print-no-link">#DiT</a>
       
     </div>
   
@@ -391,8 +475,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Paper-Reading_Video_Generation</div>
-      <div>https://pljj315.github.io/Paper-Reading/Paper-Reading-Video-Generation/</div>
+      <div>Flow-based基于流的图像生成</div>
+      <div>https://pljj315.github.io/Research-Insights/Flow_based生成/</div>
     </div>
     <div class="license-meta">
       
@@ -404,7 +488,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年3月26日</div>
+          <div>2025年4月7日</div>
         </div>
       
       
@@ -436,9 +520,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/Paper-Reading/AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/" title="AutoRegressive自回归图像生成">
+                      <a href="/Paper-Reading/Paper-Reading_Inversion_based_%E5%9B%BE%E5%83%8F%E7%BC%96%E8%BE%91/" title="Inversion_based_editing in flow_matching models">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">AutoRegressive自回归图像生成</span>
+                        <span class="hidden-mobile">Inversion_based_editing in flow_matching models</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -446,8 +530,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/Research-Insights/Research-Insights_Stylized-generation-based-diffusion/" title="Reserch-Insights_Stylized-generation-based-diffusion">
-                        <span class="hidden-mobile">Reserch-Insights_Stylized-generation-based-diffusion</span>
+                      <a href="/Research-Insights/AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/" title="AutoRegressive自回归图像生成">
+                        <span class="hidden-mobile">AutoRegressive自回归图像生成</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -470,7 +554,7 @@
         var options = Object.assign(
           {"clientID":"Ov23lipwdnWHzn8s0j4d","clientSecret":"794682cc1d531e3af88ba187be170008cdb87097","repo":"pljj315.github.io","owner":"pljj315","admin":["pljj315"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: '86828073de8985b6b15412ebf1df6193'
+            id: 'e057e16bb7f4321dca659747ab38090d'
           }
         )
         var gitalk = new Gitalk(options);
