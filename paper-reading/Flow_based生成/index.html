@@ -21,22 +21,25 @@
   
     <meta name="description" content="多模态理解与生成 分类：  基于扩散的：都是估计一种分布转换 基于扩散Diffusion:  ϵ -Prediction，UNet、DiT、MM-DiT；估计噪声&#x2F;数据分布，不限定&#x3D;&#x3D;&gt;也就是走曲线的概率密度转换路径：缺：训练时间长采样慢 前行过程：通过不可学习的Schedule 对样本进行加噪，多次加噪变换为正态分布 反向过程：从正态分布采样，并通过模型隐式的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="多模态理解与生成">
+<meta property="og:title" content="Flow-based基于流的图像生成">
 <meta property="og:url" content="https://pljj315.github.io/Paper-Reading/Flow_based%E7%94%9F%E6%88%90/index.html">
 <meta property="og:site_name" content="JH_BLOG">
 <meta property="og:description" content="多模态理解与生成 分类：  基于扩散的：都是估计一种分布转换 基于扩散Diffusion:  ϵ -Prediction，UNet、DiT、MM-DiT；估计噪声&#x2F;数据分布，不限定&#x3D;&#x3D;&gt;也就是走曲线的概率密度转换路径：缺：训练时间长采样慢 前行过程：通过不可学习的Schedule 对样本进行加噪，多次加噪变换为正态分布 反向过程：从正态分布采样，并通过模型隐式的">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://pljj315.github.io/imgs/Research-Insights_Stylized-generation-based-diffusion/image-20250227153104659.png">
+<meta property="og:image" content="https://pljj315.github.io/imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408144423138.png">
 <meta property="article:published_time" content="2025-04-07T12:40:11.000Z">
-<meta property="article:modified_time" content="2025-04-08T13:14:35.350Z">
+<meta property="article:modified_time" content="2025-04-18T07:26:53.010Z">
 <meta property="article:author" content="pljj315">
 <meta property="article:tag" content="多模态">
+<meta property="article:tag" content="flow_based">
+<meta property="article:tag" content="flux sd3">
+<meta property="article:tag" content="DiT">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pljj315.github.io/imgs/Research-Insights_Stylized-generation-based-diffusion/image-20250227153104659.png">
+<meta name="twitter:image" content="https://pljj315.github.io/imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408144423138.png">
   
   
   
-  <title>多模态理解与生成 -&gt; JH_BLOG</title>
+  <title>Flow-based基于流的图像生成 -&gt; JH_BLOG</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -213,7 +216,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="多模态理解与生成"></span>
+            <span id="subtitle" data-typed-text="Flow-based基于流的图像生成"></span>
           
         </div>
 
@@ -298,7 +301,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">多模态理解与生成</h1>
+            <h1 id="seo-header">Flow-based基于流的图像生成</h1>
             
             
               <div class="markdown-body">
@@ -456,6 +459,12 @@
       
         <a href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81/" class="print-no-link">#多模态</a>
       
+        <a href="/tags/flow-based/" class="print-no-link">#flow_based</a>
+      
+        <a href="/tags/flux-sd3/" class="print-no-link">#flux sd3</a>
+      
+        <a href="/tags/DiT/" class="print-no-link">#DiT</a>
+      
     </div>
   
 </div>
@@ -466,7 +475,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>多模态理解与生成</div>
+      <div>Flow-based基于流的图像生成</div>
       <div>https://pljj315.github.io/Paper-Reading/Flow_based生成/</div>
     </div>
     <div class="license-meta">
@@ -521,8 +530,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/Paper-Reading/AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/" title="自回归学习">
-                        <span class="hidden-mobile">自回归学习</span>
+                      <a href="/Paper-Reading/AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/" title="AutoRegressive自回归图像生成">
+                        <span class="hidden-mobile">AutoRegressive自回归图像生成</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

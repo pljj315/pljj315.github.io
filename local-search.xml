@@ -35,7 +35,7 @@
   
   
   <entry>
-    <title>多模态理解与生成</title>
+    <title>Flow-based基于流的图像生成</title>
     <link href="/Paper-Reading/Flow_based%E7%94%9F%E6%88%90/"/>
     <url>/Paper-Reading/Flow_based%E7%94%9F%E6%88%90/</url>
     
@@ -53,6 +53,12 @@
       
       <tag>多模态</tag>
       
+      <tag>flow_based</tag>
+      
+      <tag>flux sd3</tag>
+      
+      <tag>DiT</tag>
+      
     </tags>
     
   </entry>
@@ -60,7 +66,7 @@
   
   
   <entry>
-    <title>自回归学习</title>
+    <title>AutoRegressive自回归图像生成</title>
     <link href="/Paper-Reading/AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/"/>
     <url>/Paper-Reading/AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/</url>
     
@@ -76,7 +82,9 @@
     
     <tags>
       
-      <tag>stable_video_diffusion</tag>
+      <tag>AutoRegressive</tag>
+      
+      <tag>图像生成</tag>
       
     </tags>
     
