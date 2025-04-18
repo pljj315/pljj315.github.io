@@ -19,25 +19,27 @@
   <meta name="author" content="pljj315">
   <meta name="keywords" content="计算机视觉 视觉大模型 研究生生活">
   
-    <meta name="description" content="自回归模型（AR）：通过对序列中先前的输入进行测量来自动预测序列中的下一个分量，是一种用于时间序列分析的统计技术，它假设时间序列的当前值是其过去值的函数。自回归模型使用类似的数学技术来确定序列中元素之间的概率相关性。然后，它们使用所得知识来猜测未知序列中的下一个元素。视觉自回归模型（VAR）： 自回归图像生成技术探索路线：VQ-GAN、ImageGPT、CogView、JetFormer:  Ch">
+    <meta name="description" content="Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12关键概括：训练了一个即插即用的adapter，能够在各种diffusion模型下，通过相机参数或者几何信息对视角进行指导，进行多视角的一致性角色生成。  decoupled attention mechanism：新的自注意力层来源于对原自注意力层的复制">
 <meta property="og:type" content="article">
-<meta property="og:title" content="AutoRegressive自回归图像生成">
-<meta property="og:url" content="https://pljj315.github.io/Research-Insights/AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/index.html">
+<meta property="og:title" content="Paper Reading:MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12">
+<meta property="og:url" content="https://pljj315.github.io/Paper-Reading/Paper-Reading_MV-Adapter%E5%A4%9A%E8%A7%86%E8%A7%92%E7%94%9F%E6%88%90/index.html">
 <meta property="og:site_name" content="JH_BLOG">
-<meta property="og:description" content="自回归模型（AR）：通过对序列中先前的输入进行测量来自动预测序列中的下一个分量，是一种用于时间序列分析的统计技术，它假设时间序列的当前值是其过去值的函数。自回归模型使用类似的数学技术来确定序列中元素之间的概率相关性。然后，它们使用所得知识来猜测未知序列中的下一个元素。视觉自回归模型（VAR）： 自回归图像生成技术探索路线：VQ-GAN、ImageGPT、CogView、JetFormer:  Ch">
+<meta property="og:description" content="Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12关键概括：训练了一个即插即用的adapter，能够在各种diffusion模型下，通过相机参数或者几何信息对视角进行指导，进行多视角的一致性角色生成。  decoupled attention mechanism：新的自注意力层来源于对原自注意力层的复制">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://pljj315.github.io/imgs/AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/v2-f7368634982ddee73d837d5cb12ccaed_1440w.jpg">
-<meta property="article:published_time" content="2025-03-26T02:04:11.000Z">
-<meta property="article:modified_time" content="2025-04-18T07:37:57.092Z">
+<meta property="og:image" content="https://pljj315.github.io/imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223194550810.png">
+<meta property="article:published_time" content="2025-02-23T09:58:33.000Z">
+<meta property="article:modified_time" content="2025-04-18T08:00:46.788Z">
 <meta property="article:author" content="pljj315">
-<meta property="article:tag" content="AutoRegressive">
-<meta property="article:tag" content="图像生成">
+<meta property="article:tag" content="diffusion">
+<meta property="article:tag" content="text-to-img">
+<meta property="article:tag" content="multi-view">
+<meta property="article:tag" content="论文阅读">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pljj315.github.io/imgs/AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/v2-f7368634982ddee73d837d5cb12ccaed_1440w.jpg">
+<meta name="twitter:image" content="https://pljj315.github.io/imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223194550810.png">
   
   
   
-  <title>AutoRegressive自回归图像生成 -&gt; JH_BLOG</title>
+  <title>Paper Reading:MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12 -&gt; JH_BLOG</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -214,7 +216,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="AutoRegressive自回归图像生成"></span>
+            <span id="subtitle" data-typed-text="Paper Reading:MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12"></span>
           
         </div>
 
@@ -230,8 +232,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-03-26 10:04" pubdate>
-          2025年3月26日 上午
+        <time datetime="2025-02-23 17:58" pubdate>
+          2025年2月23日 下午
         </time>
       </span>
     
@@ -242,7 +244,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.3k 字
+          610 字
         
       </span>
     
@@ -253,7 +255,7 @@
         
         
         
-          11 分钟
+          6 分钟
         
       </span>
     
@@ -299,112 +301,71 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">AutoRegressive自回归图像生成</h1>
+            <h1 id="seo-header">Paper Reading:MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12</h1>
             
             
               <div class="markdown-body">
                 
-                <p>自回归模型（AR）：通过对序列中先前的输入进行测量来自动预测序列中的下一个分量，是一种用于时间序列分析的统计技术，它假设时间序列的当前值是其过去值的函数。自回归模型使用类似的数学技术来确定序列中元素之间的概率相关性。然后，它们使用所得知识来猜测未知序列中的下一个元素。<br>视觉自回归模型（VAR）：</p>
-<p>自回归图像生成技术探索路线：VQ-GAN、ImageGPT、CogView、JetFormer:</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/LexLuc/p/18798718">ChatGPT-4o 更新生图能力：原生多模态的图文生图技术详解：自回归路线的逆袭 </a></p>
-<p>Decoder-Only Transformer 模型？</p>
-</blockquote>
-<h2 id="1-AR自回归图像生成：AE（Visual-Tokenizers）"><a href="#1-AR自回归图像生成：AE（Visual-Tokenizers）" class="headerlink" title="1. AR自回归图像生成：AE（Visual Tokenizers）"></a>1. AR自回归图像生成：AE（Visual Tokenizers）</h2><p>阅读博文：</p>
+                <h1 id="Paper-Reading：MULTI-VIEW-CONSISTENT-IMAGE-GENERATION-MADE-EASY-2024-12"><a href="#Paper-Reading：MULTI-VIEW-CONSISTENT-IMAGE-GENERATION-MADE-EASY-2024-12" class="headerlink" title="Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12"></a>Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12</h1><p><strong>关键概括：<strong>训练了一个即插即用的adapter，能够在各种diffusion模型下，通过相机参数或者几何信息对视角进行指导，进行</strong>多视角的一致性角色生成</strong>。</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/22553430415">自回归图像生成中的Visual Tokenizers: AEs</a></li>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/681895334">AutoEncoder与自回归图像生成</a></li>
+<li><strong>decoupled attention mechanism</strong>：新的自注意力层来源于对原自注意力层的复制 + 平行的自注意力连接架构【原spatial_self_attention与多个其他的attention平行连接！】</li>
+<li><strong>condition-guider</strong>：能够对相机参数和几何信息进行编码的“新的条件编码器(condition encoder)”</li>
 </ul>
-<p>AE与AR图像生成的关系：第一阶段训练 “AEs”，第二阶段对AR自回归图像token预测模型进行训练（如<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=239662218&content_type=Article&match_order=1&q=PixelCNN&zhida_source=entity">PixelCNN</a>、Transformer）；</p>
-<p>经典AE技术：</p>
+<p><strong>优点：</strong></p>
 <ul>
-<li><p><strong>AE</strong>：图片经过编码器得到 latent code， 解码得到重建图片；缺：对噪声敏感</p>
+<li>即插即用，尽可能保留了底模(base model)的性能</li>
+<li>训练容易，只需要微调几个adapter层而不是整个UNet：参数量小，数据集友好</li>
+</ul>
+<h2 id="方法："><a href="#方法：" class="headerlink" title="方法："></a>方法：</h2><h3 id="1-pipeline"><a href="#1-pipeline" class="headerlink" title="1. pipeline:"></a>1. pipeline:</h3><p>包括一个condition-guider encoder; 和decoupled attention mechanism</p>
+<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223194550810.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250223194550810"></p>
+<hr>
+<h3 id="2-condition-guider-encoder："><a href="#2-condition-guider-encoder：" class="headerlink" title="2. condition-guider&#x3D;&#x3D;&gt; encoder："></a>2. condition-guider&#x3D;&#x3D;&gt; encoder：</h3><ul>
+<li>conditioning map：<ul>
+<li>相机位姿：raymap</li>
+<li>几何信息：position_map + normal_map</li>
+</ul>
 </li>
-<li><p><strong>VAE（变分自编码）</strong>：通过编码器学习出mean和std编码，随机采样一个<strong>正态分布</strong>的编码α，通过 α*std+mean 重采样得到latent code【确保梯度可传播】，解码器进行重建；优：对输入噪声不敏感，预先知道每个属性都是服从正态分布，对于任意采样都能重构出鲁棒的图片；</p>
+<li>encoder结构：一系列的卷积网络&#x3D;&#x3D;&gt;包括feature extraction blocks特征提取 + downsampling layers下采样调整scale</li>
+</ul>
+<h3 id="3-decoupled-attention-mechanism："><a href="#3-decoupled-attention-mechanism：" class="headerlink" title="3. decoupled attention mechanism："></a>3. decoupled attention mechanism：</h3><ul>
+<li><p>自注意力与其他注意力的连接方式不再是原始的级联，如下图所示：<img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200818183.png" srcset="/imgs/img/loading.gif" lazyload alt="serial attention-architecture"></p>
 </li>
-<li><p><strong>VQ-VAE（vector quantized variational autoencoder）</strong>：通过编码器学习出中间编码，然后通过最邻近搜索将中间编码映射为<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=174419408&content_type=Article&match_order=1&q=codebook&zhida_source=entity">codebook</a>中K个向量之一【<strong>离散量化+查表</strong>】，通过解码器对latent code进行重建。生成模式是“自回归的 **pixcl-CNN **+codebook”， 交叉熵损失？</p>
-<p><img src="/../imgs/AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/image-20250407190626106.png" srcset="/imgs/img/loading.gif" lazyload alt="AE&#x2F;VAE&#x2F;VQVAE"></p>
-<p><img src="/../imgs/AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/v2-8b094c3f7c0f105316651602a425a850_1440w.jpg" srcset="/imgs/img/loading.gif" lazyload alt="VA-VAE：PIXEL-CNN"></p>
+<li><p>并联架构，如下图所示：<img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200121201.png" srcset="/imgs/img/loading.gif" lazyload alt="平行注意力架构公式"></p>
 </li>
-<li><p>VQ-VAE 2：多层次的VQ-VAE：层次化的向量量化</p>
-</li>
-<li><p>VQ-GAN：引入Transformer?</p>
-</li>
-<li><p><strong>MaskGIT(MAE)</strong>：</p>
-</li>
-<li><p><strong>DALL·E tokenizer 【D-VAE】</strong>:<a target="_blank" rel="noopener" href="https://sunlin-ai.github.io/2022/06/02/DALL-E.html">D-VAE</a>：生成模式是”自回归的 <strong>GPT</strong>+codebook“</p>
+<li><p>级联注意力架构  vs  并联注意力架构，对比如下图所示：</p>
 </li>
 </ul>
-<h2 id="2-AR自回归图像生成：分类"><a href="#2-AR自回归图像生成：分类" class="headerlink" title="2. AR自回归图像生成：分类"></a>2. AR自回归图像生成：分类</h2><p>阅读博文：</p>
+<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200148615.png" srcset="/imgs/img/loading.gif" lazyload alt="级联注意力架构vs平行注意力架构"></p>
 <ul>
-<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/v_JULY_v/article/details/136318383?login=from_csdn">文生图中从扩散模型到流匹配的演变：从SDXL到Stable Diffusion3(含Flow Matching和Rectified Flow的详解)</a>、</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/v_JULY_v/article/details/131205615">AI绘画原理解析：从CLIP、BLIP到DALLE、DALLE 2、DALLE 3、Stable Diffusion</a></p>
+<li>其中：<ul>
+<li>spatial self-attention：即原始的自注意力层，Q&#x3D;K&#x3D;V&#x3D;hidden states，表示图片本身不同位置的关注度；</li>
+<li><strong>multi-view attention</strong>：较为复杂，是多视图的实现关键！<img src="/../imgs%5CPaper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy%5Cimage-20250223202102134.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250223202102134"></li>
+<li>image cross-attention：Q &#x3D; hidden states, K&#x3D;V&#x3D;来自冻结UNet对参考输入图提取得中间表示，即把冻结的平行UNet【被叫做UNet Encoder】作为了一种特征提取器，提取低级语义的特征和细粒度的细节；</li>
+</ul>
 </li>
 </ul>
-<h4 id="2-1-按照预测序列顺序进行的分类："><a href="#2-1-按照预测序列顺序进行的分类：" class="headerlink" title="2.1 按照预测序列顺序进行的分类："></a>2.1 按照预测序列顺序进行的分类：</h4><p>自回归图像生成需要设定一种比较合理的<em>序列生成顺序</em>，以及定义合适的序列里面的每一个“元素”，据此，可以将AR技术分类：</p>
-<ul>
-<li><p>next-pixel-prediction: 【raster-order、random-order】，AR、MAR，raster-order：GPT系列+单向Transformer，random-order：BERT系列+双向Transformer</p>
+<h3 id="训练："><a href="#训练：" class="headerlink" title="训练："></a>训练：</h3><ul>
+<li><p>数据集：Objaverse dataset</p>
 </li>
-<li><p>next-patch-prediction: 【raster-order】，PAR</p>
-</li>
-<li><p>Next-Block-Prediction</p>
-</li>
-<li><p>next-set-token-prediction: 【raster-order、random-order、曼哈顿距离order】， 如Muse、MaskGit、NAR、ZipAR</p>
-</li>
-<li><p>Next-Scale-Prediction:  VAR [北大 字节]</p>
-</li>
-<li><p>Next-Frequency-Prediction: FAR</p>
+<li><p>randomly zero out the features of the reference image to drop image conditions, enabling classifier-free guidance at inference：解释：对于CFG的训练策略，是在训练过程中按照比例（如0.1）随机丢弃<strong>条件信息</strong>，这里的“条件信息”一般是额外的(<strong>cross attn的K、V来源？</strong>)指导信息，比如文生图中的文本(text embedding)，这里丢弃的是<strong>参考图像特征</strong></p>
 </li>
 </ul>
-<blockquote>
-<p>raster-order光栅顺序：从左到右、从上到下，从左上角到右下角；</p>
-</blockquote>
-<p><img src="/../imgs/AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/v2-f7368634982ddee73d837d5cb12ccaed_1440w.jpg" srcset="/imgs/img/loading.gif" lazyload alt="img"></p>
-<h4 id="2-2-按照-image-token的离散、连续进行分类："><a href="#2-2-按照-image-token的离散、连续进行分类：" class="headerlink" title="2.2 按照 image token的离散、连续进行分类："></a>2.2 按照 image token的离散、连续进行分类：</h4><blockquote>
-<p>阅读博文：《Fluid: Scaling Autoregressive Text-to-image Generative Models with Continuous Tokens》Google DeepMind</p>
-</blockquote>
-<p>输入的分辨率为 256×256 的图片：</p>
-<ul>
-<li><p>离散Image Tokenizer使用 VQGAN 模型，将图像编码为 16×16 个离散Token，Codebook大小为 8192</p>
+<h3 id="待解决："><a href="#待解决：" class="headerlink" title="待解决："></a>待解决：</h3><ul>
+<li><p>shift the noise schedule towards high noise levels</p>
 </li>
-<li><p>连续Image Tokenizer采用来自 Stable Diffusion 的一种，将图像编码为连续的 32×32 个Token，每个token含 4 个通道，为与离散token器序列长度一致，进一步将每 2×2 个连续token组合为一个token，最终序列长度为 256，每个token含 16 个通道，连续Token重建质量显著高于离散Token</p>
+<li><p>shift the log signal-to-noise ratio by log(n), where n is the number of generated views.</p>
+</li>
+<li><p><strong>multi-view attention</strong>部分没有细致的研究，row-wise self_attention column-wise self-attention是什么？</p>
 </li>
 </ul>
-<h2 id="3-AR自回归-Diffusion扩散模型相结合：多模态理解与生产【终极形态？】"><a href="#3-AR自回归-Diffusion扩散模型相结合：多模态理解与生产【终极形态？】" class="headerlink" title="3. AR自回归+Diffusion扩散模型相结合：多模态理解与生产【终极形态？】"></a>3. AR自回归+Diffusion扩散模型相结合：多模态理解与生产【终极形态？】</h2><p>阅读博文：</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/3442569070">自回归+扩散模型的图像生成模型</a></li>
-</ul>
-<p>自然语言理解、生成：自回归 + Transformer，扩散较少</p>
-<p>图片理解、生成：视觉自回归、扩散 + Transformer【MM-DiT】</p>
-<p>举例：</p>
-<ul>
-<li><p>TransFusion：</p>
-<p><img src="/../imgs/AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/image-20250408101804847.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408101804847"></p>
-</li>
-</ul>
-<h2 id="4-经典AR视觉生成举例："><a href="#4-经典AR视觉生成举例：" class="headerlink" title="4. 经典AR视觉生成举例："></a>4. 经典AR视觉生成举例：</h2><p>阅读博文：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/7219374450">自回归图像生成技术举例</a></p>
-<h4 id="4-1-ImageGPT-Generative-Pretraining-from-Pixels-自回归视觉模型的先驱-OpenAI-2020-6"><a href="#4-1-ImageGPT-Generative-Pretraining-from-Pixels-自回归视觉模型的先驱-OpenAI-2020-6" class="headerlink" title="4.1 ImageGPT: Generative Pretraining from Pixels 自回归视觉模型的先驱- OpenAI 2020.6"></a>4.1 ImageGPT: Generative Pretraining from Pixels 自回归视觉模型的先驱- OpenAI 2020.6</h4><p>GPT&#x3D;Generative Pre-trained Transformer；ImageGPT会逐个预测像素序列中的每一个像素值。这意味着，在预测某一个像素值时，模型只能依据已经预测出的像素值进行推断。这种自回归的方式使得ImageGPT能够学习到图像中像素之间的依赖关系，从而生成更加自然、连贯的图像。</p>
-<p>阅读博文<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/352350329">iGPT详解</a></p>
-<p>网络结构：GPT-2，无监督训练，对概率密度进行自回归建模</p>
-<p>能力：图片补全、分类等下游任务（图像理解）</p>
-<p>缺：降采样到32&#x2F;48&#x2F;64分辨率后K-means聚类（k&#x3D;512）</p>
-<p><img src="/../imgs/AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/v2-dfb18172e3ed94a26ebe892334f179ed_1440w.jpg" srcset="/imgs/img/loading.gif" lazyload alt="iGPT图像缩减和展开，预训练，微调和线性探测"></p>
-<h4 id="4-2-DALLE-系列-DALLE1自回归，-DALLE2扩散，DALLE3不清楚"><a href="#4-2-DALLE-系列-DALLE1自回归，-DALLE2扩散，DALLE3不清楚" class="headerlink" title="4.2 DALLE 系列 - DALLE1自回归， DALLE2扩散，DALLE3不清楚"></a>4.2 DALLE 系列 - DALLE1自回归， DALLE2扩散，DALLE3不清楚</h4><p>博文阅读: <a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44966641/article/details/136289437">DALL-E 系列 (1-3)</a></p>
-<p><img src="/../imgs/AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/6b7e8268aca7807eda8d7bf0ab66c88a.png" srcset="/imgs/img/loading.gif" lazyload alt="DALLE 1:[Zero-Shot Text-to-Image Generation](https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2102.12092)"></p>
-<h4 id="4-3-Visual-AutoRegressive-Modeling-Scalable-Image-Generation-via-Next-Scale-Prediction-字节-北大-2024-6"><a href="#4-3-Visual-AutoRegressive-Modeling-Scalable-Image-Generation-via-Next-Scale-Prediction-字节-北大-2024-6" class="headerlink" title="4.3 Visual AutoRegressive Modeling: Scalable Image Generation via Next-Scale Prediction 字节 北大 2024.6"></a>4.3 Visual AutoRegressive Modeling: Scalable Image Generation via Next-Scale Prediction 字节 北大 2024.6</h4><ol>
-<li>Visual AutoRegressive (VAR) transformers： 区别于以往的“next-token prediction”，本文提出了“next-scale prediction”或者“next-resolution prediction”；</li>
-<li>架构：GPT-2类似的Transformer架构，视觉自回归，两阶段训练</li>
-<li>符合两条经验：Scaling Laws；zero-shot generalization</li>
-</ol>
-<p><img src="/../imgs/AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/image-20250407163011096.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250407163011096"></p>
-<p><img src="/../imgs/AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/image-20250407164722640.png" srcset="/imgs/img/loading.gif" lazyload alt="VAR两阶段训练"></p>
-<p><img src="/../imgs/AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/v2-0ba6bc4de789f744e0c833df74158ddd_1440w.jpg" srcset="/imgs/img/loading.gif" lazyload alt="VAR两阶段训练伪代码"></p>
-<h4 id="4-4-JetFormer-谷歌-2024-11-【待看】"><a href="#4-4-JetFormer-谷歌-2024-11-【待看】" class="headerlink" title="4.4 JetFormer: 谷歌 2024.11 【待看】"></a>4.4 JetFormer: 谷歌 2024.11 【待看】</h4><p>transformer decoder-only models trained for next-token prediction</p>
-<p>由 Transformer 和归一化流组成的生成模型，可以从头开始训练，以端到端的方式联合建模文本和原始像素</p>
-<p>通过预训练的、冻结的 VQ-VAE 将高维图像像素空间压缩为低维离散 Token 序列，然后使用 Transformer 解码器对压缩序列进行建模</p>
-<p><img src="/../imgs/AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/image-20250407205226990.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250407205226990"></p>
-<h4 id="4-5-RandAR-字节（待看）"><a href="#4-5-RandAR-字节（待看）" class="headerlink" title="4.5 RandAR 字节（待看）"></a>4.5 RandAR 字节（待看）</h4>
+<h3 id="测试实例："><a href="#测试实例：" class="headerlink" title="测试实例："></a>测试实例：</h3><p>输入、输出&#x3D;768分辨率</p>
+<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image.webp" srcset="/imgs/img/loading.gif" lazyload alt="预处理后的输入图"></p>
+<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-1740315153443-3.webp" srcset="/imgs/img/loading.gif" lazyload alt="6视图-1"></p>
+<p>![img](..&#x2F;imgs&#x2F;Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy&#x2F;image (5).webp)</p>
+<p>![image (3)](..&#x2F;imgs&#x2F;Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy&#x2F;image (3).webp)</p>
+<p>![image (4)](..&#x2F;imgs&#x2F;Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy&#x2F;image (4).webp)</p>
+<p>![image (1)](..&#x2F;imgs&#x2F;Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy&#x2F;image (1).webp)</p>
+
                 
               </div>
             
@@ -422,7 +383,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Research-Insights/" class="category-chain-item">Research Insights</a>
+  <a href="/categories/Paper-Reading/" class="category-chain-item">Paper Reading</a>
   
   
 
@@ -437,9 +398,13 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/AutoRegressive/" class="print-no-link">#AutoRegressive</a>
+        <a href="/tags/diffusion/" class="print-no-link">#diffusion</a>
       
-        <a href="/tags/%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/" class="print-no-link">#图像生成</a>
+        <a href="/tags/text-to-img/" class="print-no-link">#text-to-img</a>
+      
+        <a href="/tags/multi-view/" class="print-no-link">#multi-view</a>
+      
+        <a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" class="print-no-link">#论文阅读</a>
       
     </div>
   
@@ -451,8 +416,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>AutoRegressive自回归图像生成</div>
-      <div>https://pljj315.github.io/Research-Insights/AutoRegressive自回归/</div>
+      <div>Paper Reading:MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12</div>
+      <div>https://pljj315.github.io/Paper-Reading/Paper-Reading_MV-Adapter多视角生成/</div>
     </div>
     <div class="license-meta">
       
@@ -464,7 +429,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年3月26日</div>
+          <div>2025年2月23日</div>
         </div>
       
       
@@ -496,9 +461,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/Research-Insights/Flow_based%E7%94%9F%E6%88%90/" title="Flow-based基于流的图像生成">
+                      <a href="/Research-Insights/Research-Insights_Stylized-generation-based-diffusion/" title="Stylized-generation-based-diffusion风格化生成">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Flow-based基于流的图像生成</span>
+                        <span class="hidden-mobile">Stylized-generation-based-diffusion风格化生成</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -506,8 +471,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/Research-Insights/Paper-Reading-Video-Generation/" title="Paper-Reading_Video_Generation">
-                        <span class="hidden-mobile">Paper-Reading_Video_Generation</span>
+                      <a href="/LeetCode-highlights/LeetCode-Highlights/" title="算法——leetcode">
+                        <span class="hidden-mobile">算法——leetcode</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -530,7 +495,7 @@
         var options = Object.assign(
           {"clientID":"Ov23lipwdnWHzn8s0j4d","clientSecret":"794682cc1d531e3af88ba187be170008cdb87097","repo":"pljj315.github.io","owner":"pljj315","admin":["pljj315"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: '01c8b8558ee9d773acf622f10e54d7f9'
+            id: 'a57b15b7127476a7af6eeeacae757700'
           }
         )
         var gitalk = new Gitalk(options);

@@ -19,27 +19,24 @@
   <meta name="author" content="pljj315">
   <meta name="keywords" content="计算机视觉 视觉大模型 研究生生活">
   
-    <meta name="description" content="Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12关键概括：训练了一个即插即用的adapter，能够在各种diffusion模型下，通过相机参数或者几何信息对视角进行指导，进行多视角的一致性角色生成。  decoupled attention mechanism：新的自注意力层来源于对原自注意力层的复制">
+    <meta name="description" content="Diffusion based methods:图生视频：  文生图模型 + 时序建模：时序建模技术包括：“inter-frame attention”即temporal-layers，或者motion_module； 文生视频模型 + 图片特征：视觉特征提取（CLIP-image-encoder、Parallel-UNet-encoder &#x2F; ControlNet），latent初始化">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Paper-Reading：MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12">
-<meta property="og:url" content="https://pljj315.github.io/Paper-Reading/Paper-Reading_MV-Adapter-multi-view-consistent-image-generation-made-easy/index.html">
+<meta property="og:title" content="Video_Generation视频生成">
+<meta property="og:url" content="https://pljj315.github.io/Research-Insights/Research-Insights-Video-Generation/index.html">
 <meta property="og:site_name" content="JH_BLOG">
-<meta property="og:description" content="Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12关键概括：训练了一个即插即用的adapter，能够在各种diffusion模型下，通过相机参数或者几何信息对视角进行指导，进行多视角的一致性角色生成。  decoupled attention mechanism：新的自注意力层来源于对原自注意力层的复制">
+<meta property="og:description" content="Diffusion based methods:图生视频：  文生图模型 + 时序建模：时序建模技术包括：“inter-frame attention”即temporal-layers，或者motion_module； 文生视频模型 + 图片特征：视觉特征提取（CLIP-image-encoder、Parallel-UNet-encoder &#x2F; ControlNet），latent初始化">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://pljj315.github.io/imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223194550810.png">
-<meta property="article:published_time" content="2025-02-23T09:58:33.000Z">
-<meta property="article:modified_time" content="2025-04-18T07:37:46.748Z">
+<meta property="og:image" content="https://pljj315.github.io/imgs/Paper-Reading-Video-Generation/640.webp">
+<meta property="article:published_time" content="2025-03-26T02:04:11.000Z">
+<meta property="article:modified_time" content="2025-04-18T08:00:11.638Z">
 <meta property="article:author" content="pljj315">
-<meta property="article:tag" content="diffusion">
-<meta property="article:tag" content="text-to-img">
-<meta property="article:tag" content="论文阅读">
-<meta property="article:tag" content="multi-view">
+<meta property="article:tag" content="stable_video_diffusion">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pljj315.github.io/imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223194550810.png">
+<meta name="twitter:image" content="https://pljj315.github.io/imgs/Paper-Reading-Video-Generation/640.webp">
   
   
   
-  <title>Paper-Reading：MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12 -&gt; JH_BLOG</title>
+  <title>Video_Generation视频生成 -&gt; JH_BLOG</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -216,7 +213,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Paper-Reading：MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12"></span>
+            <span id="subtitle" data-typed-text="Video_Generation视频生成"></span>
           
         </div>
 
@@ -232,8 +229,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-02-23 17:58" pubdate>
-          2025年2月23日 下午
+        <time datetime="2025-03-26 10:04" pubdate>
+          2025年3月26日 上午
         </time>
       </span>
     
@@ -244,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          610 字
+          309 字
         
       </span>
     
@@ -255,7 +252,7 @@
         
         
         
-          6 分钟
+          3 分钟
         
       </span>
     
@@ -301,70 +298,54 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Paper-Reading：MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12</h1>
+            <h1 id="seo-header">Video_Generation视频生成</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="Paper-Reading：MULTI-VIEW-CONSISTENT-IMAGE-GENERATION-MADE-EASY-2024-12"><a href="#Paper-Reading：MULTI-VIEW-CONSISTENT-IMAGE-GENERATION-MADE-EASY-2024-12" class="headerlink" title="Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12"></a>Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12</h1><p><strong>关键概括：<strong>训练了一个即插即用的adapter，能够在各种diffusion模型下，通过相机参数或者几何信息对视角进行指导，进行</strong>多视角的一致性角色生成</strong>。</p>
+                <h1 id="Diffusion-based-methods"><a href="#Diffusion-based-methods" class="headerlink" title="Diffusion based methods:"></a>Diffusion based methods:</h1><p>图生视频：</p>
+<ol>
+<li>文生<strong>图</strong>模型 + 时序建模：时序建模技术包括：“inter-frame attention”即temporal-layers，或者motion_module；</li>
+<li>文生<strong>视频</strong>模型 + 图片特征：视觉特征提取（CLIP-image-encoder、Parallel-UNet-encoder &#x2F; ControlNet），latent初始化；</li>
+</ol>
 <ul>
-<li><strong>decoupled attention mechanism</strong>：新的自注意力层来源于对原自注意力层的复制 + 平行的自注意力连接架构【原spatial_self_attention与多个其他的attention平行连接！】</li>
-<li><strong>condition-guider</strong>：能够对相机参数和几何信息进行编码的“新的条件编码器(condition encoder)”</li>
+<li>Animate-Anyone【图生视频】</li>
+<li>Stable Video Diffusion(SVD)</li>
 </ul>
-<p><strong>优点：</strong></p>
+<h2 id="1-Stable-Video-Diffusion：StabilityAI-2023-11"><a href="#1-Stable-Video-Diffusion：StabilityAI-2023-11" class="headerlink" title="1. Stable Video Diffusion：StabilityAI 2023.11"></a>1. Stable Video Diffusion：StabilityAI 2023.11</h2><h2 id="2-AnimateDiff：2023-11-略"><a href="#2-AnimateDiff：2023-11-略" class="headerlink" title="2. AnimateDiff：2023.11 略"></a>2. AnimateDiff：2023.11 略</h2><h2 id="3-Animate-Anyone：阿里巴巴-通义-2023-12"><a href="#3-Animate-Anyone：阿里巴巴-通义-2023-12" class="headerlink" title="3. Animate-Anyone：阿里巴巴-通义 2023.12"></a>3. Animate-Anyone：阿里巴巴-通义 2023.12</h2><ol>
+<li><p>贡献点：</p>
 <ul>
-<li>即插即用，尽可能保留了底模(base model)的性能</li>
-<li>训练容易，只需要微调几个adapter层而不是整个UNet：参数量小，数据集友好</li>
-</ul>
-<h2 id="方法："><a href="#方法：" class="headerlink" title="方法："></a>方法：</h2><h3 id="1-pipeline"><a href="#1-pipeline" class="headerlink" title="1. pipeline:"></a>1. pipeline:</h3><p>包括一个condition-guider encoder; 和decoupled attention mechanism</p>
-<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223194550810.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250223194550810"></p>
-<hr>
-<h3 id="2-condition-guider-encoder："><a href="#2-condition-guider-encoder：" class="headerlink" title="2. condition-guider&#x3D;&#x3D;&gt; encoder："></a>2. condition-guider&#x3D;&#x3D;&gt; encoder：</h3><ul>
-<li>conditioning map：<ul>
-<li>相机位姿：raymap</li>
-<li>几何信息：position_map + normal_map</li>
-</ul>
+<li><p>ReferenceNet: 平行的UNet-encoder提取参考人物细节特征【优点：相比于CLIP-Image-encoer的输入分辨率只能224*224且强调语义，能够接受更大的分辨率输入且强调细粒度细节特征和语义，】</p>
 </li>
-<li>encoder结构：一系列的卷积网络&#x3D;&#x3D;&gt;包括feature extraction blocks特征提取 + downsampling layers下采样调整scale</li>
-</ul>
-<h3 id="3-decoupled-attention-mechanism："><a href="#3-decoupled-attention-mechanism：" class="headerlink" title="3. decoupled attention mechanism："></a>3. decoupled attention mechanism：</h3><ul>
-<li><p>自注意力与其他注意力的连接方式不再是原始的级联，如下图所示：<img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200818183.png" srcset="/imgs/img/loading.gif" lazyload alt="serial attention-architecture"></p>
+<li><p>Pose Guider: 姿势控制器: 高斯权重、零投影初始化，加到noise_latent上</p>
 </li>
-<li><p>并联架构，如下图所示：<img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200121201.png" srcset="/imgs/img/loading.gif" lazyload alt="平行注意力架构公式"></p>
-</li>
-<li><p>级联注意力架构  vs  并联注意力架构，对比如下图所示：</p>
+<li><p>Temporal-Attention: 时序注意力层：确保帧间的空间、时间连续性，串联在两个注意力机制后：沿着 t 维度进行自注意力机制</p>
+<p><code>Specifically, for a feature map x∈b×t×h×w×c, we first reshape it to x∈(b×h×w)×t×c, and then perform temporal attention, which refers to self-attention along the dimension t.</code></p>
 </li>
 </ul>
-<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200148615.png" srcset="/imgs/img/loading.gif" lazyload alt="级联注意力架构vs平行注意力架构"></p>
+</li>
+<li><p>训练策略：</p>
 <ul>
-<li>其中：<ul>
-<li>spatial self-attention：即原始的自注意力层，Q&#x3D;K&#x3D;V&#x3D;hidden states，表示图片本身不同位置的关注度；</li>
-<li><strong>multi-view attention</strong>：较为复杂，是多视图的实现关键！<img src="/../imgs%5CPaper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy%5Cimage-20250223202102134.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250223202102134"></li>
-<li>image cross-attention：Q &#x3D; hidden states, K&#x3D;V&#x3D;来自冻结UNet对参考输入图提取得中间表示，即把冻结的平行UNet【被叫做UNet Encoder】作为了一种特征提取器，提取低级语义的特征和细粒度的细节；</li>
+<li>两阶段：<ul>
+<li>先使用没有 Temporal-Attention 时序注意力层的网络训练Pose Guider：使用单帧；</li>
+<li>再只训练 Temporal-Attention 模块，权重由 AnimateDiff 初始化：使用24帧；</li>
 </ul>
 </li>
+<li>测试指标：SSIM， PSNR， LPIPS，FVD</li>
 </ul>
-<h3 id="训练："><a href="#训练：" class="headerlink" title="训练："></a>训练：</h3><ul>
-<li><p>数据集：Objaverse dataset</p>
 </li>
-<li><p>randomly zero out the features of the reference image to drop image conditions, enabling classifier-free guidance at inference：解释：对于CFG的训练策略，是在训练过程中按照比例（如0.1）随机丢弃<strong>条件信息</strong>，这里的“条件信息”一般是额外的(<strong>cross attn的K、V来源？</strong>)指导信息，比如文生图中的文本(text embedding)，这里丢弃的是<strong>参考图像特征</strong></p>
-</li>
+<li><p>局限：</p>
+<ul>
+<li>手部运动失真、模糊</li>
+<li>单视角参考：背面生成有不稳定</li>
 </ul>
-<h3 id="待解决："><a href="#待解决：" class="headerlink" title="待解决："></a>待解决：</h3><ul>
-<li><p>shift the noise schedule towards high noise levels</p>
 </li>
-<li><p>shift the log signal-to-noise ratio by log(n), where n is the number of generated views.</p>
-</li>
-<li><p><strong>multi-view attention</strong>部分没有细致的研究，row-wise self_attention column-wise self-attention是什么？</p>
-</li>
+</ol>
+<p><img src="/../imgs/Paper-Reading-Video-Generation/image-20250326100721485.png" srcset="/imgs/img/loading.gif" lazyload alt="animate-anyone"></p>
+<h1 id="Transformer-based-methods"><a href="#Transformer-based-methods" class="headerlink" title="Transformer based methods:"></a>Transformer based methods:</h1><ul>
+<li>CogVideo</li>
 </ul>
-<h3 id="测试实例："><a href="#测试实例：" class="headerlink" title="测试实例："></a>测试实例：</h3><p>输入、输出&#x3D;768分辨率</p>
-<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image.webp" srcset="/imgs/img/loading.gif" lazyload alt="预处理后的输入图"></p>
-<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-1740315153443-3.webp" srcset="/imgs/img/loading.gif" lazyload alt="6视图-1"></p>
-<p>![img](..&#x2F;imgs&#x2F;Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy&#x2F;image (5).webp)</p>
-<p>![image (3)](..&#x2F;imgs&#x2F;Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy&#x2F;image (3).webp)</p>
-<p>![image (4)](..&#x2F;imgs&#x2F;Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy&#x2F;image (4).webp)</p>
-<p>![image (1)](..&#x2F;imgs&#x2F;Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy&#x2F;image (1).webp)</p>
+<p><img src="/../imgs/Paper-Reading-Video-Generation/640.webp" srcset="/imgs/img/loading.gif" lazyload alt="图片"></p>
 
                 
               </div>
@@ -383,7 +364,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Paper-Reading/" class="category-chain-item">Paper Reading</a>
+  <a href="/categories/Research-Insights/" class="category-chain-item">Research Insights</a>
   
   
 
@@ -398,13 +379,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/diffusion/" class="print-no-link">#diffusion</a>
-      
-        <a href="/tags/text-to-img/" class="print-no-link">#text-to-img</a>
-      
-        <a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" class="print-no-link">#论文阅读</a>
-      
-        <a href="/tags/multi-view/" class="print-no-link">#multi-view</a>
+        <a href="/tags/stable-video-diffusion/" class="print-no-link">#stable_video_diffusion</a>
       
     </div>
   
@@ -416,8 +391,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Paper-Reading：MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12</div>
-      <div>https://pljj315.github.io/Paper-Reading/Paper-Reading_MV-Adapter-multi-view-consistent-image-generation-made-easy/</div>
+      <div>Video_Generation视频生成</div>
+      <div>https://pljj315.github.io/Research-Insights/Research-Insights-Video-Generation/</div>
     </div>
     <div class="license-meta">
       
@@ -429,7 +404,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年2月23日</div>
+          <div>2025年3月26日</div>
         </div>
       
       
@@ -461,9 +436,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/Research-Insights/Research-Insights_Stylized-generation-based-diffusion/" title="Reserch-Insights_Stylized-generation-based-diffusion">
+                      <a href="/Research-Insights/Research-Insights_Flow_based%E7%94%9F%E6%88%90/" title="Flow-based基于流的图像生成">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Reserch-Insights_Stylized-generation-based-diffusion</span>
+                        <span class="hidden-mobile">Flow-based基于流的图像生成</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -471,8 +446,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/LeetCode-highlights/LeetCode-Highlights/" title="算法——leetcode">
-                        <span class="hidden-mobile">算法——leetcode</span>
+                      <a href="/Research-Insights/Research_Insights_AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/" title="AutoRegressive自回归图像生成">
+                        <span class="hidden-mobile">AutoRegressive自回归图像生成</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -495,7 +470,7 @@
         var options = Object.assign(
           {"clientID":"Ov23lipwdnWHzn8s0j4d","clientSecret":"794682cc1d531e3af88ba187be170008cdb87097","repo":"pljj315.github.io","owner":"pljj315","admin":["pljj315"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: '31abffdff98caea76903d0a00d34091d'
+            id: 'ad71e069087846342733e6e055b73895'
           }
         )
         var gitalk = new Gitalk(options);
