@@ -9,7 +9,8 @@ tags:
 - text-to-img 
 - personalization 
 - 论文阅读
-category: paper_reading
+category: Paper Reading
+index_img: ../imgs/Paper-Reading_IDM-Virtual-Try-on/image-20250222211416822.png
 ---
 
 ## IDM-VTON: Improving Diffusion Models for Authentic Virtual Try-on in the Wild (in 2024 ECCV)

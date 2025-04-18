@@ -9,7 +9,8 @@ tags:
 - text-to-img 
 - personalization 
 - 论文阅读
-category: paper_reading
+category: Paper Reading
+index_img: ../imgs/Paper-Reading_Nested-Attention/image-20250108172150828.png
 ---
 
 # [**Nested Attention:** Semantic-aware Attention Values for Concept Personalization-2025](https://snap-research.github.io/NestedAttention/)

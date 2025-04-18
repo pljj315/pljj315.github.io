@@ -4,12 +4,13 @@ author: pljj315
 comment: gitalk
 date: 2025-01-09 10:56:23
 tags: 
-- diffusion; 
-- control; 
-- text-to-img; 
-- img-to-img; 
-- 大模型；
+- diffusion
+- control
+- text-to-img
+- img-to-img
+- 大模型
 category: Research Insights
+index_img: ../imgs/personalization-and-feature-mechanism/image-20250109172222535.png
 ---
 
 # Research Insights: diffusion VS control

@@ -2,15 +2,11 @@
 title: 影视剧、书籍、音乐和生活方式推荐
 date: 2025-01-07 20:27:41
 tags: 
-- 安利 
-- 影视剧 
-- 书籍 
-- 音乐 
 - 生活方式 
-- recommends
 category: 'My world' 
 author: pljj315
 comment: gitalk
+index_img: ../imgs/roy.jpg
 ---
 
 影视剧、书籍、音乐和生活方式推荐
