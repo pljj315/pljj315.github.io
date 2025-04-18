@@ -1,0 +1,896 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/imgs/img/OIP.jpg">
+  <link rel="icon" href="/imgs/img/OIP.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="pljj315">
+  <meta name="keywords" content="计算机视觉 视觉大模型 研究生生活">
+  
+    <meta name="description" content="前言：基于扩散&#x2F;流生成模型中的图像编辑：  test-time optimization：规模性的微调训练，如FLUX-Fill 模型、FLUX-redux万物迁移 optimization-free： Inversion-reconstruction：如 RF-Inversion，RF-Edit，并不能算“编辑”，更像“图生图”，适合风格迁移，无法背景保持，耗时 step*2 Inv">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Inversion_based_editing in flow_matching models">
+<meta property="og:url" content="https://pljj315.github.io/Paper-Reading/Paper-Reading_Inversion_based_%E5%9B%BE%E5%83%8F%E7%BC%96%E8%BE%91/index.html">
+<meta property="og:site_name" content="JH_BLOG">
+<meta property="og:description" content="前言：基于扩散&#x2F;流生成模型中的图像编辑：  test-time optimization：规模性的微调训练，如FLUX-Fill 模型、FLUX-redux万物迁移 optimization-free： Inversion-reconstruction：如 RF-Inversion，RF-Edit，并不能算“编辑”，更像“图生图”，适合风格迁移，无法背景保持，耗时 step*2 Inv">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pljj315.github.io/imgs/Paper-Reading_%E5%9F%BA%E4%BA%8EFlow%E7%9A%84%E5%9B%BE%E5%83%8F%E7%BC%96%E8%BE%91/image-20250410210713411.png">
+<meta property="article:published_time" content="2025-04-08T11:11:11.000Z">
+<meta property="article:modified_time" content="2025-04-18T06:24:40.743Z">
+<meta property="article:author" content="pljj315">
+<meta property="article:tag" content="DiT">
+<meta property="article:tag" content="Flow_based">
+<meta property="article:tag" content="图像编辑">
+<meta property="article:tag" content="Inversion">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pljj315.github.io/imgs/Paper-Reading_%E5%9F%BA%E4%BA%8EFlow%E7%9A%84%E5%9B%BE%E5%83%8F%E7%BC%96%E8%BE%91/image-20250410210713411.png">
+  
+  
+  
+  <title>Inversion_based_editing in flow_matching models -&gt; JH_BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"pljj315.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":30,"cursorChar":":","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"❡"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/imgs/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>pljj315&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/imgs/img/default_roy.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Inversion_based_editing in flow_matching models"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        pljj315
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-04-08 19:11" pubdate>
+          2025年4月8日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          17 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Inversion_based_editing in flow_matching models</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <blockquote>
+<p>前言：基于扩散&#x2F;流生成模型中的图像编辑：</p>
+<ul>
+<li>test-time optimization：规模性的微调训练，如FLUX-Fill 模型、FLUX-redux万物迁移</li>
+<li>optimization-free：</li>
+<li>Inversion-reconstruction：如 RF-Inversion，RF-Edit，并不能算“编辑”，更像“图生图”，适合风格迁移，无法背景保持，<strong>耗时 step*2</strong></li>
+<li>Inversion-free：如 Flow Edit，不再借助反演的中间的高斯噪声分布，但并没有节省时间消耗，依然 <strong>耗时 step*2</strong></li>
+<li>Inversion-based-cache：借助Inversion，并在采样时注入Inversion得到的中间表示【如：序列token，V，k&amp;V，等】，<strong>耗时 step*2</strong>——&gt; 实现结构保留的图像编辑！！！<ul>
+<li>RF-Edit：注意力共享：替换 V【单流自注意力中的V_ref】</li>
+<li>KV-Edit：注意力共享：替换 K &amp; V</li>
+<li>Personalize Anything：图像token替换，位置编码ids的实验探究</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<p>什么是Inversion? </p>
+<p>扩散的Inversion如何实现？ </p>
+<p>FLow_based的Inversion如何实现？</p>
+<p>阅读博文：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/weixin_44966641/article/details/138804404">Diffusion Inversion技术</a></li>
+</ul>
+<p>flux代码：</p>
+<p><code>sigmas = np.linspace(1.0, 1 / T_steps, T_steps) </code>从1~0均匀取值，但是取不到0,最后一位&#x3D;&#x3D;(1&#x2F;T_steps)!!!!</p>
+<p>VAE：16通道，8倍压缩比 &#x3D; pipe.vae_scale_factor&#x3D;8， patchify图块化2*2的两倍压缩比,  FLUX总压缩比16</p>
+<p>加噪：<code>Z_t= (1-t)*Z_0 + t*N_t, N_t~正态分布(0,1)</code>  scale_noise函数中实现；</p>
+<p>去噪：<code>latents = self.scheduler.step( noise_pred, t, latents, return_dict=False )[0]</code></p>
+<p>FluxTransformer2DModel.FluxAttnProcessor2_0个数：57 &#x3D;&#x3D; single_transformer_blocks：38 + transformer_blocks：19</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">FluxTransformer2DModel</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params"></span><br><span class="hljs-params">            self,</span><br><span class="hljs-params">            patch_size: <span class="hljs-built_in">int</span> = <span class="hljs-number">1</span>,</span><br><span class="hljs-params">            in_channels: <span class="hljs-built_in">int</span> = <span class="hljs-number">64</span>,</span><br><span class="hljs-params">            out_channels: <span class="hljs-type">Optional</span>[<span class="hljs-built_in">int</span>] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">            num_layers: <span class="hljs-built_in">int</span> = <span class="hljs-number">19</span>,           <span class="hljs-comment"># 双流MM-DiT :&#x27;transformer_blocks.18.attn.processor&#x27;</span></span><br><span class="hljs-params">            num_single_layers: <span class="hljs-built_in">int</span> = <span class="hljs-number">38</span>,    <span class="hljs-comment"># 单流DiT    :&#x27;single_transformer_blocks.37.attn.processor&#x27;</span></span><br><span class="hljs-params">            attention_head_dim: <span class="hljs-built_in">int</span> = <span class="hljs-number">128</span>,</span><br><span class="hljs-params">            num_attention_heads: <span class="hljs-built_in">int</span> = <span class="hljs-number">24</span>,</span><br><span class="hljs-params">            joint_attention_dim: <span class="hljs-built_in">int</span> = <span class="hljs-number">4096</span>, <span class="hljs-comment"># img_dims</span></span><br><span class="hljs-params">            pooled_projection_dim: <span class="hljs-built_in">int</span> = <span class="hljs-number">768</span>,</span><br><span class="hljs-params">            guidance_embeds: <span class="hljs-built_in">bool</span> = <span class="hljs-literal">False</span>,</span><br><span class="hljs-params">            axes_dims_rope: <span class="hljs-type">Tuple</span>[<span class="hljs-built_in">int</span>] = (<span class="hljs-params"><span class="hljs-number">16</span>, <span class="hljs-number">56</span>, <span class="hljs-number">56</span></span>), </span>)<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">attn_processors</span>()<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">set_attn_processor</span>()<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">fuse_qkv_projections</span>()<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">unfuse_qkv_projections</span>()<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">FluxTransformerBlock</span>(nn.Module)<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">FluxSingleTransformerBlock</span>(nn.Module)<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h2 id="1-Inversion-in-flow-matching-models"><a href="#1-Inversion-in-flow-matching-models" class="headerlink" title="1. Inversion in flow_matching models:"></a>1. Inversion in flow_matching models:</h2><h3 id="1-1-RF-Inversion：-Semantic-Image-Inversion-and-Editing-using-Rectified-Stochastic-Differential-Equations——谷歌【收入diffusers】"><a href="#1-1-RF-Inversion：-Semantic-Image-Inversion-and-Editing-using-Rectified-Stochastic-Differential-Equations——谷歌【收入diffusers】" class="headerlink" title="1.1 RF-Inversion： Semantic Image Inversion and Editing using Rectified Stochastic Differential Equations——谷歌【收入diffusers】"></a>1.1 RF-Inversion： Semantic Image Inversion and Editing using Rectified Stochastic Differential Equations——谷歌【收入diffusers】</h3><ol>
+<li><p>理论性强，没看懂;</p>
+</li>
+<li><p>被收入diffusers: 在：<code>examples/community/pipeline_flux_rf_inversion.py</code>中的<code>FlowMatchEulerDiscreteSDEScheduler</code></p>
+<blockquote>
+<p>注意：diffusers中<code>FluxPipeline</code>默认的flux采样器是<code>FlowMatchEulerDiscreteScheduler</code></p>
+<p>RF-Inversion需要自己拉仓库导入上述<code>FlowMatchEulerDiscreteSDEScheduler</code></p>
+</blockquote>
+</li>
+<li><p>invert参数固定：gamma&#x3D;0.5，inversion直接利用ref的latent_image_ids</p>
+</li>
+<li><p>代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># pipeline.invert</span><br><br><span class="hljs-comment"># Eq 8 dY_t = [u_t(Y_t) + γ(u_t(Y_t|y_1) - u_t(Y_t))]dt</span><br>Y_t = image_latents<br>y_1 = torch.randn_like(Y_t)<br>N = <span class="hljs-built_in">len</span>(sigmas)<br><br><span class="hljs-comment"># forward ODE loop</span><br><span class="hljs-keyword">with</span> <span class="hljs-variable language_">self</span>.progress_bar(total=N - <span class="hljs-number">1</span>) <span class="hljs-keyword">as</span> progress_bar:<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(N - <span class="hljs-number">1</span>):<br>        t_i = torch.tensor(i / (N), dtype=Y_t.dtype, device=device)<br>        timestep = torch.tensor(t_i, dtype=Y_t.dtype, device=device).repeat(batch_size)<br>        <span class="hljs-comment"># print(text_ids.shape, latent_image_ids.shape)</span><br>        <span class="hljs-comment"># get the unconditional vector field</span><br>        u_t_i = <span class="hljs-variable language_">self</span>.transformer(<br>            hidden_states=Y_t,<br>            timestep=timestep,<br>            guidance=guidance,<br>            pooled_projections=pooled_prompt_embeds,<br>            encoder_hidden_states=prompt_embeds,<br>            txt_ids=text_ids,<br>            img_ids=latent_image_ids,<br>            joint_attention_kwargs=<span class="hljs-variable language_">self</span>.joint_attention_kwargs,<br>            return_dict=<span class="hljs-literal">False</span>,<br>        )[<span class="hljs-number">0</span>]<br><br>        <span class="hljs-comment"># get the conditional vector field</span><br>        u_t_i_cond = (y_1 - Y_t) / (<span class="hljs-number">1</span> - t_i)<br><br>        <span class="hljs-comment"># controlled vector field</span><br>        <span class="hljs-comment"># Eq 8 dY_t = [u_t(Y_t) + γ(u_t(Y_t|y_1) - u_t(Y_t))]dt</span><br>        u_hat_t_i = u_t_i + gamma * (u_t_i_cond - u_t_i)<br>        Y_t = Y_t + u_hat_t_i * (sigmas[i] - sigmas[i + <span class="hljs-number">1</span>])<br>        progress_bar.update()<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 推理pipeline.call：</span><br><span class="hljs-keyword">if</span> do_rf_inversion:<br>    v_t = -noise_pred<br>    v_t_cond = (y_0 - latents) / (<span class="hljs-number">1</span> - t_i)<br>    eta_t = eta <span class="hljs-keyword">if</span> start_timestep &lt;= i &lt; stop_timestep <span class="hljs-keyword">else</span> <span class="hljs-number">0.0</span><br>    <span class="hljs-keyword">if</span> decay_eta:<br>        eta_t = eta_t * (<span class="hljs-number">1</span> - i / num_inference_steps) ** eta_decay_power  <span class="hljs-comment"># Decay eta over the loop</span><br>    v_hat_t = v_t + eta_t * (v_t_cond - v_t)<br><br>    <span class="hljs-comment"># SDE Eq: 17 from https://arxiv.org/pdf/2410.10792</span><br>    latents = latents + v_hat_t * (sigmas[i] - sigmas[i + <span class="hljs-number">1</span>])<br><span class="hljs-keyword">else</span>:<br>    <span class="hljs-comment"># compute the previous noisy sample x_t -&gt; x_t-1</span><br>    latents = <span class="hljs-variable language_">self</span>.scheduler.step(noise_pred, t, latents, return_dict=<span class="hljs-literal">False</span>)[<span class="hljs-number">0</span>]<br></code></pre></td></tr></table></figure>
+
+<p><img src="/../imgs/Paper-Reading_Inversion_based_%E5%9B%BE%E5%83%8F%E7%BC%96%E8%BE%91/image-20250411200714985.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250411200714985"></p>
+</li>
+</ol>
+<h3 id="1-2-RF-Edit-Taming-Rectified-Flow-for-Inversion-and-Editing——腾讯"><a href="#1-2-RF-Edit-Taming-Rectified-Flow-for-Inversion-and-Editing——腾讯" class="headerlink" title="1.2 RF-Edit: Taming Rectified Flow for Inversion and Editing——腾讯"></a>1.2 RF-Edit: Taming Rectified Flow for Inversion and Editing——腾讯</h3><ol>
+<li>ODE  泰勒展开 + 一阶导近似</li>
+<li>为增强细节保留在Edit时利用了<strong>注意力共享</strong>: Inversion + 替换V【单流自注意力中的V_ref】</li>
+</ol>
+<p><img src="/../imgs/Paper-Reading_FlowEdit/image-20250410195502731.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250410195502731"></p>
+<p><img src="/../imgs/Paper-Reading_FlowEdit/Picture3.jpg" srcset="/imgs/img/loading.gif" lazyload alt="Picture3.jpg"></p>
+<h3 id="1-3-FlowEdit：-Inversion-Free-Text-Based-Editing-Using-Pre-Trained-Flow-Models-2024-12"><a href="#1-3-FlowEdit：-Inversion-Free-Text-Based-Editing-Using-Pre-Trained-Flow-Models-2024-12" class="headerlink" title="1.3  FlowEdit： Inversion-Free Text-Based Editing Using Pre-Trained Flow Models 2024.12"></a>1.3  FlowEdit： Inversion-Free Text-Based Editing Using Pre-Trained Flow Models 2024.12</h3><ol>
+<li><p>理论创新：</p>
+<ul>
+<li>没去实现Inversion找中间高斯噪声的步骤，而是直接从源分布到目标分布【近似noise_free】，并在实际操作时根据n_avg取平均;</li>
+<li>Noise_free的路径：分布转换的路径消耗更小，会更好；</li>
+</ul>
+</li>
+<li><p>耗时依旧：但由于实现过程中的每一step都需要使用FLUX模型推理两次（v_tar、v_src），实现起来<strong>依然需要 2*steps!</strong>，与inversion方法相比并没有实质性的耗时优化；</p>
+</li>
+<li><p>代码：<strong>image_ids复制了src的image_ids</strong></p>
+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">latent_tar_image_ids = latent_src_image_ids： 导致如果n_min=<span class="hljs-number">0</span>会存在ref原图的伪影<br></code></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>inversion vs FlowEdit 路径对比以及FlowEdit伪代码：</li>
+</ol>
+<p><img src="/../imgs/Paper-Reading_FlowEdit/image-20250408214137099.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408214137099"></p>
+<ol start="5">
+<li><p>测试：</p>
+<ul>
+<li><p>n_min：伪影解决：timestep &#x3D; 28,  n_max &#x3D; 24, n_min &#x3D;0, n_avg&#x3D;1:  n_min设置为较小的数，能够在后期去噪阶段进行正常flow去噪，把伪影去掉；</p>
+<blockquote>
+<p>timestep 是去噪的全部步数，去噪时倒着数：从28,27，一直到1；</p>
+<p>原论文代码中设置：</p>
+<ul>
+<li>timestep–n_max：不进行处理</li>
+<li>n_max–n_min：flow_edit处理</li>
+<li>n_min–1：正常flow去噪处理</li>
+</ul>
+</blockquote>
+<p><img src="/../imgs/Paper-Reading_Inversion_based_%E5%9B%BE%E5%83%8F%E7%BC%96%E8%BE%91/1744703713461-8.png" srcset="/imgs/img/loading.gif" lazyload alt="img"></p>
+</li>
+<li><p>n_max：n_max的设置见SDEdit论文，调整了编辑的强度，n_max越大，编辑强度&#x2F;程度越大</p>
+<p><img src="/../imgs/Paper-Reading_Inversion_based_%E5%9B%BE%E5%83%8F%E7%BC%96%E8%BE%91/image-20250416105210796.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250416105210796"></p>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="2-Inversion-based-editing"><a href="#2-Inversion-based-editing" class="headerlink" title="2. Inversion_based_editing:"></a>2. Inversion_based_editing:</h2><h3 id="2-1-RF-Edit-inversion-替换单流自注意力中的-V-上文讲过"><a href="#2-1-RF-Edit-inversion-替换单流自注意力中的-V-上文讲过" class="headerlink" title="2.1 RF-Edit: inversion+ 替换单流自注意力中的 V (上文讲过)"></a>2.1 RF-Edit: inversion+ 替换单流自注意力中的 V (上文讲过)</h3><ol>
+<li>ODE  泰勒展开 + 一阶导近似</li>
+<li>为增强细节保留在Edit时利用了<strong>注意力共享</strong>: Inversion + <strong>替换V【单流自注意力中的V_ref】</strong></li>
+</ol>
+<h3 id="2-2-KV-Edit-inversion-拼接-K-V——背景保留能力-2025-3"><a href="#2-2-KV-Edit-inversion-拼接-K-V——背景保留能力-2025-3" class="headerlink" title="2.2 KV Edit: inversion + 拼接 K &amp; V——背景保留能力 2025.3"></a>2.2 KV Edit: inversion + 拼接 K &amp; V——背景保留能力 2025.3</h3><p>论文：</p>
+<ol>
+<li><p>如何实现inversion？</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">类似于RF-Inversion，没有使用condition control<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>反演步骤：包括前景和背景的分离反演，耗时*2？？？:</p>
+<ul>
+<li>前景反演：获得前景对应的高斯分布噪声分布，以作为去噪的初始表示</li>
+<li>背景反演：获得反演过程中的<strong>cached-K_bg &#x2F; cached_V_bg，以指导去噪的背景保留</strong></li>
+</ul>
+</li>
+<li><p>去噪步骤：</p>
+<ul>
+<li>初始表示：除了removal任务使用reint（加入随机噪声）外，其他均使用反演步骤得到的前景反演噪声XN_fg</li>
+<li><strong>双流交叉注意力中：拼接来自背景的K&#x2F;V</strong>？具体如何实现</li>
+</ul>
+</li>
+</ol>
+<p>针对object removal：</p>
+<ul>
+<li>re-init : <code>after inversion, we replace ztN with fused noise z′tN = noise·tN +ztN ·(1−tN )</code>disrupt the original content information.</li>
+<li><code>incorporate an attention mask during the inversion process</code></li>
+</ul>
+<p><img src="/../imgs/Paper-Reading_Inversion_based_%E5%9B%BE%E5%83%8F%E7%BC%96%E8%BE%91/image-20250409152124969.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250409152124969"></p>
+<p><img src="/../imgs/Paper-Reading_Inversion_based_%E5%9B%BE%E5%83%8F%E7%BC%96%E8%BE%91/image-20250411221055432.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250411221055432"></p>
+<p>有些不明白的描述——看代码：</p>
+<p><code>Q_fg represents queries containing only foreground tokens</code></p>
+<p><code>(Kfg, Kbg) and (Vfg, Vbg) denote the concatenation of background and foreground keys and values in their proper order (equivalent to the complete image’s keys and values),</code></p>
+<p>crop  fg操作？？？<code>performing cropping at both input and output of the attention layer,</code></p>
+<p>提出改进：是否可以更近一步K V不使用contencate，而是替换？：personalize anything是对图像token_ref替换，同时对位置编码也做了操作</p>
+<h3 id="2-3-Personalize-Anything-inversion-图像序列替换——inpaint、outpaint、个性化保持-2025-3"><a href="#2-3-Personalize-Anything-inversion-图像序列替换——inpaint、outpaint、个性化保持-2025-3" class="headerlink" title="2.3 Personalize Anything: inversion + 图像序列替换——inpaint、outpaint、个性化保持 2025.3"></a>2.3 Personalize Anything: inversion + 图像序列替换——inpaint、outpaint、个性化保持 2025.3</h3><ol>
+<li>如何实现inversion：RF-Inversion【代码】，RF-Edit【论文】</li>
+<li>反演步骤：<ul>
+<li>获得cached_tokens【无位置ids信息】:只获得语义token，不要位置</li>
+</ul>
+</li>
+<li>去噪步骤：<ul>
+<li>无位置ids信息的 cached_tokens <strong>替换replace</strong> position_encoded denoising tokens：无伪影，对ref关注，利于重建ref</li>
+<li>替换的具体实现：依赖于mask：X&#96;&#x3D; X ⊙ (1 − M) + X_ref ⊙ M，其中M可以经过任意<strong>平移</strong>；</li>
+<li><strong>timestep-adaptive token replacement</strong>：<ul>
+<li>在去噪的前期阶段执行<strong>替换</strong></li>
+<li>在去噪的后期阶段：<strong>拼接</strong> 【denoising_tokens，零ids置为的ref_tokens，text_tokens】执行MMA多模态注意力：增强语义能力</li>
+</ul>
+</li>
+<li><strong>Patch Perturbation for Variation</strong>：减少过拟合<ul>
+<li>3*3window 打乱ids</li>
+<li>Mask的增强：膨胀 腐蚀</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>消融实验：<ul>
+<li>position_encoded denoising tokens 与 position_encoded cached_tokens <strong>拼接</strong>：两者的ids都保持：产生ref伪影——DiT对ids位置很敏感</li>
+<li>position_encoded denoising tokens 与 全部ids置为(0,0)或者平移后的（i+w, j） 的 cached_tokens <strong>拼接</strong>：对ref不产生关注</li>
+</ul>
+</li>
+<li>多任务能力：<ul>
+<li>Mask的灵活移动性带来了：布局引导</li>
+<li>多主体生成</li>
+<li>图像编辑：disable perturbations and set τ to 10% total steps：inpaint、outpaint</li>
+</ul>
+</li>
+</ol>
+<p><img src="/../imgs/Paper-Reading_Inversion_based_%E5%9B%BE%E5%83%8F%E7%BC%96%E8%BE%91/image-20250412115003441.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250412115003441"></p>
+<ol start="6">
+<li><p>测试：</p>
+<p>缺：<strong>ref_token的替换并不能十分严谨的重建&#x2F;保持主体特征，而且inpaint内外不连贯</strong>，需要依赖于tau阈值参数的调整，</p>
+<p><img src="/../imgs/Paper-Reading_Inversion_based_%E5%9B%BE%E5%83%8F%E7%BC%96%E8%BE%91/image-20250414223622758.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250414223622758"></p>
+</li>
+<li><p>代码：</p>
+<ul>
+<li><p>RFInversionParallelFluxPipeline：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># pipeline_flux_rf_inversion:与RF-Inversion相同</span><br>    inverted_latents, image_latents, latent_image_ids = pipe.invert( <br>        source_prompt=<span class="hljs-string">&quot;&quot;</span>,  <span class="hljs-comment"># 使用空描述</span><br>        image=init_image, <br>        height=height,<br>        width=width,<br>        num_inversion_steps=timestep, <br>        gamma=<span class="hljs-number">1.0</span>)<br><span class="hljs-comment"># pipe.forward():执行ref_tokens替换的图像编辑生成：# 新增参数inverted_latents、start_timestep、stop_timestep： 去噪过程中timestep从1-0逐步减小！</span><br><br>latents = inverted_latents<br>new_latents, _ = <span class="hljs-variable language_">self</span>.prepare_latents(<span class="hljs-number">1</span>,..., generator,latents=<span class="hljs-literal">None</span>,)<br>latents = torch.cat((latents, new_latents), dim=<span class="hljs-number">0</span>) <span class="hljs-comment"># [0]:inverted_noise_latent, [1]:rand_noise_latent</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>set_flux_transformer_attn_processor：定义attn processor，每次不同的任务都需要重新定义</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># img_dims: 图像latent序列长度，VAE8倍压缩比 = pipe.vae_scale_factor=8， patchify图块化2*2的两倍压缩比, 总压缩比16</span><br>    set_flux_transformer_attn_processor(<br>        pipe.transformer,<br>        set_attn_proc_func=<span class="hljs-keyword">lambda</span> name, dh, nh, ap: PersonalizeAnythingAttnProcessor( name=name, tau=tau/<span class="hljs-number">100</span>, mask=mask, 					shift_mask=shift_mask, device=device, img_dims=img_dims, concept_process=<span class="hljs-literal">False</span>),) <br><span class="hljs-comment"># 通过每次重新定义attn processor来实现mask、tau阈值、shift_mask、concept_process等参数传递：shift_mask、mask</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>PersonalizeAnythingAttnProcessor、MultiPersonalizeAnythingAttnProcessor 对比原始 FluxAttnProcessor2_0</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># FluxAttnProcessor2_0：在q k v 获得后，attention计算之前，添加旋转的位置编码：</span><br>    <span class="hljs-keyword">if</span> image_rotary_emb <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>        <span class="hljs-keyword">from</span> .embeddings <span class="hljs-keyword">import</span> apply_rotary_emb<br><br>        query = apply_rotary_emb(query, image_rotary_emb)<br>        key = apply_rotary_emb(key, image_rotary_emb)<br><br><span class="hljs-comment"># PersonalizeAnythingAttnProcessor.forward()：多了timestep参数:由self._joint_attention_kwargs[&quot;timestep&quot;] =进行传递</span><br>    <span class="hljs-comment"># concept_feature_    r_hidden_states？？？？</span><br>    <span class="hljs-keyword">if</span> encoder_hidden_states <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>        concept_feature_ = hidden_states[<span class="hljs-number">0</span>, <span class="hljs-variable language_">self</span>.mask, :]  <span class="hljs-comment">#  self.mask = mask.view(img_dims).bool().to(device)</span><br>    <span class="hljs-keyword">else</span>:<br>        concept_feature_ = hidden_states[<span class="hljs-number">0</span>, <span class="hljs-number">512</span>:, :][<span class="hljs-variable language_">self</span>.mask, :] <span class="hljs-comment"># flux使用512个text_tokens</span><br><br>    <span class="hljs-keyword">if</span> r_k <span class="hljs-keyword">or</span> r_q <span class="hljs-keyword">or</span> r_v:<br>        r_hidden_states = hidden_states<br>        <span class="hljs-keyword">if</span> encoder_hidden_states <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>            r_hidden_states[<span class="hljs-number">1</span>, <span class="hljs-variable language_">self</span>.shift_mask, :] = concept_feature_<br>    <span class="hljs-keyword">else</span>:<br>        text_hidden_states = hidden_states[<span class="hljs-number">1</span>, :<span class="hljs-number">512</span>, :]<br>        image_hidden_states = hidden_states[<span class="hljs-number">1</span>, <span class="hljs-number">512</span>:, :]<br>        image_hidden_states[<span class="hljs-variable language_">self</span>.shift_mask, :] = concept_feature_<br><br>        r_hidden_states[<span class="hljs-number">1</span>] = torch.cat([text_hidden_states, image_hidden_states], dim=<span class="hljs-number">0</span>)<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+<p>insight: 视频大模型具有对物理规律的理解，光照光影位置关系等，可以利用视频大模型的先验进行图片领域上的任务，如图像编辑、多视图生成</p>
+<p>style-align</p>
+<p>Training-Free Consistent Text-to-Image Generation</p>
+<p><img src="/../imgs/Paper-Reading_Inversion_based_%E5%9B%BE%E5%83%8F%E7%BC%96%E8%BE%91/image-20250411170316940.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250411170316940"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Paper-Reading/" class="category-chain-item">Paper Reading</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/DiT/" class="print-no-link">#DiT</a>
+      
+        <a href="/tags/Flow-based/" class="print-no-link">#Flow_based</a>
+      
+        <a href="/tags/%E5%9B%BE%E5%83%8F%E7%BC%96%E8%BE%91/" class="print-no-link">#图像编辑</a>
+      
+        <a href="/tags/Inversion/" class="print-no-link">#Inversion</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Inversion_based_editing in flow_matching models</div>
+      <div>https://pljj315.github.io/Paper-Reading/Paper-Reading_Inversion_based_图像编辑/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>pljj315</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年4月8日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/Paper-Reading/Flow_based%E7%94%9F%E6%88%90/" title="多模态理解与生成">
+                        <span class="hidden-mobile">多模态理解与生成</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/gitalk/1.8.0/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"Ov23lipwdnWHzn8s0j4d","clientSecret":"794682cc1d531e3af88ba187be170008cdb87097","repo":"pljj315.github.io","owner":"pljj315","admin":["pljj315"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
+          {
+            id: '80c2a02d7dc459a9e2a42c943d4fd131'
+          }
+        )
+        var gitalk = new Gitalk(options);
+        gitalk.render('gitalk-container');
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-love"></i> <a href="https://github.com/pljj315" target="_blank" rel="nofollow noopener"><span>github</span></a> <i class="iconfont icon-love"></i> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

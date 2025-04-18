@@ -1,0 +1,771 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/imgs/img/OIP.jpg">
+  <link rel="icon" href="/imgs/img/OIP.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="pljj315">
+  <meta name="keywords" content="计算机视觉 视觉大模型 研究生生活">
+  
+    <meta name="description" content="Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12关键概括：训练了一个即插即用的adapter，能够在各种diffusion模型下，通过相机参数或者几何信息对视角进行指导，进行多视角的一致性角色生成。  decoupled attention mechanism：新的自注意力层来源于对原自注意力层的复制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Paper-Reading：MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12">
+<meta property="og:url" content="https://pljj315.github.io/paper-reading/Paper-Reading_MV-Adapter-multi-view-consistent-image-generation-made-easy/index.html">
+<meta property="og:site_name" content="JH_BLOG">
+<meta property="og:description" content="Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12关键概括：训练了一个即插即用的adapter，能够在各种diffusion模型下，通过相机参数或者几何信息对视角进行指导，进行多视角的一致性角色生成。  decoupled attention mechanism：新的自注意力层来源于对原自注意力层的复制">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pljj315.github.io/imgs/roy.jpg">
+<meta property="article:published_time" content="2025-02-23T09:58:33.000Z">
+<meta property="article:modified_time" content="2025-02-23T13:10:22.809Z">
+<meta property="article:author" content="pljj315">
+<meta property="article:tag" content="diffusion">
+<meta property="article:tag" content="text-to-img">
+<meta property="article:tag" content="论文阅读">
+<meta property="article:tag" content="multi-view">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pljj315.github.io/imgs/roy.jpg">
+  
+  
+  
+  <title>Paper-Reading：MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12 -&gt; JH_BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"pljj315.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":30,"cursorChar":":","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"❡"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/imgs/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>pljj315&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/imgs/img/default_roy.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Paper-Reading：MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        pljj315
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-23 17:58" pubdate>
+          2025年2月23日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          610 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          6 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Paper-Reading：MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Paper-Reading：MULTI-VIEW-CONSISTENT-IMAGE-GENERATION-MADE-EASY-2024-12"><a href="#Paper-Reading：MULTI-VIEW-CONSISTENT-IMAGE-GENERATION-MADE-EASY-2024-12" class="headerlink" title="Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12"></a>Paper-Reading：MULTI-VIEW CONSISTENT IMAGE GENERATION MADE EASY - 2024.12</h1><p><strong>关键概括：<strong>训练了一个即插即用的adapter，能够在各种diffusion模型下，通过相机参数或者几何信息对视角进行指导，进行</strong>多视角的一致性角色生成</strong>。</p>
+<ul>
+<li><strong>decoupled attention mechanism</strong>：新的自注意力层来源于对原自注意力层的复制 + 平行的自注意力连接架构【原spatial_self_attention与多个其他的attention平行连接！】</li>
+<li><strong>condition-guider</strong>：能够对相机参数和几何信息进行编码的“新的条件编码器(condition encoder)”</li>
+</ul>
+<p><strong>优点：</strong></p>
+<ul>
+<li>即插即用，尽可能保留了底模(base model)的性能</li>
+<li>训练容易，只需要微调几个adapter层而不是整个UNet：参数量小，数据集友好</li>
+</ul>
+<h2 id="方法："><a href="#方法：" class="headerlink" title="方法："></a>方法：</h2><h3 id="1-pipeline"><a href="#1-pipeline" class="headerlink" title="1. pipeline:"></a>1. pipeline:</h3><p>包括一个condition-guider encoder; 和decoupled attention mechanism</p>
+<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223194550810.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250223194550810"></p>
+<hr>
+<h3 id="2-condition-guider-encoder："><a href="#2-condition-guider-encoder：" class="headerlink" title="2. condition-guider&#x3D;&#x3D;&gt; encoder："></a>2. condition-guider&#x3D;&#x3D;&gt; encoder：</h3><ul>
+<li>conditioning map：<ul>
+<li>相机位姿：raymap</li>
+<li>几何信息：position_map + normal_map</li>
+</ul>
+</li>
+<li>encoder结构：一系列的卷积网络&#x3D;&#x3D;&gt;包括feature extraction blocks特征提取 + downsampling layers下采样调整scale</li>
+</ul>
+<h3 id="3-decoupled-attention-mechanism："><a href="#3-decoupled-attention-mechanism：" class="headerlink" title="3. decoupled attention mechanism："></a>3. decoupled attention mechanism：</h3><ul>
+<li><p>自注意力与其他注意力的连接方式不再是原始的级联，如下图所示：<img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200818183.png" srcset="/imgs/img/loading.gif" lazyload alt="serial attention-architecture"></p>
+</li>
+<li><p>并联架构，如下图所示：<img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200121201.png" srcset="/imgs/img/loading.gif" lazyload alt="平行注意力架构公式"></p>
+</li>
+<li><p>级联注意力架构  vs  并联注意力架构，对比如下图所示：</p>
+</li>
+</ul>
+<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-20250223200148615.png" srcset="/imgs/img/loading.gif" lazyload alt="级联注意力架构vs平行注意力架构"></p>
+<ul>
+<li>其中：<ul>
+<li>spatial self-attention：即原始的自注意力层，Q&#x3D;K&#x3D;V&#x3D;hidden states，表示图片本身不同位置的关注度；</li>
+<li><strong>multi-view attention</strong>：较为复杂，是多视图的实现关键！<img src="/../imgs%5CPaper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy%5Cimage-20250223202102134.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250223202102134"></li>
+<li>image cross-attention：Q &#x3D; hidden states, K&#x3D;V&#x3D;来自冻结UNet对参考输入图提取得中间表示，即把冻结的平行UNet【被叫做UNet Encoder】作为了一种特征提取器，提取低级语义的特征和细粒度的细节；</li>
+</ul>
+</li>
+</ul>
+<h3 id="训练："><a href="#训练：" class="headerlink" title="训练："></a>训练：</h3><ul>
+<li><p>数据集：Objaverse dataset</p>
+</li>
+<li><p>randomly zero out the features of the reference image to drop image conditions, enabling classifier-free guidance at inference：解释：对于CFG的训练策略，是在训练过程中按照比例（如0.1）随机丢弃<strong>条件信息</strong>，这里的“条件信息”一般是额外的(<strong>cross attn的K、V来源？</strong>)指导信息，比如文生图中的文本(text embedding)，这里丢弃的是<strong>参考图像特征</strong></p>
+</li>
+</ul>
+<h3 id="待解决："><a href="#待解决：" class="headerlink" title="待解决："></a>待解决：</h3><ul>
+<li><p>shift the noise schedule towards high noise levels</p>
+</li>
+<li><p>shift the log signal-to-noise ratio by log(n), where n is the number of generated views.</p>
+</li>
+<li><p><strong>multi-view attention</strong>部分没有细致的研究，row-wise self_attention column-wise self-attention是什么？</p>
+</li>
+</ul>
+<h3 id="测试实例："><a href="#测试实例：" class="headerlink" title="测试实例："></a>测试实例：</h3><p>输入、输出&#x3D;768分辨率</p>
+<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image.webp" srcset="/imgs/img/loading.gif" lazyload alt="预处理后的输入图"></p>
+<p><img src="/../imgs/Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy/image-1740315153443-3.webp" srcset="/imgs/img/loading.gif" lazyload alt="6视图-1"></p>
+<p>![img](..&#x2F;imgs&#x2F;Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy&#x2F;image (5).webp)</p>
+<p>![image (3)](..&#x2F;imgs&#x2F;Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy&#x2F;image (3).webp)</p>
+<p>![image (4)](..&#x2F;imgs&#x2F;Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy&#x2F;image (4).webp)</p>
+<p>![image (1)](..&#x2F;imgs&#x2F;Paper-Reading-MV-Adapter-multi-view-consistent-image-generation-made-easy&#x2F;image (1).webp)</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/paper-reading/" class="category-chain-item">paper_reading</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/diffusion/" class="print-no-link">#diffusion</a>
+      
+        <a href="/tags/text-to-img/" class="print-no-link">#text-to-img</a>
+      
+        <a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" class="print-no-link">#论文阅读</a>
+      
+        <a href="/tags/multi-view/" class="print-no-link">#multi-view</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Paper-Reading：MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12</div>
+      <div>https://pljj315.github.io/paper-reading/Paper-Reading_MV-Adapter-multi-view-consistent-image-generation-made-easy/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>pljj315</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月23日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/Research-Insights/Research-Insights_Stylized-generation-based-diffusion/" title="Reserch-Insights_Stylized-generation-based-diffusion">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Reserch-Insights_Stylized-generation-based-diffusion</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/LeetCode-highlights/LeetCode-Highlights/" title="算法——leetcode">
+                        <span class="hidden-mobile">算法——leetcode</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/gitalk/1.8.0/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"Ov23lipwdnWHzn8s0j4d","clientSecret":"794682cc1d531e3af88ba187be170008cdb87097","repo":"pljj315.github.io","owner":"pljj315","admin":["pljj315"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
+          {
+            id: '560dde4aa59eb20f694ae8035695be41'
+          }
+        )
+        var gitalk = new Gitalk(options);
+        gitalk.render('gitalk-container');
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-love"></i> <a href="https://github.com/pljj315" target="_blank" rel="nofollow noopener"><span>github</span></a> <i class="iconfont icon-love"></i> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

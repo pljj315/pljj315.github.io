@@ -1,0 +1,821 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/imgs/img/OIP.jpg">
+  <link rel="icon" href="/imgs/img/OIP.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="pljj315">
+  <meta name="keywords" content="计算机视觉 视觉大模型 研究生生活">
+  
+    <meta name="description" content="多模态理解与生成 分类：  基于扩散的：都是估计一种分布转换 基于扩散Diffusion:  ϵ -Prediction，UNet、DiT、MM-DiT；估计噪声&#x2F;数据分布，不限定&#x3D;&#x3D;&gt;也就是走曲线的概率密度转换路径：缺：训练时间长采样慢 前行过程：通过不可学习的Schedule 对样本进行加噪，多次加噪变换为正态分布 反向过程：从正态分布采样，并通过模型隐式的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="多模态理解与生成">
+<meta property="og:url" content="https://pljj315.github.io/Paper-Reading/Flow_based%E7%94%9F%E6%88%90/index.html">
+<meta property="og:site_name" content="JH_BLOG">
+<meta property="og:description" content="多模态理解与生成 分类：  基于扩散的：都是估计一种分布转换 基于扩散Diffusion:  ϵ -Prediction，UNet、DiT、MM-DiT；估计噪声&#x2F;数据分布，不限定&#x3D;&#x3D;&gt;也就是走曲线的概率密度转换路径：缺：训练时间长采样慢 前行过程：通过不可学习的Schedule 对样本进行加噪，多次加噪变换为正态分布 反向过程：从正态分布采样，并通过模型隐式的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pljj315.github.io/imgs/Research-Insights_Stylized-generation-based-diffusion/image-20250227153104659.png">
+<meta property="article:published_time" content="2025-04-07T12:40:11.000Z">
+<meta property="article:modified_time" content="2025-04-08T13:14:35.350Z">
+<meta property="article:author" content="pljj315">
+<meta property="article:tag" content="多模态">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pljj315.github.io/imgs/Research-Insights_Stylized-generation-based-diffusion/image-20250227153104659.png">
+  
+  
+  
+  <title>多模态理解与生成 -&gt; JH_BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"pljj315.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":30,"cursorChar":":","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"❡"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/imgs/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>pljj315&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/imgs/img/default_roy.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="多模态理解与生成"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        pljj315
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-04-07 20:40" pubdate>
+          2025年4月7日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          11 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">多模态理解与生成</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>多模态理解与生成 分类：</p>
+<ul>
+<li>基于扩散的：都是估计一种分布转换<ul>
+<li>基于扩散Diffusion:  ϵ -Prediction，UNet、DiT、MM-DiT；估计噪声&#x2F;数据分布，不限定&#x3D;&#x3D;&gt;也就是走曲线的概率密度转换路径：<strong>缺：训练时间长采样慢</strong><ul>
+<li>前行过程：通过不可学习的Schedule 对样本进行加噪，多次加噪变换为正态分布</li>
+<li>反向过程：从正态分布采样，并通过模型隐式的学习反向过程的噪声，去噪得到生成的样本【迭代多步生成】</li>
+</ul>
+</li>
+<li>基于流Flow： v -Prediction，DiT、MM-DiT；估计向量场&#x2F;速度场，尽量走直线的概率密度转换路径，与扩散落实在代码上的区别是“训练目标函数和采样函数”<ul>
+<li>前行过程：通过显式的可学习的可逆变换将样本分布变换为正态分布</li>
+<li>反向过程：从正态分布采样，并通过上述变换的逆变换得到生成的样本【近似直线一步生成】</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>基于自回归的：各种AR的序列预测顺序</li>
+<li>基于扩散+自回归的</li>
+</ul>
+<p>基础框架：</p>
+<ul>
+<li>Transformer：decoder-only transformer？</li>
+<li>Diffusion-Transformer（DiT）</li>
+<li>MM-DiT</li>
+</ul>
+<p><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408144423138.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408144423138"></p>
+<h3 id="2-Flow-based-Method-原理理解："><a href="#2-Flow-based-Method-原理理解：" class="headerlink" title="2. Flow-based Method 原理理解："></a>2. Flow-based Method 原理理解：</h3><p>阅读博文：</p>
+<ul>
+<li>Rectified Flow论文原作者的中文解读：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/603740431">ICLR2023] 扩散生成模型新方法：极度简化，一步生成</a></li>
+<li><a target="_blank" rel="noopener" href="https://littlenyima.github.io/posts/51-flow-matching-for-diffusion-models/index.html">Flow Matching 理论详解</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/11686643707">深入理解Rectified Flow，完善统一扩散框架</a></li>
+</ul>
+<blockquote>
+<p>flow: 使用时间参数化的向量场来定义一个流函数 <strong>Flow</strong>，从而在连续时间内对概率密度进行变换</p>
+<p>marginal distribution: 边际分布？</p>
+<p>可以把Rectified Flow理解为<strong>保持线性插值边缘分布相等的，具有因果的ODE</strong></p>
+</blockquote>
+<p>常见的Flow-based包括：</p>
+<ul>
+<li>Normalizing Flow：离散可逆变换，对概率分布进行建模，实现从先验分布（即，高斯分布）到目标分布的可逆转换过程并采样生成；</li>
+<li>Continuous Normalizing Flow（CNF）：连续可逆变换【ODE】；<ul>
+<li>Rectified Flow（linear flows）2022.10：<strong>一步沿着直线采样生成【ODE】</strong>：Domain Transfer，两次训练</li>
+<li>Flow Matching（FM）、Conditional Flow Matching（CFM）2022.10：【ODE】：几乎同上</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-1-Rectified-flow-2022-10"><a href="#2-1-Rectified-flow-2022-10" class="headerlink" title="2.1 Rectified flow 2022.10:"></a>2.1 Rectified flow 2022.10:</h4><p>Rectified flow + 【蒸馏 与 Reflow回流的区别】</p>
+<p><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408143435584.png" srcset="/imgs/img/loading.gif" lazyload alt="Rectified Flow"></p>
+<p><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408144230797.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408144230797"></p>
+<h4 id="2-2-Flow-Matching-–-Conditional-FM-2022-10"><a href="#2-2-Flow-Matching-–-Conditional-FM-2022-10" class="headerlink" title="2.2 Flow Matching –&gt; Conditional FM 2022.10:"></a>2.2 Flow Matching –&gt; Conditional FM 2022.10:</h4><p>先验分布设定为高斯分布，包括μ_t均值函数、sigma_t标准差函数的不同，可以构建不同的高斯条件概率路径：</p>
+<ul>
+<li><strong>Variance Preserving，VP</strong> 方差保持扩散路径：传输路径轨迹为曲线</li>
+<li><strong>Variance Exploding，VE</strong> 方差爆炸扩散路径：传输路径轨迹为曲线</li>
+<li><strong>最优传输（Optimal Transport，OT）</strong> 路径（CFM）：传输路径轨迹为直线，得到更快的训练速度和生成速度、更好的性能表现</li>
+</ul>
+<p><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408152543388.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408152543388"><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408151908334.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408151908334"></p>
+<p><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408150909885.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408150909885"><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408151159712.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408151159712"></p>
+<h3 id="3-Flow-based-Model-Transformer"><a href="#3-Flow-based-Model-Transformer" class="headerlink" title="3. Flow_based Model + Transformer:"></a>3. Flow_based Model + Transformer:</h3><h4 id="3-1-Transformer-原理探究：DiT"><a href="#3-1-Transformer-原理探究：DiT" class="headerlink" title="3.1 Transformer 原理探究：DiT"></a>3.1 Transformer 原理探究：DiT</h4><p>博文阅读：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/684125968">Diffusion Transformer（DiT）原理与源码解析 - 知乎</a></li>
+</ul>
+<p>ViT &#x3D; Transformer用在CV领域：将图像进行 patchify 得到固定大小的 patch 序列，作为输入馈送进标准 Transformer Encoder，然后进行下游任务的处理</p>
+<p>DiT &#x3D; 调整Normalization后的ViT + LDM（输入是latent）： </p>
+<ul>
+<li>TimestepEmbedder:  timestep_embedding(对数正弦位置编码，log_SPE) + MLP结构</li>
+<li>LabelEmbedder: dropout丢弃实现CFG能力</li>
+<li>DiTBlock: SelfAttention、FeedForward、Normalization: DiT 使用 adaln_zero 来代替标准 transformer 中的 Layer Normalization</li>
+<li>Final Layer：</li>
+<li>Patchify： timm.PatchEmbed（）:2*2， SPE位置编码</li>
+</ul>
+<p><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408164934759.png" srcset="/imgs/img/loading.gif" lazyload alt="ViT 到 DiT"></p>
+<h4 id="3-2-SD3-–-Rectified-Flow-stability-ai-2024-3：Scaling-Rectified-Flow-Transformers-for-High-Resolution-Image-Synthesis"><a href="#3-2-SD3-–-Rectified-Flow-stability-ai-2024-3：Scaling-Rectified-Flow-Transformers-for-High-Resolution-Image-Synthesis" class="headerlink" title="3.2 SD3 –&gt; [Rectified Flow] _stability.ai 2024.3：Scaling Rectified Flow Transformers for High-Resolution Image Synthesis"></a>3.2 SD3 –&gt; [Rectified Flow] _stability.ai 2024.3：Scaling Rectified Flow Transformers for High-Resolution Image Synthesis</h4><p><strong>主要贡献</strong>：<br><strong>1）改进的<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=240459073&content_type=Article&match_order=1&q=%E5%99%AA%E5%A3%B0%E9%87%87%E6%A0%B7%E6%8A%80%E6%9C%AF&zhida_source=entity">噪声采样技术</a>（Improved Noise Sampling Techniques）</strong>：</p>
+<ul>
+<li>作者针对修正流模型（Rectified Flow Models）提出了一种新的噪声采样方法（<strong>Timestep Samplers</strong>），这种方法通过偏向感知相关尺度（perceptually relevant scales）来提高训练效率和生成图像的质量。这种改进有助于模型在训练过程中更有效地学习数据到噪声的转换过程。</li>
+<li>introducing a re-weighting of the noise scales in rectified flow models：SNR采样器</li>
+<li>提到了一个diffusion的scheduler缺陷：Common Diffusion Noise Schedules and Sample Steps are Flawed</li>
+</ul>
+<p><strong>2）MM-DiT：novel transformer-based architecture</strong> 文图双向流</p>
+<p><img src="/../imgs/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90/image-20250408163912375.png" srcset="/imgs/img/loading.gif" lazyload alt="image-20250408163912375"></p>
+<h4 id="3-3-Flux-–-Flow-Matching-Black-Forest-Labs-没公开论文"><a href="#3-3-Flux-–-Flow-Matching-Black-Forest-Labs-没公开论文" class="headerlink" title="3.3 Flux –&gt; [Flow Matching] _Black Forest Labs 没公开论文"></a>3.3 Flux –&gt; [Flow Matching] _Black Forest Labs 没公开论文</h4><p>博文阅读：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/741939590">FLUX.1 原理与源码解析 - 知乎</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/714150390">FLUX.1 源码深度前瞻解读</a></li>
+</ul>
+<p>主要贡献</p>
+<ul>
+<li>DoubleStreamBlock 双流块 （与MM-DiT几乎相同）</li>
+<li>SingleStreamBlock 单流块 （与DiT几乎相同）</li>
+</ul>
+<p><img src="/../imgs/Flow_based%E7%94%9F%E6%88%90/v2-ef89636e6f9d4c333116cdba283f1151_r.png" srcset="/imgs/img/loading.gif" lazyload alt="FLUX"></p>
+<h3 id="4-Transformer-位置编码"><a href="#4-Transformer-位置编码" class="headerlink" title="4. Transformer 位置编码"></a>4. Transformer 位置编码</h3><p>阅读博文：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/631363482">Transformer位置编码（基础）</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/454482273">Transformer学习笔记一：Positional Encoding（位置编码）</a></li>
+</ul>
+<p>Positional Encoding：就是将位置信息添加（嵌入）到Embedding词向量中，让Transformer保留词向量的<strong>位置信息</strong>，可以提高模型对序列的理解能力；</p>
+<ol>
+<li>为每个字输出<strong>唯一的编码</strong>；</li>
+<li>不同长度的句子之间，任何两个字之间的差值应该保持一致？</li>
+<li>编码值应该是<strong>有界</strong>的。</li>
+</ol>
+<p>位置编码分类：</p>
+<ul>
+<li><p>绝对位置编码 <code>Absolute Position Embedding</code>：</p>
+<ul>
+<li><p><strong>学习式位置编码（Learned Positional Embedding）</strong>：方法是最普遍的绝对位置编码方法，该方法直接对不同的位置随机初始化一个 <code>postion embedding</code>，加到 <code>word embedding</code> 上输入模型，<strong>作为参数进行训练</strong>；举例：<a href="https://link.zhihu.com/?target=https://arxiv.org/pdf/1810.04805.pdf">BERT</a>、<a href="https://link.zhihu.com/?target=https://ailab-ua.github.io/courses/resources/GPT-2_Radford_2018.pdf">GPT-2</a></p>
+</li>
+<li><p><strong>正弦位置编码（Sinusoidal Positional Encoding, SPE）</strong>：是通过将正弦和余弦函数的不同频率应用于输入序列的位置来计算位置编码；</p>
+<p><img src="/../imgs/Flow_based%E7%94%9F%E6%88%90/image-20250408180932773.png" srcset="/imgs/img/loading.gif" lazyload alt="SPE正弦位置编码"></p>
+</li>
+</ul>
+</li>
+<li><p><strong>相对位置编码 <code>Relative Position Embedding</code></strong>：</p>
+<ul>
+<li>Learned Positional Encoding：通过学习一组可学习参数来计算位置编码- </li>
+<li><strong>旋转位置编码RoPE</strong></li>
+</ul>
+</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Paper-Reading/" class="category-chain-item">Paper Reading</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81/" class="print-no-link">#多模态</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>多模态理解与生成</div>
+      <div>https://pljj315.github.io/Paper-Reading/Flow_based生成/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>pljj315</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年4月7日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/Paper-Reading/Paper-Reading_Inversion_based_%E5%9B%BE%E5%83%8F%E7%BC%96%E8%BE%91/" title="Inversion_based_editing in flow_matching models">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Inversion_based_editing in flow_matching models</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/Paper-Reading/AutoRegressive%E8%87%AA%E5%9B%9E%E5%BD%92/" title="自回归学习">
+                        <span class="hidden-mobile">自回归学习</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/gitalk/1.8.0/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"Ov23lipwdnWHzn8s0j4d","clientSecret":"794682cc1d531e3af88ba187be170008cdb87097","repo":"pljj315.github.io","owner":"pljj315","admin":["pljj315"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
+          {
+            id: '762f209dd5f2ff5c55ed305c5dfa8de3'
+          }
+        )
+        var gitalk = new Gitalk(options);
+        gitalk.render('gitalk-container');
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-love"></i> <a href="https://github.com/pljj315" target="_blank" rel="nofollow noopener"><span>github</span></a> <i class="iconfont icon-love"></i> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
