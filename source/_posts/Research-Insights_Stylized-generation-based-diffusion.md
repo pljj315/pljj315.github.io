@@ -1,5 +1,5 @@
 ---
-title: Reserch-Insights_Stylized-generation-based-diffusion
+title: Stylized-generation-based-diffusion风格化生成
 author: pljj315
 comment: gitalk
 date: 2025-02-27 13:42:30

@@ -1,5 +1,5 @@
 ---
-title: Inversion_based_editing in flow_matching models
+title:  基于反演的图像编辑Inversion_based_editing in flow_matching models
 author: pljj315
 comment: gitalk
 date: 2025-04-08 19:11:11
@@ -8,7 +8,7 @@ tags:
 - Flow_based
 - 图像编辑
 - Inversion
-category: Paper Reading
+category: Research Insights
 index_img: ../imgs/Paper-Reading_基于Flow的图像编辑/image-20250410210713411.png
 ---
 

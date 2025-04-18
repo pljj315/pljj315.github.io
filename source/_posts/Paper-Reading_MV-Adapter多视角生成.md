@@ -1,5 +1,5 @@
 ---
-title: Paper-Reading：MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12
+title: Paper Reading:MV_Adapter_multi-view_consistent_image_generation_made_easy- 2024.12
 author: pljj315
 comment: gitalk
 date: 2025-02-23 17:58:33

@@ -1,5 +1,5 @@
 ---
-title: 'paper reading: Nested Attention: Semantic-aware Attention Values for Concept Personalization-2025'
+title: Paper Reading:Nested Attention:Semantic-aware Attention Values for Concept Personalization-2025 
 author: pljj315
 comment: gitalk
 date: 2025-01-08 15:21:08

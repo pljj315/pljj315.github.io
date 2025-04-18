@@ -1,5 +1,5 @@
 ---
-title:  Error-records: DDP
+title:  Error-records:DDP
 author: pljj315
 comment: gitalk
 date: 2025-03-17 13:42:30

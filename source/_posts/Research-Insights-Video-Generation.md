@@ -1,5 +1,5 @@
 ---
-title: Paper-Reading_Video_Generation
+title:  Video_Generation视频生成
 author: pljj315
 comment: gitalk
 date: 2025-03-26 10:04:11
@@ -8,12 +8,6 @@ tags:
 category: Research Insights
 index_img: ../imgs/Paper-Reading-Video-Generation/640.webp
 ---
-
-
-
-
-
-
 
 
 

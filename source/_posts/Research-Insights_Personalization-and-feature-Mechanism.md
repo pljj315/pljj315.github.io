@@ -1,5 +1,5 @@
 ---
-title: 'Research Insights: diffusion VS control'
+title:  diffusion VS control
 author: pljj315
 comment: gitalk
 date: 2025-01-09 10:56:23

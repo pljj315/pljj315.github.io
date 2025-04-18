@@ -1,5 +1,5 @@
 ---
-title: 'paper reading:  IDM-VTON: Improving Diffusion Models for Authentic Virtual Try-on in the Wild-2024 ECCV'
+title: Paper Reading:IDM-VTON:Improving Diffusion Models for Authentic Virtual Try-on in the Wild-2024 ECCV
 author: pljj315
 comment: gitalk
 date: 2024-12-20 21:16:38
