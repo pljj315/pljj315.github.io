@@ -138,13 +138,13 @@
       
       <tag>text-to-img</tag>
       
-      <tag>style-transfer</tag>
-      
-      <tag>stylized-generation</tag>
-      
       <tag>img-to-img</tag>
       
       <tag>大模型</tag>
+      
+      <tag>style-transfer</tag>
+      
+      <tag>stylized-generation</tag>
       
       <tag>风格化生成</tag>
       
@@ -231,11 +231,11 @@
       
       <tag>text-to-img</tag>
       
+      <tag>control</tag>
+      
       <tag>img-to-img</tag>
       
       <tag>大模型</tag>
-      
-      <tag>control</tag>
       
     </tags>
     
