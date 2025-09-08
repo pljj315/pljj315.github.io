@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://pljj315.github.io/imgs/Paper-Reading_%E5%9F%BA%E4%BA%8EFlow%E7%9A%84%E5%9B%BE%E5%83%8F%E7%BC%96%E8%BE%91/image-20250410210713411.png">
 <meta property="article:published_time" content="2025-04-08T11:11:11.000Z">
-<meta property="article:modified_time" content="2025-04-18T07:59:57.889Z">
+<meta property="article:modified_time" content="2025-04-18T13:02:33.976Z">
 <meta property="article:author" content="pljj315">
 <meta property="article:tag" content="DiT">
 <meta property="article:tag" content="Flow_based">
@@ -244,7 +244,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.9k 字
+          2k 字
         
       </span>
     
@@ -255,7 +255,7 @@
         
         
         
-          17 分钟
+          18 分钟
         
       </span>
     
@@ -330,11 +330,17 @@
 </ul>
 <p>flux代码：</p>
 <p><code>sigmas = np.linspace(1.0, 1 / T_steps, T_steps) </code>从1~0均匀取值，但是取不到0,最后一位&#x3D;&#x3D;(1&#x2F;T_steps)!!!!</p>
-<p>VAE：16通道，8倍压缩比 &#x3D; pipe.vae_scale_factor&#x3D;8， patchify图块化2*2的两倍压缩比,  FLUX总压缩比16</p>
+<p>在进入模型主体之前，img和txt都需要通过Linear层，将维度分别调整为：</p>
+<ul>
+<li>img: [bs, 4096, 64] &#x3D;&#x3D;&gt; [bs, 4096, 3072]</li>
+<li>txt: [bs, 512, 4096] &#x3D;&#x3D;&gt; [bs, 512, 3072]</li>
+<li>其中 3072: 注意力头数为 24，每头维度 128，总的<strong>内部特征维度达到 3072&#x3D;（24×128）</strong></li>
+</ul>
+<p>VAE：<strong>16通道</strong>，<strong>8倍压缩比 &#x3D; pipe.vae_scale_factor&#x3D;8</strong>， patchify图块化2<em>2的两倍压缩比,  FLUX*<em>总压缩比16</em></em>; FLUX.1 由于把 2×2 个像素在通道上拼接到了一起，其去噪网络的<strong>输入通道数是 64</strong></p>
 <p>加噪：<code>Z_t= (1-t)*Z_0 + t*N_t, N_t~正态分布(0,1)</code>  scale_noise函数中实现；</p>
 <p>去噪：<code>latents = self.scheduler.step( noise_pred, t, latents, return_dict=False )[0]</code></p>
 <p>FluxTransformer2DModel.FluxAttnProcessor2_0个数：57 &#x3D;&#x3D; single_transformer_blocks：38 + transformer_blocks：19</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">FluxTransformer2DModel</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params"></span><br><span class="hljs-params">            self,</span><br><span class="hljs-params">            patch_size: <span class="hljs-built_in">int</span> = <span class="hljs-number">1</span>,</span><br><span class="hljs-params">            in_channels: <span class="hljs-built_in">int</span> = <span class="hljs-number">64</span>,</span><br><span class="hljs-params">            out_channels: <span class="hljs-type">Optional</span>[<span class="hljs-built_in">int</span>] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">            num_layers: <span class="hljs-built_in">int</span> = <span class="hljs-number">19</span>,           <span class="hljs-comment"># 双流MM-DiT :&#x27;transformer_blocks.18.attn.processor&#x27;</span></span><br><span class="hljs-params">            num_single_layers: <span class="hljs-built_in">int</span> = <span class="hljs-number">38</span>,    <span class="hljs-comment"># 单流DiT    :&#x27;single_transformer_blocks.37.attn.processor&#x27;</span></span><br><span class="hljs-params">            attention_head_dim: <span class="hljs-built_in">int</span> = <span class="hljs-number">128</span>,</span><br><span class="hljs-params">            num_attention_heads: <span class="hljs-built_in">int</span> = <span class="hljs-number">24</span>,</span><br><span class="hljs-params">            joint_attention_dim: <span class="hljs-built_in">int</span> = <span class="hljs-number">4096</span>, <span class="hljs-comment"># img_dims</span></span><br><span class="hljs-params">            pooled_projection_dim: <span class="hljs-built_in">int</span> = <span class="hljs-number">768</span>,</span><br><span class="hljs-params">            guidance_embeds: <span class="hljs-built_in">bool</span> = <span class="hljs-literal">False</span>,</span><br><span class="hljs-params">            axes_dims_rope: <span class="hljs-type">Tuple</span>[<span class="hljs-built_in">int</span>] = (<span class="hljs-params"><span class="hljs-number">16</span>, <span class="hljs-number">56</span>, <span class="hljs-number">56</span></span>), </span>)<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">attn_processors</span>()<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">set_attn_processor</span>()<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">fuse_qkv_projections</span>()<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">unfuse_qkv_projections</span>()<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">FluxTransformerBlock</span>(nn.Module)<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">FluxSingleTransformerBlock</span>(nn.Module)<br></code></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">FluxTransformer2DModel</span> : 先<span class="hljs-number">19</span>个双流MM-DiT, 在经历<span class="hljs-number">38</span>个单流DiT<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params"></span><br><span class="hljs-params">            self,</span><br><span class="hljs-params">            patch_size: <span class="hljs-built_in">int</span> = <span class="hljs-number">1</span>,</span><br><span class="hljs-params">            in_channels: <span class="hljs-built_in">int</span> = <span class="hljs-number">64</span>,</span><br><span class="hljs-params">            out_channels: <span class="hljs-type">Optional</span>[<span class="hljs-built_in">int</span>] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">            num_layers: <span class="hljs-built_in">int</span> = <span class="hljs-number">19</span>,           <span class="hljs-comment"># 双流MM-DiT :&#x27;transformer_blocks.18.attn.processor&#x27;</span></span><br><span class="hljs-params">            num_single_layers: <span class="hljs-built_in">int</span> = <span class="hljs-number">38</span>,    <span class="hljs-comment"># 单流DiT    :&#x27;single_transformer_blocks.37.attn.processor&#x27;</span></span><br><span class="hljs-params">            attention_head_dim: <span class="hljs-built_in">int</span> = <span class="hljs-number">128</span>,</span><br><span class="hljs-params">            num_attention_heads: <span class="hljs-built_in">int</span> = <span class="hljs-number">24</span>,</span><br><span class="hljs-params">            joint_attention_dim: <span class="hljs-built_in">int</span> = <span class="hljs-number">4096</span>, <span class="hljs-comment"># img_dims</span></span><br><span class="hljs-params">            pooled_projection_dim: <span class="hljs-built_in">int</span> = <span class="hljs-number">768</span>,</span><br><span class="hljs-params">            guidance_embeds: <span class="hljs-built_in">bool</span> = <span class="hljs-literal">False</span>,</span><br><span class="hljs-params">            axes_dims_rope: <span class="hljs-type">Tuple</span>[<span class="hljs-built_in">int</span>] = (<span class="hljs-params"><span class="hljs-number">16</span>, <span class="hljs-number">56</span>, <span class="hljs-number">56</span></span>), </span>)<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">attn_processors</span>()<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">set_attn_processor</span>()<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">fuse_qkv_projections</span>()<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">unfuse_qkv_projections</span>()<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">FluxTransformerBlock</span>(nn.Module)<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">FluxSingleTransformerBlock</span>(nn.Module)<br></code></pre></td></tr></table></figure>
 
 
 
@@ -591,6 +597,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/post/Research_Insights_VLLM%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3.html" title="VLLM多模态理解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">VLLM多模态理解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">

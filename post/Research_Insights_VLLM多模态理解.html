@@ -1,0 +1,1029 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/imgs/img/OIP.jpg">
+  <link rel="icon" href="/imgs/img/OIP.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="pljj315">
+  <meta name="keywords" content="计算机视觉 视觉大模型 研究生生活">
+  
+    <meta name="description" content="1. VLLM（Vid-LLM）总述：多模态视觉理解：  图片-语言理解：LLAVA、LLAVA1.5、LLAVA-NEXT-IMAGE 视频-语言理解：LLAVA-NEXT-VIDEO、VideoLLaMA系列、Qwen-vl系列  博文阅读：  参考链接：视频理解综述-2024、VideoULLM：视频理解大语言模型汇总、MLLM首篇综述 参考综述：Vid-LLM survey 、Video-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VLLM多模态理解">
+<meta property="og:url" content="https://pljj315.github.io/post/Research_Insights_VLLM%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3.html">
+<meta property="og:site_name" content="JH_BLOG">
+<meta property="og:description" content="1. VLLM（Vid-LLM）总述：多模态视觉理解：  图片-语言理解：LLAVA、LLAVA1.5、LLAVA-NEXT-IMAGE 视频-语言理解：LLAVA-NEXT-VIDEO、VideoLLaMA系列、Qwen-vl系列  博文阅读：  参考链接：视频理解综述-2024、VideoULLM：视频理解大语言模型汇总、MLLM首篇综述 参考综述：Vid-LLM survey 、Video-">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pljj315.github.io/imgs/Research_Insights_VLLM%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3/vid-llm%E5%B8%B8%E7%94%A8%E6%A1%86%E6%9E%B6.png">
+<meta property="article:published_time" content="2025-06-04T12:04:08.000Z">
+<meta property="article:modified_time" content="2025-09-08T12:25:49.080Z">
+<meta property="article:author" content="pljj315">
+<meta property="article:tag" content="多模态理解">
+<meta property="article:tag" content="VLLM">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pljj315.github.io/imgs/Research_Insights_VLLM%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3/vid-llm%E5%B8%B8%E7%94%A8%E6%A1%86%E6%9E%B6.png">
+  
+  
+  
+  <title>VLLM多模态理解 -&gt; JH_BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"pljj315.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":30,"cursorChar":":","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"❡"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/imgs/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>pljj315&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/imgs/img/default_roy.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="VLLM多模态理解"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        pljj315
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-06-04 20:04" pubdate>
+          2025年6月4日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          23 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">VLLM多模态理解</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="1-VLLM（Vid-LLM）总述："><a href="#1-VLLM（Vid-LLM）总述：" class="headerlink" title="1. VLLM（Vid-LLM）总述："></a>1. VLLM（Vid-LLM）总述：</h2><p>多模态视觉理解：</p>
+<ul>
+<li>图片-语言理解：LLAVA、LLAVA1.5、LLAVA-NEXT-IMAGE</li>
+<li>视频-语言理解：LLAVA-NEXT-VIDEO、VideoLLaMA系列、Qwen-vl系列</li>
+</ul>
+<p>博文阅读：</p>
+<ul>
+<li>参考链接：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/699932060">视频理解综述-2024</a>、<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/688143927">VideoULLM：视频理解大语言模型汇总</a>、<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/639664615">MLLM首篇综述</a><ul>
+<li>参考综述：<a target="_blank" rel="noopener" href="https://github.com/yunlong10/Awesome-LLMs-for-Video-Understanding">Vid-LLM survey </a>、<a target="_blank" rel="noopener" href="https://video-mme.github.io/">Video-MME多模态视频理解-综述-排行榜</a>]</li>
+</ul>
+</li>
+</ul>
+<p>综述论文：</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2401.13601">MM-LLMs: Recent Advances in MultiModal Large Language Models（2024.2.20)</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2312.17432">Video Understanding with Large Language Models: A Survey（2024.1.4）</a></p>
+</li>
+</ul>
+<blockquote>
+<p>多模态数据集<strong>构造</strong>学习：LLAVA</p>
+<p>多模态数据集<strong>清洗</strong>学习：VideoLlaMA3</p>
+</blockquote>
+<figure class="half">
+  <img src="../imgs/Research_Insights_VLLM多模态理解/多模态视觉理解评测榜.png" srcset="/imgs/img/loading.gif" lazyload>
+  <img src="../imgs/Research_Insights_VLLM多模态理解/vid-llm常用框架.png" srcset="/imgs/img/loading.gif" lazyload>
+</figure>
+
+
+
+<h2 id="2-Qwen-VL系列-论文技术解读🤏"><a href="#2-Qwen-VL系列-论文技术解读🤏" class="headerlink" title="2. Qwen-VL系列 论文技术解读🤏"></a>2. Qwen-VL系列 论文技术解读🤏</h2><h3 id="2-1-Qwen2-5-VL"><a href="#2-1-Qwen2-5-VL" class="headerlink" title="2.1 Qwen2.5-VL:"></a>2.1 Qwen2.5-VL:</h3><p>微调相关代码：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/datawhalechina/self-llm/tree/master/models/Qwen2-VL">https://github.com/datawhalechina/self-llm/tree/master/models/Qwen2-VL</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/QwenLM/Qwen2.5-VL/tree/main/qwen-vl-finetune">https://github.com/QwenLM/Qwen2.5-VL/tree/main/qwen-vl-finetune</a></p>
+<ol>
+<li>介绍：</li>
+</ol>
+<p>基于Qwen2.5 LLM进行预训练的多模态（文、图、视频）预训练大模型，包括三种参量大小： Qwen2.5-Vl-72B &gt; Qwen2.5-Vl-7B &gt; Qwen2.5-Vl-3B;</p>
+<p>能力：能够实现文档级别的细粒度理解；</p>
+<ol start="2">
+<li><p>技术特点：</p>
+<ul>
+<li><p>动态分辨率处理ViT：提升空间感知能力</p>
+<ul>
+<li><p>Window Attention：在视觉编码器中实现窗口注意力，优化推理效率</p>
+</li>
+<li><p>动态分辨率：不实用归一化坐标，使用原始比例分辨率，提升不同分辨率的处理能力</p>
+</li>
+<li><p>28 patch_size</p>
+</li>
+</ul>
+</li>
+<li><p>绝对时间编码M-ROPE：提升时间感知能力</p>
+<ul>
+<li><p>M-ROPE&#x3D;【时间，高度，宽度】：时间id不再与输入帧数绑定，而是使用绝对时间，更好地支持超长视频输入，更好的理解视频时间快慢</p>
+</li>
+<li><p>动态fps帧率：可变帧率输入，更好的感知视频时间动态性</p>
+</li>
+</ul>
+</li>
+<li><p>视觉语言融合：2层MLP</p>
+<ul>
+<li><p>RMSNorm：归一化</p>
+</li>
+<li><p>SwiGLU：激活函数</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p><img src="/../imgs/Research_Insights_VLLM%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3/%E7%BB%9D%E5%AF%B9%E6%97%B6%E9%97%B4%E7%BC%96%E7%A0%81.png" srcset="/imgs/img/loading.gif" lazyload alt="img"><img src="/../imgs/Research_Insights_VLLM%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3/image.png" srcset="/imgs/img/loading.gif" lazyload alt="img"></p>
+<ol start="3">
+<li>训练阶段及数据：</li>
+</ol>
+<p><img src="/../imgs/Research_Insights_VLLM%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3/image.2.png" srcset="/imgs/img/loading.gif" lazyload alt="img"></p>
+<h4 id="实践关键问题："><a href="#实践关键问题：" class="headerlink" title="实践关键问题："></a>实践关键问题：</h4><ol>
+<li>Qwen2.5-VL中使用的视觉编码器？<br>改动并重新训练后Vision Transformer (ViT)：设置14的patch_size保持原始分辨率，将full attention替换为window attention（112*112窗口）节省计算开销；采用不同的FPS采样率机制；M-ROPE使用绝对时间作为时间id进行编码；还使用了不同的组件：FFN with SwiGLU activation, RMSNorm for normalization, and window-based attention mechanisms to enhance performance and efficiency.</li>
+<li>使用了什么位置编码？</li>
+<li>图片：2D-ROPE（14*14）：（height_ids, width_ids）</li>
+<li>视频：3D-ROPE（14*14）：绝对时间作为时间id进行位置编码（time_ids, height_ids, width_ids）</li>
+<li>最长输入多少token？<ol>
+<li>Sequence length：8192-32768</li>
+</ol>
+</li>
+<li>图像与视频转换为Token的规则：每28x28像素对应一个Token <a target="_blank" rel="noopener" href="https://help.aliyun.com/zh/model-studio/vision#3cd05154a3pa5"><strong>！！tokens计算链接</strong></a><ol>
+<li>图片——下限4个tokens，上限1280个tokens：<ol>
+<li>按照min_pixels, max_pixels进行等比例缩放并调整到28整数倍</li>
+<li>图像的tokens数量 &#x3D; 总像素数量&#x2F;（28*28）+ 2</li>
+</ol>
+</li>
+<li>视频——视频帧下限128个tokens，视频帧上限768个tokens：<ol>
+<li>帧率fps&#x3D;2（默认）</li>
+<li>最大抽取帧数FPS_MAX_FRAMES&#x3D;512，最小抽取帧数FPS_MIN_FRAMES&#x3D;4（设置）</li>
+<li>视频输入的最大像素数VIDEO_TOTAL_PIXELS &#x3D; 65536 * 28* 28（设置）： 65536&#x3D;128*512</li>
+<li>视频参数：video_fps视频的原始帧率，total_frames视频的原始总帧数</li>
+<li><code>nframes = total_frames / video_fps * fps</code></li>
+<li>视频的tokens数量 &#x3D; <code>int(math.ceil(num_frames / 2) * </code>（长&#x2F;&#x2F;28）*（宽&#x2F;&#x2F;28）+ 2</li>
+</ol>
+</li>
+<li>对于视频（总结）：<ol>
+<li>每视频帧上限768tokens &#x3D; 768<em>28</em>28 &#x3D;&gt; 602112 pixels &#x3D; 1024*588</li>
+<li>抽取的视频帧数 &#x3D; 视频时长 * fps (需&lt; 512）</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="2-2-Qwen2-VL："><a href="#2-2-Qwen2-VL：" class="headerlink" title="2.2 Qwen2-VL："></a>2.2 Qwen2-VL：</h3><p><img src="/../imgs/Research_Insights_VLLM%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3/image.4.png" srcset="/imgs/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/../imgs/Research_Insights_VLLM%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3/image.5.png" srcset="/imgs/img/loading.gif" lazyload alt="img"></p>
+<h2 id="3-VideoLlaMA系列-论文技术解读"><a href="#3-VideoLlaMA系列-论文技术解读" class="headerlink" title="3. VideoLlaMA系列 论文技术解读"></a>3. VideoLlaMA系列 论文技术解读</h2><p>基于LlaMA语言模型进行多模态预训练；阿里巴巴；视觉token经过投影层映射到文本空间，使用llm进行回答；</p>
+<h3 id="3-1-VideoLlaMA3-2025-1-："><a href="#3-1-VideoLlaMA3-2025-1-：" class="headerlink" title="3.1 VideoLlaMA3(2025.1)："></a>3.1 VideoLlaMA3(2025.1)：</h3><ol>
+<li><p>论文：<a target="_blank" rel="noopener" href="http://arxiv.org/abs/2501.13106">VideoLLaMA 3: Frontier Multimodal Foundation Models for Image and Video Understanding.</a></p>
+</li>
+<li><p>特点：</p>
+<ol>
+<li><p>最长tokens长度16384，最长视觉tokens长度10240，fps&#x3D;1，最长180帧【3min】</p>
+</li>
+<li><p>VideoLlaMA3回归<em>视觉模态</em>，以视觉为中心进行训练及框架设计【🆚VideoLlaMA2对<em>音频模态</em>的集成，少而精路线】；</p>
+</li>
+<li><p>数据：强调在视频-文数据对稀少情况下，高质量图-文数据对（图片理解能力 ）对视频理解的关键作用；</p>
+</li>
+<li><p>构建高质量图文数据集：清洗+recaption； </p>
+<ol>
+<li>清洗策略：长宽比、美学评分、BLIP&#x2F;CLIP余弦相似度、CLIP特征空间聚类；</li>
+<li>recaption：InternVL2-8B、InternVL2-26B分别作短、长caption；</li>
+</ol>
+</li>
+<li><p>视觉编码器：</p>
+<ol>
+<li><p>Any-resolution Vision Tokenization (AVT) ：用2D-RoPE替代固定&#x2F;绝对位置编码，实现动态分辨率输入；</p>
+</li>
+<li><p>Differential Frame Pruner (DiffFP)：基于1-范数距离，降低视频帧信息冗余度，实现视频tokens压缩；</p>
+</li>
+<li><p>对视频tokens进行：基于双线性插值的2*2下采样，以进一步限制tokens长度；</p>
+<p>![img](..&#x2F;imgs&#x2F;Research_Insights_VLLM多模态理解&#x2F;image.6 (1).png)</p>
+<p><img src="/../imgs/Research_Insights_VLLM%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3/image.7.png" srcset="/imgs/img/loading.gif" lazyload alt="img"></p>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>训练步骤：</p>
+<ol>
+<li><p>视觉编码器对齐训练：</p>
+<ol>
+<li>适配动态分辨率输入【🆚VideoLlaMA2固定分辨率336*336】；</li>
+<li>训练<strong>视觉编码器【1e-5】+视觉投影连接器【1e-3】</strong>：使视觉编码器的特征空间与LLM对齐；</li>
+</ol>
+</li>
+<li><p>视觉-语言对齐训练🌟：</p>
+<ol>
+<li>高质量图文数据对和少量纯文本数据，详细描述+bbox；</li>
+<li><strong>全参量训练</strong>：联合微调视觉编码器【2e-6】、视觉投影连接器【1e-5】、LLM【1e-5】；</li>
+</ol>
+</li>
+<li><p>多任务微调：<strong>全参量训练</strong>，指令遵循能力，为视频理解奠定基础，视频压缩器DiffFP；</p>
+</li>
+<li><p>视频能力微调：全参量训练，视频压缩器DiffFP；<img src="/../imgs/Research_Insights_VLLM%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3/image.7.png" srcset="/imgs/img/loading.gif" lazyload alt="img"></p>
+<p>![img](..&#x2F;imgs&#x2F;Research_Insights_VLLM多模态理解&#x2F;image.4 (1).png)</p>
+</li>
+</ol>
+</li>
+<li><p>模型初始化：</p>
+<ol>
+<li>视觉编码器：SigLIP【 VIT- based 架构，分辨率384*384】+ RoPE；</li>
+<li>LLM：Qwen2.5；</li>
+<li>视觉投影连接器：两层MLPs；</li>
+</ol>
+</li>
+</ol>
+<h3 id="3-2-VideoLlaMA2-音视频-文（2024-6）："><a href="#3-2-VideoLlaMA2-音视频-文（2024-6）：" class="headerlink" title="3.2 VideoLlaMA2-音视频+文（2024.6）："></a>3.2 VideoLlaMA2-音视频+文（2024.6）：</h3><ol>
+<li><p>论文：<a target="_blank" rel="noopener" href="http://arxiv.org/abs/2406.07476">VideoLLaMA 2: Advancing Spatial-Temporal Modeling and Audio Understanding in Video-LLMs.</a></p>
+</li>
+<li><p>特点：</p>
+<ol>
+<li>时空卷积连接器（STC）：增强时空理解能力；</li>
+<li>音频模态：具有纯音频问答任务的能力；</li>
+<li>Mistral-7B-Instruct作为LLM；</li>
+</ol>
+</li>
+<li><p>框架：视觉-语言分支（视觉编码器） + 听觉-语言分支（音频编码器）； </p>
+<p>![image.2 (1)](..&#x2F;imgs&#x2F;Research_Insights_VLLM多模态理解&#x2F;image.2 (1).png)![image.2 (1)](..&#x2F;imgs&#x2F;Research_Insights_VLLM多模态理解&#x2F;image.2 (1).png)</p>
+</li>
+<li><p>视觉-语言分支：</p>
+<ol>
+<li>视觉编码器：CLIP (ViT-L&#x2F;14)，输入视频帧分辨率336*336，固定帧数；</li>
+<li>视频编码器输出具有冗杂性，为去除信息冗杂、减少视频tokens：使用 STC时空卷积连接器（VideoLlaMA1中使用Q-former）；</li>
+<li>视觉-文本对齐：两层的MLP；</li>
+</ol>
+</li>
+<li><p>听觉-语言分支：</p>
+<ol>
+<li>预处理：128频率bins；</li>
+<li>音频编码器：BEATs：捕捉时间动态性、音频细节；</li>
+<li>音频-文本对齐：两层的MLP；</li>
+</ol>
+</li>
+<li><p>训练步骤：训练目标：cross-entropy loss of the text tokens. 学习率：1e-3 ——&gt; 2e-5</p>
+<ol>
+<li>视觉-语言分支 预训练：<ol>
+<li>【弱标注】图文数据对、视频文数据对 12.2M，视频帧均匀采样，分辨率336*336；</li>
+<li>冻结视觉编码器和LLM，只训练<strong>视觉投影器MLPs</strong>；</li>
+</ol>
+</li>
+<li>视觉-语言分支 多任务微调训练：<ol>
+<li>【强标注】任务导向、高质量数据对；</li>
+<li>冻结视觉编码器，训练<strong>LLM+视觉投影器MLPs；</strong></li>
+</ol>
+</li>
+<li>听觉-语言分支 预训练：<ol>
+<li>冻结音频编码器+LLM，只训练<strong>音频投影器MLPs</strong>；</li>
+</ol>
+</li>
+<li>听觉-语言分支 多任务微调训练：<ol>
+<li>冻结LLM，训练<strong>音频编码器+音频投影器MLPs</strong>；</li>
+</ol>
+</li>
+<li>视音频联合训练：<ol>
+<li>冻结LLM、视觉编码器、音频编码器，训练<strong>视觉投影器MLPs+音频投影器MLPs</strong>；</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="3-3-VideoLlaMA1："><a href="#3-3-VideoLlaMA1：" class="headerlink" title="3.3 VideoLlaMA1："></a>3.3 VideoLlaMA1：</h3><ol>
+<li>Q-former：压缩视觉tokens冗余度；</li>
+</ol>
+<h2 id="4-LLAVA系列-论文技术解读"><a href="#4-LLAVA系列-论文技术解读" class="headerlink" title="4. LLAVA系列 论文技术解读"></a>4. LLAVA系列 论文技术解读</h2><p>LLAVA：Large Language and Vision Assistant 大语言视觉模型：图片理解——&gt;只有<strong>LLaVA-NeXT-Video</strong>是视频理解</p>
+<p>LLaVA–LLaVA 1.5–LLaVA-Next-Image(1.6)–<strong>LLaVA-NeXT-Video</strong>–LLaVA-NeXT(Stronger)</p>
+<p>![img](..&#x2F;imgs&#x2F;Research_Insights_VLLM多模态理解&#x2F;image (2).png)</p>
+<h3 id="4-1-LLaVA-NEXT-Video（2024-4-30）：视频模态"><a href="#4-1-LLaVA-NEXT-Video（2024-4-30）：视频模态" class="headerlink" title="4.1 LLaVA-NEXT-Video（2024.4.30）：视频模态"></a>4.1 LLaVA-NEXT-Video（2024.4.30）：视频模态</h3><p>基于Qwen2.5语言模型</p>
+<ol>
+<li><p>特点：</p>
+<ol>
+<li><p>对LLaVA-Next-Image针对视频数据进行进一步的有监督微调（<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=251312041&content_type=Article&match_order=1&q=SFT&zd_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ6aGlkYV9zZXJ2ZXIiLCJleHAiOjE3NDg1MDg5ODcsInEiOiJTRlQiLCJ6aGlkYV9zb3VyY2UiOiJlbnRpdHkiLCJjb250ZW50X2lkIjoyNTEzMTIwNDEsImNvbnRlbnRfdHlwZSI6IkFydGljbGUiLCJtYXRjaF9vcmRlciI6MSwiemRfdG9rZW4iOm51bGx9.0FBWLlyvvnooB5rc5fgsNPIe0uo9lvUENkj4ttT7PrQ&zhida_source=entity">SFT</a>），基于图像理解能力获取视频理解能力；</p>
+</li>
+<li><p>训练最长tokens：4096(LLM的模型限制)；</p>
+</li>
+<li><p>AnyRes结构天然实现零样本从图文到视频模态迁移：从多补丁到多帧，长度泛化：从多帧到长视频，动态分辨率；将一组图像消化为一系列串联的视觉标记，允许统一的图像和视频输入，这自然支持从多图像到多帧（视频模态）的演变；</p>
+<p>![img](..&#x2F;imgs&#x2F;Research_Insights_VLLM多模态理解&#x2F;image.4 (2).png)</p>
+</li>
+<li><p>在旋转位置嵌入 (RoPE) 中实现<strong>线性缩放</strong>，在 LLaVA-NeXT 中应用了类似的缩放方法。例如，通过引入 2 的缩放因子，有效地将模型的**“max_token_length”**容量加倍，使其能够处理多达 8192 个标记的序列；</p>
+<p>![img](..&#x2F;imgs&#x2F;Research_Insights_VLLM多模态理解&#x2F;image.5 (2).png)</p>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="4-2-LLaVA-NEXT-Image（2024-1-30）"><a href="#4-2-LLaVA-NEXT-Image（2024-1-30）" class="headerlink" title="4.2 LLaVA-NEXT-Image（2024.1.30）"></a>4.2 LLaVA-NEXT-Image（2024.1.30）</h3><ol>
+<li>特点：<ol>
+<li>AnyRes：Dynamic High Resolution</li>
+<li>图文双模态：</li>
+</ol>
+</li>
+</ol>
+<h3 id="4-3-LLAVA-1-5（2023-10）"><a href="#4-3-LLAVA-1-5（2023-10）" class="headerlink" title="4.3 LLAVA-1.5（2023.10）"></a>4.3 LLAVA-1.5（2023.10）</h3><ol>
+<li><p>论文：《Improved Baselines with Visual Instruction Tuning》<a href="https://link.zhihu.com/?target=https://arxiv.org/pdf/2310.03744">https://arxiv.org/pdf/2310.03744</a></p>
+</li>
+<li><p>特点：</p>
+<ol>
+<li><p>基于LLAVA，在模型架构等方面做了实验，对输入&#x2F;模型结构&#x2F;数据等进行了研究；</p>
+</li>
+<li><p>开始使用MLP作为 图-文双模态连接器；</p>
+</li>
+<li><p>提升分辨率：AnyRes + CLIP@336;</p>
+<p><img src="/../imgs/Research_Insights_VLLM%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3/image.10.png" srcset="/imgs/img/loading.gif" lazyload alt="img"></p>
+</li>
+<li><p>通过提示词，引导模型输出短回答，能保证模型回答不被过拟合：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">&#123;Answer the question using a single word <span class="hljs-keyword">or</span> phrase.&#125;<br></code></pre></td></tr></table></figure></li>
+</ol>
+</li>
+<li><p>模型初始化：</p>
+<ol>
+<li>视觉编码器🔥：【<strong>CLIP ViT-L-336px</strong>，336<em>336的分辨率</em><em>、ViT】+AnyRes</em>*</li>
+<li>LLM：</li>
+<li>连接器&#x2F;投影器🔥：两层MLP 全连接；</li>
+</ol>
+</li>
+</ol>
+<h3 id="4-4-LLAVA（2023-4）"><a href="#4-4-LLAVA（2023-4）" class="headerlink" title="4.4 LLAVA（2023.4）"></a>4.4 LLAVA（2023.4）</h3><ol>
+<li><p>论文：<a target="_blank" rel="noopener" href="http://arxiv.org/abs/2304.08485">Visual Instruction Tuning</a></p>
+</li>
+<li><p>特点：</p>
+<ol>
+<li>2023年发布，比较先锋式的<strong>创建了vid-llm多模态的视觉指令微调范式</strong>：使用图文数据集，对预训练的LLM大语言模型以及预训练的视觉编码器中间的“连接器”进行 “指令微调”，得到具有视觉语言理解能力的多模态模型！</li>
+<li>先锋式的【图-文】<strong>视觉指令跟随微调数据集构建&#x2F;生成</strong>：可以学习构造技巧！<ol>
+<li>使用ChatGPT&#x2F;GPT-4，向基础的image-text数据对赋予指令跟随能力；</li>
+<li>文本内容（caption&#x2F;bbox）提供给GPT，引导GPT输出指令text；</li>
+<li>3种类型：conversion&#x2F;detailed description&#x2F;complex reasoning，共计158k；</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>模型初始化：</p>
+<ol>
+<li><p>视觉编码器：<strong>CLIP ViT-L&#x2F;14</strong>，224*224的分辨率；</p>
+</li>
+<li><p>LLM：<strong>Vicuna1.5（基于llama2微调）</strong>，最大2048tokens序列长度；</p>
+</li>
+<li><p>连接器&#x2F;投影器：projection matrix W&#x3D;&#x3D;单线性投影层（比较落后的策略）；</p>
+<p><img src="/../imgs/Research_Insights_VLLM%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3/image.8.png" srcset="/imgs/img/loading.gif" lazyload alt="img"></p>
+</li>
+</ol>
+</li>
+<li><p>训练步骤：</p>
+<ol>
+<li>视觉-语言对齐 预训练：2e-3<ol>
+<li>训练目标：LLM的自回归训练目标：下一个token预测损失；</li>
+<li>训练参数：只训练投影矩阵 <strong>W</strong>；</li>
+<li>训练集：过滤后的CC3M图文对 595K；</li>
+</ol>
+</li>
+<li>视觉-语言 指令跟随微调：2e-5<ol>
+<li>训练目标：LLM的自回归训练目标：下一个token预测损失；</li>
+<li>训练参数：训练投影矩阵 <strong>W 和 LLM（比较落后的训练策略）</strong>；</li>
+<li>训练集：158K自建的指令跟随数据集 + 515K VQA data；</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h4 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h4><ol>
+<li><p>训练数据格式：sharegpt格式 + 用 <image> 作为占位符</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;image&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;llava_image/00453/004539375.jpg&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;conversations&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>      <span class="hljs-punctuation">&#123;</span><br>        <span class="hljs-attr">&quot;from&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;human&quot;</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-attr">&quot;value&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;&lt;image&gt;\nRender a clear and concise summary of the photo.&quot;</span><br>      <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-punctuation">&#123;</span><br>        <span class="hljs-attr">&quot;from&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;gpt&quot;</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-attr">&quot;value&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;select luxury furniture 3 - inch gel memory foam mattress topper&quot;</span><br>      <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>模型：&#x2F;llava&#x2F;model&#x2F;llava_arch.py——prepare_inputs_labels_for_multimodal()</p>
+</li>
+<li><p>训练：llava&#x2F;train&#x2F;train.py——train()</p>
+</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Research-Insights/" class="category-chain-item">Research Insights</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3/" class="print-no-link">#多模态理解</a>
+      
+        <a href="/tags/VLLM/" class="print-no-link">#VLLM</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>VLLM多模态理解</div>
+      <div>https://pljj315.github.io/post/Research_Insights_VLLM多模态理解.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>pljj315</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年6月4日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/post/Research-Insights_Inversion_based_%E5%9B%BE%E5%83%8F%E7%BC%96%E8%BE%91.html" title="基于反演的图像编辑Inversion_based_editing in flow_matching models">
+                        <span class="hidden-mobile">基于反演的图像编辑Inversion_based_editing in flow_matching models</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/gitalk/1.8.0/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"Ov23lipwdnWHzn8s0j4d","clientSecret":"794682cc1d531e3af88ba187be170008cdb87097","repo":"pljj315.github.io","owner":"pljj315","admin":["pljj315"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
+          {
+            id: 'cf1e139c88a6616e0eb37389b6881f56'
+          }
+        )
+        var gitalk = new Gitalk(options);
+        gitalk.render('gitalk-container');
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-love"></i> <a href="https://github.com/pljj315" target="_blank" rel="nofollow noopener"><span>github</span></a> <i class="iconfont icon-love"></i> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
